@@ -1,11 +1,14 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import styles from '../styles/homeStyles';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../App';
 
-const HomeScreen = () => {
+type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
+
+const HomeScreen = ({ navigation }: Props) => {
   return (
     <View style={styles.container}>
-      
       {/* Left Sidebar */}
       <View style={styles.sidebar}>
         <TouchableOpacity style={styles.sidebarButton}>
@@ -23,7 +26,9 @@ const HomeScreen = () => {
 
       {/* Main Content */}
       <View style={styles.main}>
-        <Text style={styles.learnText}>LEARN</Text>
+        <TouchableOpacity onPress={() => navigation.navigate('Topics')}>
+          <Text style={styles.learnText}>LEARN</Text>
+        </TouchableOpacity>
       </View>
 
       {/* Bottom Section */}
