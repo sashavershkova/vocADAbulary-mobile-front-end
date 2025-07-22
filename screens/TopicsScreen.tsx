@@ -1,41 +1,36 @@
-// screens/TopicsScreen.tsx
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList } from 'react-native';
 import styles from '../styles/topicsStyles';
-import axios from 'axios';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../App';
 
-interface Topic {
+type Props = NativeStackScreenProps<RootStackParamList, 'Topics'>;
+
+type Topic = {
   id: number;
   name: string;
-}
+};
 
-const TopicsScreen = () => {
+const TopicsScreen = ({ navigation }: Props) => {
   const [topics, setTopics] = useState<Topic[]>([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios
-      .get('http://localhost:8080/topics') 
-      .then(response => {
-        setTopics(response.data);
-        setLoading(false);
-      })
-      .catch(error => {
-        console.error('Error fetching topics:', error);
-        setLoading(false);
-      });
+    fetch('http://localhost:8080/topics')  // adjust if needed
+      .then(res => res.json())
+      .then(data => setTopics(data))
+      .catch(err => console.error(err));
   }, []);
 
-  if (loading) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#333" />
-      </View>
-    );
-  }
-
   const renderTopic = ({ item }: { item: Topic }) => (
-    <TouchableOpacity style={styles.topicBox}>
+    <TouchableOpacity
+      style={styles.topicBox}
+      onPress={() =>
+        navigation.navigate('Topic', {
+          topicId: item.id,
+          topicName: item.name,
+        })
+      }
+    >
       <Text style={styles.topicText}>{item.name}</Text>
     </TouchableOpacity>
   );
@@ -44,10 +39,9 @@ const TopicsScreen = () => {
     <View style={styles.container}>
       <FlatList
         data={topics}
+        keyExtractor={(item) => item.id.toString()}
         renderItem={renderTopic}
-        keyExtractor={item => item.id.toString()}
-        contentContainerStyle={styles.list}
-        numColumns={2}
+        contentContainerStyle={styles.topicList}
       />
     </View>
   );
