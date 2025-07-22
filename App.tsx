@@ -1,14 +1,17 @@
+// App.tsx
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import LoginScreen from './screens/LoginScreen';
 import HomeScreen from './screens/HomeScreen';
 
+// Define the types for navigation params
 export type RootStackParamList = {
   Login: undefined;
-  Home: undefined;
+  Home: { userId: number };
 };
 
+// Create the stack navigator with the type
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
