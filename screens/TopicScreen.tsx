@@ -3,6 +3,7 @@ import { View, Text, ActivityIndicator } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../App';
 import styles from '../styles/topicStyles';
+import api from '../api/axiosInstance'; // ✅ Axios instance
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Topic'>;
 
@@ -23,20 +24,24 @@ const TopicScreen = ({ route }: Props) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`http://localhost:8080/topics/${topicId}/flashcards`)
-      .then(res => res.json())
-      .then(data => {
+    const fetchFlashcards = async () => {
+      try {
+        const response = await api.get(`api/topics/${topicId}/flashcards`);
+        const data = response.data;
+
         setFlashcards(data);
         if (data.length > 0) {
           const randomIndex = Math.floor(Math.random() * data.length);
           setRandomCard(data[randomIndex]);
         }
-        setLoading(false);
-      })
-      .catch(error => {
+      } catch (error) {
         console.error('Error fetching flashcards:', error);
+      } finally {
         setLoading(false);
-      });
+      }
+    };
+
+    fetchFlashcards(); // ✅ Call the async function
   }, [topicId]);
 
   if (loading) {
@@ -61,7 +66,7 @@ const TopicScreen = ({ route }: Props) => {
         <Text style={styles.example}>Example: {randomCard.example}</Text>
         <Text style={styles.synonyms}>Synonyms: {randomCard.synonyms}</Text>
         <Text style={styles.phonetic}>{randomCard.phonetic}</Text>
-        {/* audioUrl can be used later for playing sound */}
+        {/* You can later add audio playback for audioUrl here */}
       </View>
     </View>
   );
