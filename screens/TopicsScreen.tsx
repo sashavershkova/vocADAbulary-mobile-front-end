@@ -15,7 +15,7 @@ const TopicsScreen = ({ navigation }: Props) => {
   const [topics, setTopics] = useState<Topic[]>([]);
 
   useEffect(() => {
-    fetch('http://localhost:8080/topics')  // adjust if needed
+    fetch('http://localhost:8080/api/topics')  // adjust if needed
       .then(res => res.json())
       .then(data => setTopics(data))
       .catch(err => console.error(err));
