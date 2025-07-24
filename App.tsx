@@ -14,11 +14,8 @@ export type RootStackParamList = {
   Home: { userId: number };
   Topics: undefined;
   Topic: { topicId: number; topicName: string };
-  // Flashcard: { flashcardId: number; topicId: number; topicName: string };
-  Flashcard: { flashcardId: number; topicId: number};
-  // ...other screens
+  Flashcard: { flashcardId: number; topicId: number; topicName: string };
 };
-
 
 // Create the stack navigator with the type
 const Stack = createNativeStackNavigator<RootStackParamList>();
