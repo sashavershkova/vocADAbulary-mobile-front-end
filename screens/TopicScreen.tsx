@@ -23,7 +23,7 @@ const TopicScreen = ({ route }: Props) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`http://localhost:8080/topics/${topicId}/flashcards`)
+    fetch(`http://localhost:8080/api/topics/${topicId}/flashcards`)
       .then(res => res.json())
       .then(data => {
         setFlashcards(data);
