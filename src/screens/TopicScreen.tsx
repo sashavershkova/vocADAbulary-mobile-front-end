@@ -26,7 +26,8 @@ const TopicScreen = ({ route }: Props) => {
   useEffect(() => {
     const fetchFlashcards = async () => {
       try {
-        const response = await api.get(`api/topics/${topicId}/flashcards`);
+        console.log('🧠 topicId from route:', topicId);
+        const response = await api.get(`/topics/${topicId}/flashcards`);
         const data = response.data;
 
         setFlashcards(data);

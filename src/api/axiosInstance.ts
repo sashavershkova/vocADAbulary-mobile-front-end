@@ -14,4 +14,11 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+// log all outgoing requests:
+api.interceptors.request.use((request) => {
+  const fullUrl = `${request.baseURL?.replace(/\/$/, '')}${request.url}`;
+  console.log(`📡 Axios Request: ${request.method?.toUpperCase()} ${fullUrl}`);
+  return request;
+});
+
 export default api;

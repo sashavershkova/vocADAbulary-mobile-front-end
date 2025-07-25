@@ -41,7 +41,7 @@ const FlashcardScreen = () => {
   useEffect(() => {
     const fetchFlashcards = async () => {
       try {
-        const response = await api.get(`/api/topics/${topicId}/flashcards`);
+        const response = await api.get(`/topics/${topicId}/flashcards`);
         const data = response.data;
         setFlashcards(data);
         if (data.length > 0) {
@@ -78,7 +78,7 @@ const FlashcardScreen = () => {
       return;
     }
     try {
-      await api.delete(`/api/flashcards/${currentCard.id}`);
+      await api.delete(`/flashcards/${currentCard.id}`);
       Alert.alert('Deleted', 'Flashcard was successfully deleted.');
       handleNext();
     } catch (error) {
@@ -89,7 +89,7 @@ const FlashcardScreen = () => {
 
   const updateStatus = async (status: string) => {
     try {
-      await api.put(`/api/flashcards/${currentCard?.id}/wallet`, { status });
+      await api.put(`/flashcards/${currentCard?.id}/wallet`, { status });
       Alert.alert('Updated', `Flashcard marked as ${status}.`);
     } catch (error) {
       console.error('Update error:', error);
@@ -99,7 +99,7 @@ const FlashcardScreen = () => {
 
   const addToWallet = async () => {
     try {
-      await api.post(`/api/flashcards/${currentCard?.id}/wallet`);
+      await api.post(`/flashcards/${currentCard?.id}/wallet`);
       Alert.alert('Added', 'Flashcard added to wallet.');
     } catch (error) {
       console.error('Wallet error:', error);
