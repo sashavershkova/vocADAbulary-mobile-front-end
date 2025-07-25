@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Image } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../App';
 import styles from '../styles/loginStyles';
 import api from '../api/axiosInstance';
+import { MaterialIcons } from '@expo/vector-icons';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
 const LoginScreen = ({ navigation }: Props) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
 
   const handleLogin = async () => {
     try {
@@ -17,18 +19,13 @@ const LoginScreen = ({ navigation }: Props) => {
       const response = await api.post('/users/login', { username });
 
       const { id, role } = response.data;
-      // ✅ Set mock headers dynamically
+
       api.defaults.headers.common['X-Mock-User-Id'] = id;
       api.defaults.headers.common['X-Mock-User-Role'] = role;
 
-      // Save mock credentials globally (for now, in globalThis — we can refactor later)
-      globalThis.mockUser = {
-        id,
-        role,
-      };
+      globalThis.mockUser = { id, role };
 
       console.log('✅ Logged in as:', username, '| ID:', id, '| Role:', role);
-
       navigation.navigate('Home', { userId: id });
     } catch (error) {
       console.error('❌ Login failed:', error);
@@ -38,7 +35,12 @@ const LoginScreen = ({ navigation }: Props) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Login</Text>
+      <Text style={styles.title}>TECH VOICE</Text>
+
+      <Image
+        source={require('../assets/images/stickman.png')}
+        style={styles.avatar}
+      />
 
       <TextInput
         placeholder="Username"
@@ -56,7 +58,34 @@ const LoginScreen = ({ navigation }: Props) => {
         secureTextEntry
       />
 
-      <Button title="Login" onPress={handleLogin} />
+      <TouchableOpacity
+        style={styles.checkboxRow}
+        onPress={() => setRememberMe(!rememberMe)}
+      >
+        <View
+          style={{
+            width: 24,
+            height: 24,
+            borderRadius: 6,
+            borderWidth: 2,
+            borderColor: '#06610bff',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: rememberMe ? '#233a24ff' : 'transparent',
+          }}
+        >
+          {rememberMe && <MaterialIcons name="check" size={18} color="#fff" />}
+        </View>
+        <Text style={styles.checkboxText}>Remember Me</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity>
+        <Text style={styles.forgotText}>Forgot Username / Password?</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+        <Text style={styles.loginButtonText}>Sign in</Text>
+      </TouchableOpacity>
     </View>
   );
 };

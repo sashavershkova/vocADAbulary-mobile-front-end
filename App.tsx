@@ -8,7 +8,11 @@ import LoginScreen from './src/screens/LoginScreen';
 import HomeScreen from './src/screens/HomeScreen';
 import TopicsScreen from './src/screens/TopicsScreen';
 import TopicScreen from './src/screens/TopicScreen';
-import FlashcardScreen from './src/screens/FlashcardScreen';
+import { useFonts } from 'expo-font';
+
+const customFonts = {
+  'ArchitectsDaughter': require('./src/assets/fonts/ArchitectsDaughter-Regular.ttf'),
+};
 
 // Define the types for navigation params
 export type RootStackParamList = {
@@ -24,7 +28,11 @@ export type RootStackParamList = {
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
-  console.log('🧭 App.tsx rendered');
+  const [fontsLoaded] = useFonts(customFonts);
+
+  if (!fontsLoaded) {
+    return null; 
+  }
   return (
     <UserProvider>
       <NavigationContainer>
