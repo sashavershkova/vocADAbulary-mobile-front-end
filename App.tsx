@@ -8,6 +8,7 @@ import LoginScreen from './src/screens/LoginScreen';
 import HomeScreen from './src/screens/HomeScreen';
 import TopicsScreen from './src/screens/TopicsScreen';
 import TopicScreen from './src/screens/TopicScreen';
+import FlashcardScreen from './src/screens/FlashcardScreen';
 import { useFonts } from 'expo-font';
 
 const customFonts = {
