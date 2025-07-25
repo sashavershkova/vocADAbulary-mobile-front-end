@@ -5,7 +5,7 @@ import { Audio } from 'expo-av';
 import { Ionicons } from '@expo/vector-icons';
 import api from '../api/axiosInstance';
 import { useMockUser } from '../context/UserContext'; // Import the user context hook
-// import styles from '../styles/flashcardStyles';
+import styles from '../styles/flashcardStyles';
 
 type Flashcard = {
   id: number;
@@ -33,6 +33,10 @@ const FlashcardScreen = () => {
   const [currentCard, setCurrentCard] = useState<Flashcard | null>(null);
   const [loading, setLoading] = useState(true);
   const [showPhonetic, setShowPhonetic] = useState(false);
+
+  useEffect(() => {
+  console.log('📘 FlashcardScreen loaded');
+}, []);
 
   useEffect(() => {
     const fetchFlashcards = async () => {
@@ -111,7 +115,7 @@ const FlashcardScreen = () => {
     <View style={styles.container}>
       <Text style={styles.title}>{currentCard.word}</Text>
 
-      <View style={styles.cardBox}>
+      <View style={styles.card}>
         <TouchableOpacity
           style={styles.audioIcon}
           onPress={handlePlayAudio}

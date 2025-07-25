@@ -10,15 +10,23 @@ const flashcardStyles = StyleSheet.create({
 
   card: {
     padding: 20,
-    borderRadius: 16,
-    backgroundColor: '#f0f8ff',
+    borderRadius: 12,
+    backgroundColor: '#f9f9f9',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 6,
-    elevation: 5,
-    marginBottom: 10,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+    marginBottom: 16,
     position: 'relative',
+  },
+
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginVertical: 16,
+    color: '#333',
   },
 
   word: {
@@ -49,6 +57,18 @@ const flashcardStyles = StyleSheet.create({
     padding: 8,
     borderRadius: 20,
     backgroundColor: '#e6f7ff',
+  },
+
+  actionButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginVertical: 12,
+  },
+  actionText: {
+    color: '#007AFF',
+    fontWeight: 'bold',
+    marginHorizontal: 8,
+    fontSize: 16,
   },
 
   buttonRow: {
@@ -93,6 +113,26 @@ const flashcardStyles = StyleSheet.create({
     borderRadius: 8,
   },
 
+  exampleText: {
+    fontSize: 16,
+    color: '#333',
+    marginVertical: 8,
+  },
+
+  navBar: {
+    flexDirection: 'row', // changed from 'column' to 'row'
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 24,
+    paddingHorizontal: 8,
+  },
+
+  navText: {
+    color: '#007AFF',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+
   loader: {
     flex: 1,
     justifyContent: 'center',
@@ -101,3 +141,6 @@ const flashcardStyles = StyleSheet.create({
 });
 
 export default flashcardStyles;
+
+
+

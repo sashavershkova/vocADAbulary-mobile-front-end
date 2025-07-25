@@ -5,6 +5,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../App';
 import { getAllTopics } from '../api/topics'; // ✅ Axios call
 import { getFlashcardsByTopic } from '../api/flashcards';
+import { useNavigationState } from '@react-navigation/native';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Topics'>;
 
@@ -29,6 +30,9 @@ const TopicsScreen = ({ navigation }: Props) => {
   }, []);
 
   const handleTopicPress = async (topicId: number, topicName: string) => {
+
+    // console.log('📘 Load Flashcards from TopicScreen #1');
+
     try {
       const flashcards = await getFlashcardsByTopic(topicId);
       if (flashcards.length === 0) {
