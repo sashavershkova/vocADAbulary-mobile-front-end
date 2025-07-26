@@ -16,6 +16,7 @@
     "expo": "~53.0.17",
     "expo-font": "~13.3.2",
     "expo-status-bar": "~2.2.3",
+    "lottie-react-native": "7.2.2",
     "react": "19.0.0",
     "react-native": "0.79.5",
     "react-native-gesture-handler": "~2.24.0",
@@ -23,9 +24,10 @@
     "react-native-reanimated": "~3.17.4",
     "react-native-safe-area-context": "5.4.0",
     "react-native-screens": "~4.11.1",
-    "expo-font": "~13.3.2",
+    "expo-audio": "~0.4.8",
+    "expo-video": "~2.2.2",
     "expo-av": "~15.1.7",
-    "lottie-react-native": "7.2.2"
+    "expo-linear-gradient": "~14.1.5"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
