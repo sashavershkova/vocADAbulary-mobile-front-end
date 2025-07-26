@@ -10,7 +10,7 @@ const HomeScreen = ({ navigation, route }: Props) => {
   const { userId, username } = route.params;
   React.useLayoutEffect(() => {
   navigation.setOptions({
-    headerLeft: () => null, // removes back arrow
+    headerBackVisible: false, // removes back arrow
     title: username, // shows username in the header
   });
 }, [navigation, username]);
@@ -48,7 +48,11 @@ const HomeScreen = ({ navigation, route }: Props) => {
           <TouchableOpacity style={styles.smallButton}>
             <Text>SETTINGS</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.smallButton}>
+          <TouchableOpacity style={styles.smallButton}
+          onPress={() => navigation.reset({
+            index: 0,
+            routes: [{ name: 'Login' }],
+          })}>
             <Text>EXIT</Text>
           </TouchableOpacity>
         </View>
