@@ -44,7 +44,7 @@ const LoginScreen = ({ navigation }: Props) => {
         <Text style={styles.title}>TECH VOICE</Text>
         <Image
           source={require('../assets/images/stickman.png')}
-          style={[styles.avatar, { tintColor: '#b869d3ff' }]}
+          style={[styles.avatar, { tintColor: undefined }]}
         />
       </View>
 
