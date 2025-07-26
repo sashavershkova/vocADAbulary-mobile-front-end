@@ -5,6 +5,8 @@ import { RootStackParamList } from '../../App';
 import styles from '../styles/loginStyles';
 import api from '../api/axiosInstance';
 import { MaterialIcons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
+import { useFonts } from 'expo-font';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
@@ -34,13 +36,17 @@ const LoginScreen = ({ navigation }: Props) => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>TECH VOICE</Text>
-
-      <Image
-        source={require('../assets/images/stickman.png')}
-        style={styles.avatar}
-      />
+    <LinearGradient
+      colors={['#87ee8764', '#65c165ff']}
+      style={styles.container}
+    >
+      <View style={styles.titleRow}>
+        <Text style={styles.title}>TECH VOICE</Text>
+        <Image
+          source={require('../assets/images/stickman.png')}
+          style={[styles.avatar, { tintColor: '#b869d3ff' }]}
+        />
+      </View>
 
       <TextInput
         placeholder="Username"
@@ -83,10 +89,14 @@ const LoginScreen = ({ navigation }: Props) => {
         <Text style={styles.forgotText}>Forgot Username / Password?</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-        <Text style={styles.loginButtonText}>Sign in</Text>
+      <TouchableOpacity onPress={handleLogin} style={styles.buttonWrapper}>
+        <Image
+          source={require('../assets/images/button.png')}
+          style={styles.buttonImage}
+        />
+        <Text style={styles.buttonText}>Sign In</Text>
       </TouchableOpacity>
-    </View>
+    </LinearGradient>
   );
 };
 
