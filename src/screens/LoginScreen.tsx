@@ -43,7 +43,7 @@ const LoginScreen = ({ navigation }: Props) => {
       globalThis.mockUser = { id, role };
 
       console.log('✅ Logged in as:', username, '| ID:', id, '| Role:', role);
-      navigation.navigate('Home', { userId: id });
+      navigation.navigate('Home', { userId: id, username });
 
       if (rememberMe) {
         await AsyncStorage.setItem('savedUsername', username);

@@ -6,7 +6,15 @@ import { RootStackParamList } from '../../App';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
-const HomeScreen = ({ navigation }: Props) => {
+const HomeScreen = ({ navigation, route }: Props) => {
+  const { userId, username } = route.params;
+  React.useLayoutEffect(() => {
+  navigation.setOptions({
+    headerLeft: () => null, // removes back arrow
+    title: username, // shows username in the header
+  });
+}, [navigation, username]);
+
   return (
     <View style={styles.container}>
       {/* Left Sidebar */}
