@@ -6,7 +6,15 @@ import { RootStackParamList } from '../../App';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
-const HomeScreen = ({ navigation }: Props) => {
+const HomeScreen = ({ navigation, route }: Props) => {
+  const { userId, username } = route.params;
+  React.useLayoutEffect(() => {
+  navigation.setOptions({
+    headerBackVisible: false, // removes back arrow
+    title: username, // shows username in the header
+  });
+}, [navigation, username]);
+
   return (
     <View style={styles.container}>
       {/* Left Sidebar */}
@@ -40,7 +48,11 @@ const HomeScreen = ({ navigation }: Props) => {
           <TouchableOpacity style={styles.smallButton}>
             <Text>SETTINGS</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.smallButton}>
+          <TouchableOpacity style={styles.smallButton}
+          onPress={() => navigation.reset({
+            index: 0,
+            routes: [{ name: 'Login' }],
+          })}>
             <Text>EXIT</Text>
           </TouchableOpacity>
         </View>

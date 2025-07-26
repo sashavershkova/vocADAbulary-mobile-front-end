@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Image } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../App';
@@ -7,6 +8,7 @@ import api from '../api/axiosInstance';
 import { MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useFonts } from 'expo-font';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
@@ -14,6 +16,21 @@ const LoginScreen = ({ navigation }: Props) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
+
+  useEffect(() => {
+  const loadSavedUsername = async () => {
+    try {
+      const savedUsername = await AsyncStorage.getItem('savedUsername');
+      if (savedUsername) {
+        setUsername(savedUsername);
+        setRememberMe(true);
+      }
+    } catch (err) {
+      console.log('Error loading saved username:', err);
+    }
+  };
+  loadSavedUsername();
+  }, []);
 
   const handleLogin = async () => {
     try {
@@ -28,7 +45,14 @@ const LoginScreen = ({ navigation }: Props) => {
       globalThis.mockUser = { id, role };
 
       console.log('✅ Logged in as:', username, '| ID:', id, '| Role:', role);
-      navigation.navigate('Home', { userId: id });
+      navigation.navigate('Home', { userId: id, username });
+
+      if (rememberMe) {
+        await AsyncStorage.setItem('savedUsername', username);
+      } else {
+        await AsyncStorage.removeItem('savedUsername');
+      }
+      
     } catch (error) {
       console.error('❌ Login failed:', error);
       Alert.alert('Login failed', 'Invalid username. Please try again.');

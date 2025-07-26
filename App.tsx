@@ -20,7 +20,7 @@ const customFonts = {
 export type RootStackParamList = {
   Splash: undefined;
   Login: undefined;
-  Home: { userId: number };
+  Home: { userId: number; username: string  }; // Added username to Home params
   Topics: undefined;
   Topic: { topicId: number; topicName: string };
   Flashcard: { flashcardId: number; topicId: number; topicName: string };
