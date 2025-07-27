@@ -7,6 +7,9 @@ import api from '../api/axiosInstance';
 import { useMockUser } from '../context/UserContext'; // Import the user context hook
 import styles from '../styles/flashcardStyles';
 
+import { addToWallet as addToWalletApi,
+         updateWalletFlashcardStatus } from '../api/wallet';
+
 type Flashcard = {
   id: number;
   word: string;
@@ -41,7 +44,7 @@ const FlashcardScreen = () => {
   useEffect(() => {
     const fetchFlashcards = async () => {
       try {
-        const response = await api.get(`/topics/${topicId}/flashcards`);
+        const response = await api.get(`api/topics/${topicId}/flashcards`);
         const data = response.data;
         setFlashcards(data);
         if (data.length > 0) {
@@ -88,8 +91,9 @@ const FlashcardScreen = () => {
   };
 
   const updateStatus = async (status: string) => {
+    if (!currentCard) return;
     try {
-      await api.put(`/flashcards/${currentCard?.id}/wallet`, { status });
+      await updateWalletFlashcardStatus(currentCard.id, status);
       Alert.alert('Updated', `Flashcard marked as ${status}.`);
     } catch (error) {
       console.error('Update error:', error);
@@ -97,15 +101,16 @@ const FlashcardScreen = () => {
     }
   };
 
-  const addToWallet = async () => {
-    try {
-      await api.post(`/flashcards/${currentCard?.id}/wallet`);
-      Alert.alert('Added', 'Flashcard added to wallet.');
-    } catch (error) {
-      console.error('Wallet error:', error);
-      Alert.alert('Error', 'Could not add flashcard to wallet.');
-    }
-  };
+const addToWallet = async () => {
+  if (!currentCard) return;
+  try {
+    await addToWalletApi(currentCard.id);
+    Alert.alert('Added', 'Flashcard added to wallet.');
+  } catch (error) {
+    console.error('Wallet error:', error);
+    Alert.alert('Error', 'Could not add flashcard to wallet.');
+  }
+};
 
   if (loading || !currentCard) {
     return <ActivityIndicator style={styles.loader} size="large" />;

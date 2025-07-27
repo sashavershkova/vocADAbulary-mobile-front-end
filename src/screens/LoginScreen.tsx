@@ -35,7 +35,7 @@ const LoginScreen = ({ navigation }: Props) => {
   const handleLogin = async () => {
     try {
       console.log('🔍 API baseURL:', api.defaults.baseURL);
-      const response = await api.post('/users/login', { username });
+      const response = await api.post('/api/users/login', { username });
 
       const { id, role } = response.data;
 
