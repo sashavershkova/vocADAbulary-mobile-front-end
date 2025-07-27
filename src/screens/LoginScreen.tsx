@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Image } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../App';
+import { RootStackParamList } from '../types/navigation';
 import styles from '../styles/loginStyles';
 import api from '../api/axiosInstance';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -61,7 +61,7 @@ const LoginScreen = ({ navigation }: Props) => {
 
   return (
     <LinearGradient
-      colors={['#87ee8764', '#65c165ff']}
+      colors={['#abf5ab64', '#347134bc']}
       style={styles.container}
     >
       <View style={styles.titleRow}>
