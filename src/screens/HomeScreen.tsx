@@ -27,7 +27,10 @@ const HomeScreen = ({ navigation, route }: Props) => {
           <Text>QUIZ</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.sidebarButton}>
+        <TouchableOpacity
+          style={styles.sidebarButton}
+          onPress={() => navigation.navigate('Wallet')}  // <-- navigate to Wallet
+        >
           <Text>WALLET</Text>
         </TouchableOpacity>
       </View>

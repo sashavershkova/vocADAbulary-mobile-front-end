@@ -11,8 +11,13 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { Audio } from "expo-av";
 import { useNavigation } from "@react-navigation/native";
-import { getWalletFlashcards, removeFromWallet, updateWalletStatus } from "../api/wallet";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList } from '../../App';
+import { getWalletFlashcards, removeFromWallet, updateWalletFlashcardStatus } from "../api/wallet";
 import styles from "../styles/walletStyles"; // Import your styles
+
+
+type WalletNavProp = NativeStackNavigationProp<RootStackParamList, "Wallet">;
 
 type WalletFlashcard = {
   id: number;
@@ -24,23 +29,35 @@ type WalletFlashcard = {
 };
 
 const WalletScreen = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<WalletNavProp>();
   const [flashcards, setFlashcards] = useState<WalletFlashcard[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState("");
 
-  const fetchWallet = async () => {
-    try {
-      setLoading(true);
-      const data = await getWalletFlashcards();
-      setFlashcards(data);
-    } catch (error) {
-      console.error("Error fetching wallet:", error);
-      Alert.alert("Error", "Could not load wallet flashcards.");
-    } finally {
-      setLoading(false);
-    }
-  };
+const fetchWallet = async () => {
+  try {
+    setLoading(true);
+    const data = await getWalletFlashcards();
+    console.log("Wallet data:", JSON.stringify(data, null, 2));
+
+    // Map backend data (flashcardId) to the format expected by the frontend
+    const normalized = data.map((item: any) => ({
+      id: item.flashcardId,
+      word: item.word,
+      definition: item.definition,
+      status: item.status,
+      lastReviewed: item.lastReviewed,
+      audioUrl: item.audioUrl,
+    }));
+
+    setFlashcards(normalized);
+  } catch (error) {
+    console.error("Error fetching wallet:", error);
+    Alert.alert("Error", "Could not load wallet flashcards.");
+  } finally {
+    setLoading(false);
+  }
+};
 
   useEffect(() => {
     fetchWallet();
@@ -65,7 +82,7 @@ const WalletScreen = () => {
 
   const markAsLearned = async (id: number) => {
     try {
-      await updateWalletStatus(id, "LEARNED");
+      await updateWalletFlashcardStatus(id, "LEARNED");
       Alert.alert("Updated", "Marked as learned.");
       fetchWallet();
     } catch (error) {

@@ -10,6 +10,7 @@ import TopicScreen from './src/screens/TopicScreen';
 import FlashcardScreen from './src/screens/FlashcardScreen';
 import SplashScreen from './src/screens/SplashScreen';
 import FallbackScreen from './src/screens/FallbackScreen';
+import WalletScreen from './src/screens/WalletScreen';
 import { useFonts } from 'expo-font';
 
 const customFonts = {
@@ -25,6 +26,7 @@ export type RootStackParamList = {
   Topic: { topicId: number; topicName: string };
   Flashcard: { flashcardId: number; topicId: number; topicName: string };
   Fallback: undefined;
+  Wallet: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -54,6 +56,7 @@ export default function App() {
           <Stack.Screen name="Topics" component={TopicsScreen} />
           <Stack.Screen name="Topic" component={TopicScreen} />
           <Stack.Screen name="Flashcard" component={FlashcardScreen} />
+          <Stack.Screen name="Wallet" component={WalletScreen} />
           <Stack.Screen name="Fallback" component={FallbackScreen} />
         </Stack.Navigator>
       </NavigationContainer>
