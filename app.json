@@ -27,7 +27,7 @@
     },
     "plugins": [
       "expo-font",
-      "expo-audio",
+      // "expo-audio",
       "expo-video"
     ]
   }
