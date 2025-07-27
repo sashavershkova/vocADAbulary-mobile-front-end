@@ -7,7 +7,7 @@ import {
   Dimensions,
 } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../App';
+import { RootStackParamList } from '../types/navigation';
 import bgImage from '../assets/images/splash-bg.jpeg';
 import { splashStyles } from '../styles/splashStyles';
 

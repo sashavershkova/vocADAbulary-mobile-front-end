@@ -1,4 +1,3 @@
-// App.tsx
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -12,6 +11,7 @@ import SplashScreen from './src/screens/SplashScreen';
 import FallbackScreen from './src/screens/FallbackScreen';
 import WalletScreen from './src/screens/WalletScreen';
 import { useFonts } from 'expo-font';
+import AppNavigator from './src/navigation/AppNavigator';
 
 const customFonts = {
   'ArchitectsDaughter': require('./src/assets/fonts/ArchitectsDaughter-Regular.ttf'),
@@ -60,6 +60,7 @@ export default function App() {
           <Stack.Screen name="Fallback" component={FallbackScreen} />
         </Stack.Navigator>
       </NavigationContainer>
+      <AppNavigator />
     </UserProvider>
   );
 }
