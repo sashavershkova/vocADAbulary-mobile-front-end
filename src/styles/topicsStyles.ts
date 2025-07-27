@@ -7,7 +7,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     padding: 10,
   },
-  list: {
+  topicList: {
     justifyContent: 'space-between',
   },
   topicBox: {

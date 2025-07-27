@@ -5,7 +5,6 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigation';
 import { getAllTopics } from '../api/topics'; // ✅ Axios call
 import { getFlashcardsByTopic } from '../api/flashcards';
-import { useNavigationState } from '@react-navigation/native';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Topics'>;
 
