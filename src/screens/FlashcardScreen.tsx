@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
-import { useNavigation, useRoute } from '@react-navigation/native';
 import { Audio } from 'expo-av';
 import { Ionicons } from '@expo/vector-icons';
 import api from '../api/axiosInstance';
-import { useMockUser } from '../context/UserContext'; // Import the user context hook
+import { useMockUser } from '../context/UserContext';
 import styles from '../styles/flashcardStyles';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../types/navigation';
+
+type Props = NativeStackScreenProps<RootStackParamList, 'Flashcard'>;
 
 import { addToWallet as addToWalletApi,
          updateWalletFlashcardStatus } from '../api/wallet';
@@ -21,25 +24,14 @@ type Flashcard = {
   createdBy: number;
 };
 
-type RouteParams = {
-  topicId: number;
-  topicName: string;
-};
-
-const FlashcardScreen = () => {
-  const navigation = useNavigation();
-  const route = useRoute();
+const FlashcardScreen = ({ route, navigation }: Props) => {
+  const { topicId, topicName, flashcardId } = route.params;
   const { id: mockUserId } = useMockUser();
-  const { topicId, topicName } = route.params as RouteParams;
 
   const [flashcards, setFlashcards] = useState<Flashcard[]>([]);
   const [currentCard, setCurrentCard] = useState<Flashcard | null>(null);
   const [loading, setLoading] = useState(true);
   const [showPhonetic, setShowPhonetic] = useState(false);
-
-  useEffect(() => {
-  console.log('📘 FlashcardScreen loaded');
-}, []);
 
   useEffect(() => {
     const fetchFlashcards = async () => {
