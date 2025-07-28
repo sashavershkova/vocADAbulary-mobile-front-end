@@ -23,7 +23,10 @@ const HomeScreen = ({ navigation, route }: Props) => {
           <Text>PROGRESS</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.sidebarButton}>
+        <TouchableOpacity
+          style={styles.sidebarButton}
+          onPress={() => navigation.navigate('Quiz')}
+        >
           <Text>QUIZ</Text>
         </TouchableOpacity>
 
