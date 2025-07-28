@@ -7,18 +7,31 @@ import { RootStackParamList } from '../types/navigation';
 type Props = NativeStackScreenProps<RootStackParamList, 'Quiz'>;
 
 const QuizScreen = ({ navigation }: Props) => {
-  const question = {
-    term: "BOOLEAN",
-    answers: [
-      { id: 1, text: "A data type with only two possible values", correct: true },
-      { id: 2, text: "A loop that never ends", correct: false },
-      { id: 3, text: "A function that returns a number", correct: false },
-      { id: 4, text: "A type of API call", correct: false },
-    ],
-  };
+	const questions = [
+		{
+			term: "BOOLEAN",
+			answers: [
+				{ id: 1, text: "A data type with only two possible values", correct: true },
+				{ id: 2, text: "A loop that never ends", correct: false },
+				{ id: 3, text: "A function that returns a number", correct: false },
+				{ id: 4, text: "A type of API call", correct: false },
+			],
+		},
+		{
+			term: "ARRAY",
+			answers: [
+				{ id: 1, text: "A collection of values stored in a single variable", correct: true },
+				{ id: 2, text: "A CSS property", correct: false },
+				{ id: 3, text: "A type of API response", correct: false },
+				{ id: 4, text: "A React hook", correct: false },
+			],
+		},
+	];
 
   const [selectedAnswerId, setSelectedAnswerId] = useState<number | null>(null);
   const [isAnswered, setIsAnswered] = useState(false);
+	const [currentIndex, setCurrentIndex] = useState(0);
+	const question = questions[currentIndex];
 
   const handleSelect = (answerId: number) => {
     if (!isAnswered) {
@@ -63,9 +76,17 @@ const QuizScreen = ({ navigation }: Props) => {
         <TouchableOpacity style={styles.navButton}>
           <Text style={styles.buttonText}>✅</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.navButton}>
-          <Text style={styles.buttonText}>➡️</Text>
-        </TouchableOpacity>
+				<TouchableOpacity
+					style={styles.navButton}
+					onPress={() => {
+						const nextIndex = (currentIndex + 1) % questions.length;
+						setCurrentIndex(nextIndex);
+						setSelectedAnswerId(null);
+						setIsAnswered(false);
+					}}
+				>
+					<Text style={styles.buttonText}>➡️</Text>
+				</TouchableOpacity>
       </View>
     </SafeAreaView>
   );
