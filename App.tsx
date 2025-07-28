@@ -10,6 +10,7 @@ import FlashcardScreen from './src/screens/FlashcardScreen';
 import SplashScreen from './src/screens/SplashScreen';
 import FallbackScreen from './src/screens/FallbackScreen';
 import WalletScreen from './src/screens/WalletScreen';
+import QuizScreen from './src/screens/QuizScreen';
 import LearnedFlashcardsScreen from './src/screens/LearnedFlashcardScreen';
 import { useFonts } from 'expo-font';
 
@@ -60,6 +61,7 @@ export default function App() {
           <Stack.Screen name="Wallet" component={WalletScreen} />
           <Stack.Screen name="LearnedCards" component={LearnedFlashcardsScreen} />
           <Stack.Screen name="Fallback" component={FallbackScreen} />
+          <Stack.Screen name="Quiz" component={QuizScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </UserProvider>
