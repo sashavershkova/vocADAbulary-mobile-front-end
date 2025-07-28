@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 import { View, Text, SafeAreaView, TouchableOpacity } from 'react-native';
 import styles from '../styles/quizStyles';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../types/navigation';
 
-const QuizScreen = () => {
+type Props = NativeStackScreenProps<RootStackParamList, 'Quiz'>;
+
+const QuizScreen = ({ navigation }: Props) => {
   const question = {
     term: "BOOLEAN",
     answers: [
@@ -14,6 +18,14 @@ const QuizScreen = () => {
   };
 
   const [selectedAnswerId, setSelectedAnswerId] = useState<number | null>(null);
+  const [isAnswered, setIsAnswered] = useState(false);
+
+  const handleSelect = (answerId: number) => {
+    if (!isAnswered) {
+      setSelectedAnswerId(answerId);
+      setIsAnswered(true);
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -24,15 +36,37 @@ const QuizScreen = () => {
       {question.answers.map((answer) => (
         <TouchableOpacity
           key={answer.id}
-          onPress={() => setSelectedAnswerId(answer.id)}
+          onPress={() => handleSelect(answer.id)}
           style={[
             styles.answerBox,
-            selectedAnswerId === answer.id && styles.selectedAnswerBox,
+            isAnswered && answer.correct && styles.correctAnswerBox,
+            isAnswered &&
+              selectedAnswerId === answer.id &&
+              !answer.correct &&
+              styles.wrongAnswerBox,
           ]}
         >
           <Text style={styles.answerText}>{answer.text}</Text>
         </TouchableOpacity>
       ))}
+
+      <View style={styles.buttonRow}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.navButton}>
+          <Text style={styles.buttonText}>⬅️</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => {
+          setSelectedAnswerId(null);
+          setIsAnswered(false);
+        }} style={styles.navButton}>
+          <Text style={styles.buttonText}>🔁</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.navButton}>
+          <Text style={styles.buttonText}>✅</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.navButton}>
+          <Text style={styles.buttonText}>➡️</Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 };
