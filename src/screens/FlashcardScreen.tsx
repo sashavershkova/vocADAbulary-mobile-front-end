@@ -27,6 +27,8 @@ type Flashcard = {
 const FlashcardScreen = ({ route, navigation }: Props) => {
   const { topicId, topicName, flashcardId } = route.params;
   const { id: mockUserId } = useMockUser();
+  const mockUser = useMockUser();
+  const userId = mockUser.id; 
 
   const [flashcards, setFlashcards] = useState<Flashcard[]>([]);
   const [currentCard, setCurrentCard] = useState<Flashcard | null>(null);
@@ -85,7 +87,7 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
   const updateStatus = async (status: string) => {
     if (!currentCard) return;
     try {
-      await updateWalletFlashcardStatus(currentCard.id, status);
+      await updateWalletFlashcardStatus(mockUserId, currentCard.id, status);
       Alert.alert('Updated', `Flashcard marked as ${status}.`);
     } catch (error) {
       console.error('Update error:', error);

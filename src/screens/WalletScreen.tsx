@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useMockUser } from "../context/UserContext";
 import {
   View,
   Text,
@@ -30,6 +31,8 @@ type WalletFlashcard = {
 
 const WalletScreen = () => {
   const navigation = useNavigation<WalletNavProp>();
+  const mockUser = useMockUser();
+  const userId = mockUser.id; 
   const [flashcards, setFlashcards] = useState<WalletFlashcard[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState("");
@@ -37,7 +40,7 @@ const WalletScreen = () => {
 const fetchWallet = async () => {
   try {
     setLoading(true);
-    const data = await getWalletFlashcards();
+    const data = await getWalletFlashcards(userId);
     console.log("Wallet data:", JSON.stringify(data, null, 2));
 
     // Map backend data (flashcardId) to the format expected by the frontend
@@ -71,7 +74,7 @@ const fetchWallet = async () => {
 
   const handleDelete = async (id: number) => {
     try {
-      await removeFromWallet(id);
+      await removeFromWallet(userId, id);
       Alert.alert("Removed", "Flashcard removed from wallet.");
       fetchWallet();
     } catch (error) {
@@ -82,7 +85,7 @@ const fetchWallet = async () => {
 
   const markAsLearned = async (id: number) => {
     try {
-      await updateWalletFlashcardStatus(id, "LEARNED");
+      await updateWalletFlashcardStatus(userId, id, "LEARNED");
       Alert.alert("Updated", "Marked as learned.");
       fetchWallet();
     } catch (error) {
