@@ -40,4 +40,16 @@ export const getWalletFlashcards = async (userId: number, status?: string) => {
 export const getLearnedFlashcards = async (userId: number) => {
   const response = await api.get(`/api/users/${userId}/flashcards/learned`);
   return response.data;
-}
+};
+
+//  6. Hide flashcard completely
+export const hideFlashcardCompletely = async (
+  userId: number,
+  flashcardId: number
+) => {
+  const response = await api.put(
+    `/api/users/${userId}/flashcards/${flashcardId}/hide`,
+    { status: "HIDDEN" }
+  );
+  return response.data;
+};

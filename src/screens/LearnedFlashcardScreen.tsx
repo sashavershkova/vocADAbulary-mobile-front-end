@@ -6,7 +6,7 @@ import { Audio } from "expo-av";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../App";
-import { getWalletFlashcards, removeFromWallet, updateWalletFlashcardStatus, getLearnedFlashcards } from "../api/wallet";
+import { getWalletFlashcards, removeFromWallet, updateWalletFlashcardStatus, getLearnedFlashcards, hideFlashcardCompletely } from "../api/wallet";
 import styles from "../styles/walletStyles";
 
 type LearnedNavProp = NativeStackNavigationProp<RootStackParamList, "LearnedCards">;
@@ -68,7 +68,7 @@ const handleDelete = (id: number) => {
     "What would you like to do with this flashcard?",
     [
       {
-        text: "Mark Unlearned, keep in Deck",
+        text: "Mark Unlearned",
         onPress: async () => {
           try {
             await updateWalletFlashcardStatus(userId, id, "IN_PROGRESS");
@@ -81,11 +81,11 @@ const handleDelete = (id: number) => {
         },
       },
       {
-        text: "Remove Completely",
+        text: "Hide Completely",
         style: "destructive",
         onPress: async () => {
           try {
-            await removeFromWallet(userId, id);
+            await hideFlashcardCompletely(userId, id);
             Alert.alert("Removed", "Flashcard removed completely.");
             fetchLearned();
           } catch (error) {
