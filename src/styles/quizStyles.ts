@@ -1,56 +1,58 @@
 import { StyleSheet } from 'react-native';
 
-const quizStyles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#d5e9f5',
+    backgroundColor: '#fff',
     padding: 16,
-    justifyContent: 'flex-start',
+    justifyContent: 'center',
   },
   termBox: {
-    backgroundColor: '#fff57e',
-    padding: 24,
-    borderRadius: 12,
-    alignItems: 'center',
+    backgroundColor: '#f1f1f1',
+    padding: 16,
     marginBottom: 16,
+    borderRadius: 10,
+    alignItems: 'center',
   },
   termText: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#000',
+    fontSize: 20,
+    fontWeight: '600',
     textAlign: 'center',
   },
   answerBox: {
-    backgroundColor: '#ae81f8',
-    padding: 16,
-    borderRadius: 10,
+    backgroundColor: '#e0e0e0',
+    padding: 12,
     marginBottom: 12,
-  },
-  correctAnswerBox: {
-    backgroundColor: '#6df06d',
-  },
-  wrongAnswerBox: {
-    backgroundColor: '#f06d6d',
+    borderRadius: 8,
   },
   answerText: {
-    fontSize: 16,
-    color: 'white',
+    fontSize: 18,
+    textAlign: 'center',
+  },
+  correctAnswerBox: {
+    backgroundColor: '#b2f2bb', // Light green
+  },
+  wrongAnswerBox: {
+    backgroundColor: '#ffb3b3', // Light red
   },
   buttonRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 32,
+    justifyContent: 'space-around',
+    marginTop: 24,
   },
   navButton: {
-    backgroundColor: '#3d3d3d',
-    paddingVertical: 12,
-    paddingHorizontal: 16,
+    padding: 10,
     borderRadius: 8,
+    backgroundColor: '#d1c4e9',
   },
   buttonText: {
-    color: 'white',
-    fontSize: 18,
+    fontSize: 20,
+  },
+    selectedAnswerBox: {
+    borderWidth: 2,
+    borderColor: '#7e57c2',
+    backgroundColor: '#ede7f6',
   },
 });
 
-export default quizStyles;
+export default styles;

@@ -9,7 +9,7 @@ type Props = NativeStackScreenProps<RootStackParamList, 'Quiz'>;
 
 type Quiz = {
   id: number;
-  topicId: number | null;
+  topicId: number;
   topicName: string;
   questions: {
     id: number;
@@ -26,39 +26,42 @@ const QuizScreen = ({ navigation }: Props) => {
   const [currentQuizIndex, setCurrentQuizIndex] = useState(0);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswerId, setSelectedAnswerId] = useState<number | null>(null);
-  const [isAnswered, setIsAnswered] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   useEffect(() => {
-    const fetchQuizzes = async () => {
+    const fetchAllQuizzes = async () => {
       try {
         const response = await api.get('/api/quizzes');
-        const shuffled = response.data.sort(() => Math.random() - 0.5);
-
-        if (shuffled.length === 0) {
+        if (!response.data || response.data.length === 0) {
           Alert.alert('No Quizzes', 'There are no quizzes available.');
           navigation.goBack();
-          return;
+        } else {
+          setQuizzes(shuffleArray(response.data));
         }
-
-        setQuizzes(shuffled);
-        setCurrentQuizIndex(0);
-        setCurrentQuestionIndex(0);
       } catch (err) {
-        console.error('❌ Failed to load quizzes:', err);
+        console.error('Failed to load quizzes:', err);
       }
     };
 
-    fetchQuizzes();
+    fetchAllQuizzes();
   }, []);
+
+  const shuffleArray = <T,>(array: T[]): T[] => {
+    return [...array].sort(() => Math.random() - 0.5);
+  };
 
   const currentQuiz = quizzes[currentQuizIndex];
   const currentQuestion = currentQuiz?.questions[currentQuestionIndex];
 
   const handleSelect = (answerIndex: number) => {
-    if (!isAnswered) {
+    if (!isSubmitted) {
       setSelectedAnswerId(answerIndex);
-      setIsAnswered(true);
     }
+  };
+
+  const handleSubmit = () => {
+    if (selectedAnswerId === null) return;
+    setIsSubmitted(true);
   };
 
   const handleNext = () => {
@@ -73,19 +76,19 @@ const QuizScreen = ({ navigation }: Props) => {
         setCurrentQuizIndex(nextQuizIndex);
         setCurrentQuestionIndex(0);
       } else {
-        // All quizzes done — loop from beginning
+        Alert.alert('🎉 Done!', 'You completed all quizzes. Restarting...');
         setCurrentQuizIndex(0);
         setCurrentQuestionIndex(0);
       }
     }
 
     setSelectedAnswerId(null);
-    setIsAnswered(false);
+    setIsSubmitted(false);
   };
 
   const handleReset = () => {
     setSelectedAnswerId(null);
-    setIsAnswered(false);
+    setIsSubmitted(false);
   };
 
   if (!currentQuestion) {
@@ -102,19 +105,24 @@ const QuizScreen = ({ navigation }: Props) => {
         <Text style={styles.termText}>{currentQuestion.questionText}</Text>
       </View>
 
-      {currentQuestion.answers.map((answer, index) => (
-        <TouchableOpacity
-          key={index}
-          onPress={() => handleSelect(index)}
-          style={[
-            styles.answerBox,
-            isAnswered && answer.correct && styles.correctAnswerBox,
-            isAnswered && selectedAnswerId === index && !answer.correct && styles.wrongAnswerBox,
-          ]}
-        >
-          <Text style={styles.answerText}>{answer.text}</Text>
-        </TouchableOpacity>
-      ))}
+      {currentQuestion.answers.map((answer, index) => {
+        const isSelected = selectedAnswerId === index;
+
+        return (
+          <TouchableOpacity
+            key={index}
+            onPress={() => handleSelect(index)}
+            style={[
+              styles.answerBox,
+              !isSubmitted && isSelected && styles.selectedAnswerBox,
+              isSubmitted && answer.correct && styles.correctAnswerBox,
+              isSubmitted && isSelected && !answer.correct && styles.wrongAnswerBox,
+            ]}
+          >
+            <Text style={styles.answerText}>{answer.text}</Text>
+          </TouchableOpacity>
+        );
+      })}
 
       <View style={styles.buttonRow}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.navButton}>
@@ -123,7 +131,7 @@ const QuizScreen = ({ navigation }: Props) => {
         <TouchableOpacity onPress={handleReset} style={styles.navButton}>
           <Text style={styles.buttonText}>🔁</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.navButton}>
+        <TouchableOpacity onPress={handleSubmit} style={styles.navButton}>
           <Text style={styles.buttonText}>✅</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={handleNext} style={styles.navButton}>
