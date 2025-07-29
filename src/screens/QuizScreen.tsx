@@ -1,62 +1,115 @@
-import React, { useState } from 'react';
-import { View, Text, SafeAreaView, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, SafeAreaView, TouchableOpacity, Alert } from 'react-native';
 import styles from '../styles/quizStyles';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigation';
+import api from '../api/axiosInstance';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Quiz'>;
 
-const QuizScreen = ({ navigation }: Props) => {
-	const questions = [
-		{
-			term: "BOOLEAN",
-			answers: [
-				{ id: 1, text: "A data type with only two possible values", correct: true },
-				{ id: 2, text: "A loop that never ends", correct: false },
-				{ id: 3, text: "A function that returns a number", correct: false },
-				{ id: 4, text: "A type of API call", correct: false },
-			],
-		},
-		{
-			term: "ARRAY",
-			answers: [
-				{ id: 1, text: "A collection of values stored in a single variable", correct: true },
-				{ id: 2, text: "A CSS property", correct: false },
-				{ id: 3, text: "A type of API response", correct: false },
-				{ id: 4, text: "A React hook", correct: false },
-			],
-		},
-	];
+type Quiz = {
+  id: number;
+  topicId: number | null;
+  topicName: string;
+  questions: {
+    id: number;
+    questionText: string;
+    answers: {
+      text: string;
+      correct: boolean;
+    }[];
+  }[];
+};
 
+const QuizScreen = ({ navigation }: Props) => {
+  const [quizzes, setQuizzes] = useState<Quiz[]>([]);
+  const [currentQuizIndex, setCurrentQuizIndex] = useState(0);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswerId, setSelectedAnswerId] = useState<number | null>(null);
   const [isAnswered, setIsAnswered] = useState(false);
-	const [currentIndex, setCurrentIndex] = useState(0);
-	const question = questions[currentIndex];
 
-  const handleSelect = (answerId: number) => {
+  useEffect(() => {
+    const fetchQuizzes = async () => {
+      try {
+        const response = await api.get('/api/quizzes');
+        const shuffled = response.data.sort(() => Math.random() - 0.5);
+
+        if (shuffled.length === 0) {
+          Alert.alert('No Quizzes', 'There are no quizzes available.');
+          navigation.goBack();
+          return;
+        }
+
+        setQuizzes(shuffled);
+        setCurrentQuizIndex(0);
+        setCurrentQuestionIndex(0);
+      } catch (err) {
+        console.error('❌ Failed to load quizzes:', err);
+      }
+    };
+
+    fetchQuizzes();
+  }, []);
+
+  const currentQuiz = quizzes[currentQuizIndex];
+  const currentQuestion = currentQuiz?.questions[currentQuestionIndex];
+
+  const handleSelect = (answerIndex: number) => {
     if (!isAnswered) {
-      setSelectedAnswerId(answerId);
+      setSelectedAnswerId(answerIndex);
       setIsAnswered(true);
     }
   };
 
+  const handleNext = () => {
+    if (!currentQuiz) return;
+
+    const nextQuestionIndex = currentQuestionIndex + 1;
+    if (nextQuestionIndex < currentQuiz.questions.length) {
+      setCurrentQuestionIndex(nextQuestionIndex);
+    } else {
+      const nextQuizIndex = currentQuizIndex + 1;
+      if (nextQuizIndex < quizzes.length) {
+        setCurrentQuizIndex(nextQuizIndex);
+        setCurrentQuestionIndex(0);
+      } else {
+        // All quizzes done — loop from beginning
+        setCurrentQuizIndex(0);
+        setCurrentQuestionIndex(0);
+      }
+    }
+
+    setSelectedAnswerId(null);
+    setIsAnswered(false);
+  };
+
+  const handleReset = () => {
+    setSelectedAnswerId(null);
+    setIsAnswered(false);
+  };
+
+  if (!currentQuestion) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <Text style={styles.termText}>Loading...</Text>
+      </SafeAreaView>
+    );
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.termBox}>
-        <Text style={styles.termText}>{question.term}</Text>
+        <Text style={styles.termText}>{currentQuestion.questionText}</Text>
       </View>
 
-      {question.answers.map((answer) => (
+      {currentQuestion.answers.map((answer, index) => (
         <TouchableOpacity
-          key={answer.id}
-          onPress={() => handleSelect(answer.id)}
+          key={index}
+          onPress={() => handleSelect(index)}
           style={[
             styles.answerBox,
             isAnswered && answer.correct && styles.correctAnswerBox,
-            isAnswered &&
-              selectedAnswerId === answer.id &&
-              !answer.correct &&
-              styles.wrongAnswerBox,
+            isAnswered && selectedAnswerId === index && !answer.correct && styles.wrongAnswerBox,
           ]}
         >
           <Text style={styles.answerText}>{answer.text}</Text>
@@ -67,26 +120,15 @@ const QuizScreen = ({ navigation }: Props) => {
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.navButton}>
           <Text style={styles.buttonText}>⬅️</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => {
-          setSelectedAnswerId(null);
-          setIsAnswered(false);
-        }} style={styles.navButton}>
+        <TouchableOpacity onPress={handleReset} style={styles.navButton}>
           <Text style={styles.buttonText}>🔁</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.navButton}>
           <Text style={styles.buttonText}>✅</Text>
         </TouchableOpacity>
-				<TouchableOpacity
-					style={styles.navButton}
-					onPress={() => {
-						const nextIndex = (currentIndex + 1) % questions.length;
-						setCurrentIndex(nextIndex);
-						setSelectedAnswerId(null);
-						setIsAnswered(false);
-					}}
-				>
-					<Text style={styles.buttonText}>➡️</Text>
-				</TouchableOpacity>
+        <TouchableOpacity onPress={handleNext} style={styles.navButton}>
+          <Text style={styles.buttonText}>➡️</Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );

@@ -15,9 +15,10 @@ const quizStyles = StyleSheet.create({
     marginBottom: 16,
   },
   termText: {
-    fontSize: 28,
+    fontSize: 24,
     fontWeight: 'bold',
     color: '#000',
+    textAlign: 'center',
   },
   answerBox: {
     backgroundColor: '#ae81f8',
@@ -36,9 +37,9 @@ const quizStyles = StyleSheet.create({
     color: 'white',
   },
   buttonRow: {
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  marginTop: 32,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 32,
   },
   navButton: {
     backgroundColor: '#3d3d3d',
