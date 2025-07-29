@@ -36,7 +36,14 @@ const QuizScreen = ({ navigation }: Props) => {
           Alert.alert('No Quizzes', 'There are no quizzes available.');
           navigation.goBack();
         } else {
-          setQuizzes(shuffleArray(response.data));
+          const shuffledQuizzes = shuffleArray(response.data).map(quiz => ({
+            ...quiz,
+            questions: quiz.questions.map(question => ({
+              ...question,
+              answers: shuffleArray(question.answers), // shuffle answers per question
+            })),
+          }));
+          setQuizzes(shuffledQuizzes);
         }
       } catch (err) {
         console.error('Failed to load quizzes:', err);
