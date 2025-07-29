@@ -131,9 +131,9 @@ const addToWallet = async () => {
           <TouchableOpacity onPress={addToWallet}>
             <Text style={styles.actionText}>Add to Wallet</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => updateStatus('in_progress')}>
+          {/* <TouchableOpacity onPress={() => updateStatus('in_progress')}> FC are "in_progress" by default
             <Text style={styles.actionText}>In Progress</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <TouchableOpacity onPress={() => updateStatus('learned')}>
             <Text style={styles.actionText}>Learned</Text>
           </TouchableOpacity>
