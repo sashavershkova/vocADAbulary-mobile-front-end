@@ -1,14 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, FlatList, Alert, ActivityIndicator } from "react-native";
+import { useMockUser } from "../context/UserContext";
 import { Ionicons } from "@expo/vector-icons";
 import { Audio } from "expo-av";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../App";
-import { getWalletFlashcards, removeFromWallet, updateWalletFlashcardStatus } from "../api/wallet";
+import { getWalletFlashcards, removeFromWallet, updateWalletFlashcardStatus, getLearnedFlashcards } from "../api/wallet";
 import styles from "../styles/walletStyles";
 
-type LearnedNavProp = NativeStackNavigationProp<RootStackParamList, "Wallet">;
+type LearnedNavProp = NativeStackNavigationProp<RootStackParamList, "LearnedCards">;
 
 type WalletFlashcard = {
   id: number;
@@ -21,6 +22,9 @@ type WalletFlashcard = {
 
 const LearnedFlashcardsScreen = () => {
   const navigation = useNavigation<LearnedNavProp>();
+  const mockUser = useMockUser();
+  const userId = mockUser.id;  
+
   const [flashcards, setFlashcards] = useState<WalletFlashcard[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState("");
@@ -28,17 +32,16 @@ const LearnedFlashcardsScreen = () => {
   const fetchLearned = async () => {
     try {
       setLoading(true);
-      const data = await getWalletFlashcards(); // same endpoint
-      const learned = data
-        .filter((item: any) => item.status.toLowerCase() === "learned")
-        .map((item: any) => ({
-          id: item.flashcardId,
-          word: item.word,
-          definition: item.definition,
-          status: item.status,
-          lastReviewed: item.lastReviewed,
-          audioUrl: item.audioUrl,
-        }));
+      const data = await getLearnedFlashcards(userId); // same endpoint
+
+      const learned = data.map((item: any) => ({
+        id: item.flashcardId,
+        word: item.word,
+        definition: item.definition,
+        status: item.status,
+        lastReviewed: item.lastReviewed,
+        audioUrl: item.audioUrl,
+    }));
 
       setFlashcards(learned);
     } catch (error) {
@@ -65,10 +68,10 @@ const handleDelete = (id: number) => {
     "What would you like to do with this flashcard?",
     [
       {
-        text: "Keep in Deck",
+        text: "Mark Unlearned, keep in Deck",
         onPress: async () => {
           try {
-            await updateWalletFlashcardStatus(id, "IN_PROGRESS");
+            await updateWalletFlashcardStatus(userId, id, "IN_PROGRESS");
             Alert.alert("Updated", "Flashcard moved back to the main deck.");
             fetchLearned();
           } catch (error) {
@@ -82,7 +85,7 @@ const handleDelete = (id: number) => {
         style: "destructive",
         onPress: async () => {
           try {
-            await removeFromWallet(id);
+            await removeFromWallet(userId, id);
             Alert.alert("Removed", "Flashcard removed completely.");
             fetchLearned();
           } catch (error) {
@@ -98,7 +101,7 @@ const handleDelete = (id: number) => {
 
   const moveBackToMainDeck = async (id: number) => {
     try {
-      await updateWalletFlashcardStatus(id, "in_progress");
+      await updateWalletFlashcardStatus(userId,id, "IN_PROGRESS");
       Alert.alert("Updated", "Moved back to main deck.");
       fetchLearned();
     } catch (error) {
@@ -108,7 +111,7 @@ const handleDelete = (id: number) => {
   };
 
   const filteredFlashcards = flashcards.filter((fc) =>
-    fc.word.toLowerCase().includes(searchText.toLowerCase())
+    fc.word.toUpperCase().includes(searchText.toUpperCase())
   );
 
   if (loading) {

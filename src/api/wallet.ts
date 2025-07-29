@@ -35,3 +35,9 @@ export const getWalletFlashcards = async (userId: number, status?: string) => {
   const response = await api.get(url);
   return response.data;
 };
+
+// 5. Get learned flashcards
+export const getLearnedFlashcards = async (userId: number) => {
+  const response = await api.get(`/api/users/${userId}/flashcards/learned`);
+  return response.data;
+}
