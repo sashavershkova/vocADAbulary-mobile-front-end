@@ -1,4 +1,6 @@
 // src/navigation/AppNavigator.tsx
+// src/navigation/AppNavigator.tsx
+
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -19,17 +21,71 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const AppNavigator = () => (
   <NavigationContainer>
-    <Stack.Navigator initialRouteName="Splash">
-      <Stack.Screen name="Splash" component={SplashScreen} options={{ headerShown: false }} />
-      <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
-      <Stack.Screen name="Home" component={HomeScreen} />
-      <Stack.Screen name="Topics" component={TopicsScreen} />
-      <Stack.Screen name="Topic" component={TopicScreen} />
-      <Stack.Screen name="Flashcard" component={FlashcardScreen} />
-      <Stack.Screen name="Progress" component={ProgressScreen} />
-      <Stack.Screen name="Settings" component={SettingsScreen} />
-      <Stack.Screen name="Wallet" component={WalletScreen} />
-      <Stack.Screen name="Fallback" component={FallbackScreen} />
+    <Stack.Navigator
+      initialRouteName="Splash"
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: '#E6E6FA', // 💜 Лавандовый цвет хедера
+        },
+        headerTitleStyle: {
+          fontFamily: 'ArchitectsDaughter', // шрифт заголовка
+          fontSize: 28,
+          color: '#006400', // зелёный цвет заголовка
+        },
+        headerTitleAlign: 'center', // выравнивание по центру
+        headerBackVisible: false, // скрыть кнопку "назад"
+      }}
+    >
+      <Stack.Screen
+        name="Splash"
+        component={SplashScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Login"
+        component={LoginScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{ title: 'HOME' }}
+      />
+      <Stack.Screen
+        name="Topics"
+        component={TopicsScreen}
+        options={{ title: 'TOPICS' }}
+      />
+      <Stack.Screen
+        name="Topic"
+        component={TopicScreen}
+        options={{ title: 'TOPIC' }}
+      />
+      <Stack.Screen
+        name="Flashcard"
+        component={FlashcardScreen}
+        options={{ title: 'FLASHCARD' }}
+      />
+      <Stack.Screen
+        name="Progress"
+        component={ProgressScreen}
+        options={{ title: 'PROGRESS' }}
+      />
+      <Stack.Screen
+        name="Settings"
+        component={SettingsScreen}
+        options={{ title: 'SETTINGS' }}
+      />
+      <Stack.Screen
+        name="Wallet"
+        component={WalletScreen}
+        options={{ title: 'WALLET' }}
+      />
+      <Stack.Screen
+        name="Fallback"
+        component={FallbackScreen}
+        options={{ title: 'ERROR' }}
+      />
     </Stack.Navigator>
   </NavigationContainer>
 );

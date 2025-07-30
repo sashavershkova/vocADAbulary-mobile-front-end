@@ -1,67 +1,68 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
-import styles from '../styles/homeStyles';
+import { View, TouchableOpacity, Text } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigation';
+import { LinearGradient } from 'expo-linear-gradient';
+import styles from '../styles/homeStyles';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
-const HomeScreen = ({ navigation, route }: Props) => {
-  const { userId, username } = route.params;
+const HomeScreen = ({ navigation }: Props) => {
   React.useLayoutEffect(() => {
-  navigation.setOptions({
-    headerBackVisible: false, // removes back arrow
-    title: username, // shows username in the header
-  });
-}, [navigation, username]);
+    navigation.setOptions({
+      headerBackVisible: false,
+      title: '', // ← или можешь вообще не писать title
+    });
+  }, [navigation]);
 
   return (
-    <View style={styles.container}>
-      {/* Left Sidebar */}
-      <View style={styles.sidebar}>
-        <TouchableOpacity style={styles.sidebarButton}>
-          <Text>PROGRESS</Text>
-        </TouchableOpacity>
+    <LinearGradient colors={['#f9f9b4a5', '#6cdc6cff']} style={styles.container}>
+      {/* Progress — верхний левый */}
+      <TouchableOpacity style={styles.progressButton}>
+        <Text style={styles.smallButtonText}>PROGRESS</Text>
+      </TouchableOpacity>
 
-        <TouchableOpacity style={styles.sidebarButton}>
-          <Text>QUIZ</Text>
-        </TouchableOpacity>
+      {/* Settings — чуть ниже справа */}
+      <TouchableOpacity style={styles.settingsButton}>
+        <Text style={styles.smallButtonText}>SETTINGS</Text>
+      </TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.sidebarButton}
-          onPress={() => navigation.navigate('Wallet')}  // <-- navigate to Wallet
-        >
-          <Text>WALLET</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Main Content */}
-      <View style={styles.main}>
-        <TouchableOpacity onPress={() => navigation.navigate('Topics')}>
-          <Text style={styles.learnText}>LEARN</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Bottom Section */}
-      <View style={styles.bottomRow}>
-        <TouchableOpacity style={styles.bottomButton}>
-          <Text>CONSTRUCTOR</Text>
-        </TouchableOpacity>
-        <View style={styles.sideButtons}>
-          <TouchableOpacity style={styles.smallButton}>
-            <Text>SETTINGS</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.smallButton}
-          onPress={() => navigation.reset({
+      {/* Exit — нижний правый */}
+      <TouchableOpacity
+        style={styles.exitButton}
+        onPress={() =>
+          navigation.reset({
             index: 0,
             routes: [{ name: 'Login' }],
-          })}>
-            <Text>EXIT</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </View>
+          })
+        }
+      >
+        <Text style={styles.buttonText}>EXIT</Text>
+      </TouchableOpacity>
+
+      {/* LEARN — большая зелёная кнопка с правильным соотношением */}
+      <TouchableOpacity
+        style={styles.learnButton}
+        onPress={() => navigation.navigate('Topics')}
+      >
+        <Text style={styles.learnText}>LEARN</Text>
+      </TouchableOpacity>
+      {/* Constructor — внизу по центру */}
+      <TouchableOpacity style={styles.constructorButton}>
+        <Text style={styles.buttonText}>CONSTRUCTOR</Text>
+      </TouchableOpacity>
+      {/* WALLET — левый нижний угол */}
+      <TouchableOpacity style={styles.walletButton}>
+        <Text style={styles.buttonText}>WALLET</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.quizButton}>
+        <Text style={styles.buttonText}>QUIZ</Text>
+      </TouchableOpacity>
+    </LinearGradient>
   );
 };
 
 export default HomeScreen;
+
+
+

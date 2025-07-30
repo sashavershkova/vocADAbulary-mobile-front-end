@@ -1,13 +1,19 @@
-import React, { useState } from 'react';
-import { useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Image } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Alert,
+  Image,
+  Animated,
+} from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigation';
 import styles from '../styles/loginStyles';
 import api from '../api/axiosInstance';
 import { MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useFonts } from 'expo-font';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
@@ -17,19 +23,43 @@ const LoginScreen = ({ navigation }: Props) => {
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
 
+  const title = 'TECH VOICE';
+  const animatedValues = useRef(title.split('').map(() => new Animated.Value(1))).current;
+
   useEffect(() => {
-  const loadSavedUsername = async () => {
-    try {
-      const savedUsername = await AsyncStorage.getItem('savedUsername');
-      if (savedUsername) {
-        setUsername(savedUsername);
-        setRememberMe(true);
+    const animate = (index: number) => {
+      Animated.sequence([
+        Animated.timing(animatedValues[index], {
+          toValue: 1.5,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+        Animated.timing(animatedValues[index], {
+          toValue: 1,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+      ]).start(() => {
+        const nextIndex = (index + 1) % animatedValues.length;
+        animate(nextIndex);
+      });
+    };
+    animate(0);
+  }, []);
+
+  useEffect(() => {
+    const loadSavedUsername = async () => {
+      try {
+        const savedUsername = await AsyncStorage.getItem('savedUsername');
+        if (savedUsername) {
+          setUsername(savedUsername);
+          setRememberMe(true);
+        }
+      } catch (err) {
+        console.log('Error loading saved username:', err);
       }
-    } catch (err) {
-      console.log('Error loading saved username:', err);
-    }
-  };
-  loadSavedUsername();
+    };
+    loadSavedUsername();
   }, []);
 
   const handleLogin = async () => {
@@ -52,7 +82,7 @@ const LoginScreen = ({ navigation }: Props) => {
       } else {
         await AsyncStorage.removeItem('savedUsername');
       }
-      
+
     } catch (error) {
       console.error('❌ Login failed:', error);
       Alert.alert('Login failed', 'Invalid username. Please try again.');
@@ -60,12 +90,19 @@ const LoginScreen = ({ navigation }: Props) => {
   };
 
   return (
-    <LinearGradient
-      colors={['#abf5ab64', '#347134bc']}
-      style={styles.container}
-    >
+    <LinearGradient colors={['#abf5ab64', '#347134bc']} style={styles.container}>
       <View style={styles.titleRow}>
-        <Text style={styles.title}>TECH VOICE</Text>
+        {title.split('').map((char, i) => (
+          <Animated.Text
+            key={i}
+            style={[
+              styles.title,
+              { transform: [{ scale: animatedValues[i] }] },
+            ]}
+          >
+            {char}
+          </Animated.Text>
+        ))}
         <Image
           source={require('../assets/images/stickman.png')}
           style={[styles.avatar, { tintColor: undefined }]}
@@ -98,10 +135,10 @@ const LoginScreen = ({ navigation }: Props) => {
             height: 24,
             borderRadius: 6,
             borderWidth: 2,
-            borderColor: '#06610bff',
+            borderColor: '#006400',
             alignItems: 'center',
             justifyContent: 'center',
-            backgroundColor: rememberMe ? '#233a24ff' : 'transparent',
+            backgroundColor: rememberMe ? '#006400' : 'transparent',
           }}
         >
           {rememberMe && <MaterialIcons name="check" size={18} color="#fff" />}
@@ -113,12 +150,8 @@ const LoginScreen = ({ navigation }: Props) => {
         <Text style={styles.forgotText}>Forgot Username / Password?</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={handleLogin} style={styles.buttonWrapper}>
-        <Image
-          source={require('../assets/images/button.png')}
-          style={styles.buttonImage}
-        />
-        <Text style={styles.buttonText}>Sign In</Text>
+      <TouchableOpacity onPress={handleLogin} style={styles.simpleButton}>
+        <Text style={styles.simpleButtonText}>Sign In</Text>
       </TouchableOpacity>
     </LinearGradient>
   );
