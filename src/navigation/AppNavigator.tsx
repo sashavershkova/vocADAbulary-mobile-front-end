@@ -10,7 +10,7 @@ import HomeScreen from '../screens/HomeScreen';
 import TopicsScreen from '../screens/TopicsScreen';
 import TopicScreen from '../screens/TopicScreen';
 import FlashcardScreen from '../screens/FlashcardScreen';
-import ProgressScreen from '../screens/ProgressScreen';
+import ProgressScreen from '../screens/UserProgressSummaryScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import WalletScreen from '../screens/WalletScreen';
 import FallbackScreen from '../screens/FallbackScreen';

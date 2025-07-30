@@ -19,7 +19,10 @@ const HomeScreen = ({ navigation, route }: Props) => {
     <View style={styles.container}>
       {/* Left Sidebar */}
       <View style={styles.sidebar}>
-        <TouchableOpacity style={styles.sidebarButton}>
+        <TouchableOpacity 
+          style={styles.sidebarButton}
+          onPress={() => navigation.navigate('UserProgressSummary', { userId, username })}
+        >
           <Text>PROGRESS</Text>
         </TouchableOpacity>
 
