@@ -1,6 +1,4 @@
 // src/navigation/AppNavigator.tsx
-// src/navigation/AppNavigator.tsx
-
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -12,10 +10,11 @@ import HomeScreen from '../screens/HomeScreen';
 import TopicsScreen from '../screens/TopicsScreen';
 import TopicScreen from '../screens/TopicScreen';
 import FlashcardScreen from '../screens/FlashcardScreen';
-import ProgressScreen from '../screens/ProgressScreen';
-import SettingsScreen from '../screens/SettingsScreen';
+import UserProgressSummaryScreen from '../screens/UserProgressSummaryScreen';
 import WalletScreen from '../screens/WalletScreen';
+import QuizScreen from '../screens/QuizScreen';
 import FallbackScreen from '../screens/FallbackScreen';
+import LearnedFlashcardsScreen from '../screens/LearnedFlashcardScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -25,69 +24,31 @@ const AppNavigator = () => (
       initialRouteName="Splash"
       screenOptions={{
         headerStyle: {
-          backgroundColor: '#E6E6FA', // 💜 Лавандовый цвет хедера
+          backgroundColor: '#E6E6FA', // 💜 лавандовый фон
         },
         headerTitleStyle: {
-          fontFamily: 'ArchitectsDaughter', // шрифт заголовка
+          fontFamily: 'ArchitectsDaughter',
           fontSize: 28,
-          color: '#006400', // зелёный цвет заголовка
+          color: '#006400',
         },
-        headerTitleAlign: 'center', // выравнивание по центру
-        headerBackVisible: false, // скрыть кнопку "назад"
+        headerTitleAlign: 'center',
+        headerBackVisible: false,
       }}
     >
-      <Stack.Screen
-        name="Splash"
-        component={SplashScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="Login"
-        component={LoginScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="Home"
-        component={HomeScreen}
-        options={{ title: 'HOME' }}
-      />
-      <Stack.Screen
-        name="Topics"
-        component={TopicsScreen}
-        options={{ title: 'TOPICS' }}
-      />
-      <Stack.Screen
-        name="Topic"
-        component={TopicScreen}
-        options={{ title: 'TOPIC' }}
-      />
-      <Stack.Screen
-        name="Flashcard"
-        component={FlashcardScreen}
-        options={{ title: 'FLASHCARD' }}
-      />
-      <Stack.Screen
-        name="Progress"
-        component={ProgressScreen}
-        options={{ title: 'PROGRESS' }}
-      />
-      <Stack.Screen
-        name="Settings"
-        component={SettingsScreen}
-        options={{ title: 'SETTINGS' }}
-      />
-      <Stack.Screen
-        name="Wallet"
-        component={WalletScreen}
-        options={{ title: 'WALLET' }}
-      />
-      <Stack.Screen
-        name="Fallback"
-        component={FallbackScreen}
-        options={{ title: 'ERROR' }}
-      />
+      <Stack.Screen name="Splash" component={SplashScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="Home" component={HomeScreen} options={{ title: 'HOME' }} />
+      <Stack.Screen name="Topics" component={TopicsScreen} options={{ title: 'TOPICS' }} />
+      <Stack.Screen name="Topic" component={TopicScreen} options={{ title: 'TOPIC' }} />
+      <Stack.Screen name="Flashcard" component={FlashcardScreen} options={{ title: 'FLASHCARD' }} />
+      <Stack.Screen name="Wallet" component={WalletScreen} options={{ title: 'WALLET' }} />
+      <Stack.Screen name="LearnedCards" component={LearnedFlashcardsScreen} options={{ title: 'LEARNED' }} />
+      <Stack.Screen name="Quiz" component={QuizScreen} options={{ title: 'QUIZ' }} />
+      <Stack.Screen name="UserProgressSummary" component={UserProgressSummaryScreen} options={{ title: 'PROGRESS' }} />
+      <Stack.Screen name="Fallback" component={FallbackScreen} options={{ title: 'ERROR' }} />
     </Stack.Navigator>
   </NavigationContainer>
 );
 
 export default AppNavigator;
+

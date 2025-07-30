@@ -27,6 +27,8 @@ type Flashcard = {
 const FlashcardScreen = ({ route, navigation }: Props) => {
   const { topicId, topicName, flashcardId } = route.params;
   const { id: mockUserId } = useMockUser();
+  const mockUser = useMockUser();
+  const userId = mockUser.id; 
 
   const [flashcards, setFlashcards] = useState<Flashcard[]>([]);
   const [currentCard, setCurrentCard] = useState<Flashcard | null>(null);
@@ -85,7 +87,7 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
   const updateStatus = async (status: string) => {
     if (!currentCard) return;
     try {
-      await updateWalletFlashcardStatus(currentCard.id, status);
+      await updateWalletFlashcardStatus(mockUserId, currentCard.id, status);
       Alert.alert('Updated', `Flashcard marked as ${status}.`);
     } catch (error) {
       console.error('Update error:', error);
@@ -131,9 +133,9 @@ const addToWallet = async () => {
           <TouchableOpacity onPress={addToWallet}>
             <Text style={styles.actionText}>Add to Wallet</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => updateStatus('in_progress')}>
+          {/* <TouchableOpacity onPress={() => updateStatus('in_progress')}> FC are "in_progress" by default
             <Text style={styles.actionText}>In Progress</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <TouchableOpacity onPress={() => updateStatus('learned')}>
             <Text style={styles.actionText}>Learned</Text>
           </TouchableOpacity>
