@@ -3,14 +3,13 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigation';
-
 import SplashScreen from '../screens/SplashScreen';
 import LoginScreen from '../screens/LoginScreen';
 import HomeScreen from '../screens/HomeScreen';
 import TopicsScreen from '../screens/TopicsScreen';
 import TopicScreen from '../screens/TopicScreen';
 import FlashcardScreen from '../screens/FlashcardScreen';
-import UserProgressSummaryScreen from '../screens/UserProgressSummaryScreen';
+import ProgressScreen from '../screens/ProgressScreen';
 import WalletScreen from '../screens/WalletScreen';
 import QuizScreen from '../screens/QuizScreen';
 import FallbackScreen from '../screens/FallbackScreen';
@@ -44,7 +43,7 @@ const AppNavigator = () => (
       <Stack.Screen name="Wallet" component={WalletScreen} options={{ title: 'WALLET' }} />
       <Stack.Screen name="LearnedCards" component={LearnedFlashcardsScreen} options={{ title: 'LEARNED' }} />
       <Stack.Screen name="Quiz" component={QuizScreen} options={{ title: 'QUIZ' }} />
-      <Stack.Screen name="UserProgressSummary" component={UserProgressSummaryScreen} options={{ title: 'PROGRESS' }} />
+      <Stack.Screen name="Progress" component={ProgressScreen} options={{ title: 'PROGRESS' }} />
       <Stack.Screen name="Fallback" component={FallbackScreen} options={{ title: 'ERROR' }} />
     </Stack.Navigator>
   </NavigationContainer>

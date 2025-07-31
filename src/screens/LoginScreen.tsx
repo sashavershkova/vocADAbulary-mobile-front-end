@@ -15,6 +15,9 @@ import api from '../api/axiosInstance';
 import { MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+declare global {
+  var mockUser: { id: number; role: string };
+}
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
 

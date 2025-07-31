@@ -6,8 +6,6 @@ import {
   Alert,
   ActivityIndicator,
   View,
-  StyleSheet,
-  Dimensions,
 } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -24,7 +22,7 @@ type Topic = {
   name: string;
 };
 
-const topicGradients = [
+const topicGradients: [string, string][] = [
   ['#b3e5f9ff', '#e3bef8ff'],
   ['#FFE8C2', '#FFC1C1'],
   ['#a0f5cdff', '#f6f690ff'],
@@ -32,7 +30,7 @@ const topicGradients = [
   ['#ECD8FF', '#FFE5EC'],
 ];
 
-const topicGradientsActive = [
+const topicGradientsActive: [string, string][] = [
   ['#85d9eeff', '#a9f057ff'],
   ['#f6cb7cff', '#f29898ff'],
   ['#85f4cbff', '#c6fa72ff'],
@@ -90,9 +88,10 @@ const TopicsScreen = ({ navigation }: Props) => {
 
   const renderTopic = ({ item, index }: { item: Topic; index: number }) => {
     const isActive = activeId === item.id;
-    const gradient = isActive
-      ? topicGradientsActive[index % topicGradientsActive.length]
-      : topicGradients[index % topicGradients.length];
+
+    const gradient: string[] = isActive
+      ? [...topicGradientsActive[index % topicGradientsActive.length]]
+      : [...topicGradients[index % topicGradients.length]];
 
     const borderColor = isActive ? '#e8dbf8ff' : '#006400';
 

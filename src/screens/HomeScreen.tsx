@@ -7,23 +7,32 @@ import styles from '../styles/homeStyles';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
-const HomeScreen = ({ navigation }: Props) => {
+const HomeScreen = ({ navigation, route }: Props) => {
+  const { userId, username } = route.params;
   React.useLayoutEffect(() => {
     navigation.setOptions({
-      headerBackVisible: false,
-      title: '', // ← или можешь вообще не писать title
+      headerBackVisible: false, // removes back arrow
+      title: username, // shows username in the header
     });
-  }, [navigation]);
+  }, [navigation, username]);
 
   return (
     <LinearGradient colors={['#f9f9b4a5', '#6cdc6cff']} style={styles.container}>
       {/* Progress — верхний левый */}
-      <TouchableOpacity style={styles.progressButton}>
+      <TouchableOpacity
+        style={styles.progressButton}
+        onPress={() => {
+          navigation.navigate('Progress', { userId, username });
+        }}
+      >
         <Text style={styles.smallButtonText}>PROGRESS</Text>
       </TouchableOpacity>
 
       {/* Settings — чуть ниже справа */}
-      <TouchableOpacity style={styles.settingsButton}>
+      <TouchableOpacity
+        style={styles.settingsButton}
+        onPress={() => navigation.navigate('Settings')}
+      >
         <Text style={styles.smallButtonText}>SETTINGS</Text>
       </TouchableOpacity>
 
@@ -47,15 +56,25 @@ const HomeScreen = ({ navigation }: Props) => {
       >
         <Text style={styles.learnText}>LEARN</Text>
       </TouchableOpacity>
+
       {/* Constructor — внизу по центру */}
       <TouchableOpacity style={styles.constructorButton}>
         <Text style={styles.buttonText}>CONSTRUCTOR</Text>
       </TouchableOpacity>
+
       {/* WALLET — левый нижний угол */}
-      <TouchableOpacity style={styles.walletButton}>
+      <TouchableOpacity
+        style={styles.walletButton}
+        onPress={() => navigation.navigate('Wallet')}
+      >
         <Text style={styles.buttonText}>WALLET</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.quizButton}>
+
+      {/* Quiz — левая сторона */}
+      <TouchableOpacity
+        style={styles.quizButton}
+        onPress={() => navigation.navigate('Quiz')}
+      >
         <Text style={styles.buttonText}>QUIZ</Text>
       </TouchableOpacity>
     </LinearGradient>

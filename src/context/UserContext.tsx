@@ -3,13 +3,13 @@ import React, { createContext, useContext, ReactNode } from 'react';
 // Type for user info
 type MockUser = {
   id: number;
-  name: string;
+  username: string;
 };
 
 // Default value for your mock user
 const defaultUser: MockUser = {
   id: 1,
-  name: 'Mock User',
+  username: 'Mock User',
 };
 
 // Create context
