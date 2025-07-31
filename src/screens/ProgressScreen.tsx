@@ -11,7 +11,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigation';
 import { useMockUser } from '../context/UserContext';
 import { getUserProgressSummary } from '../api/summary';
-import styles from '../styles/summaryStyles';
+import styles from '../styles/progressStyles';
 
 type ProgressNavProp = NativeStackNavigationProp<RootStackParamList, 'Progress'>;
 
