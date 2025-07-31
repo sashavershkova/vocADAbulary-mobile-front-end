@@ -31,8 +31,8 @@ type WalletFlashcard = {
 
 const WalletScreen = () => {
   const navigation = useNavigation<WalletNavProp>();
-  const mockUser = useMockUser();
-  const userId = mockUser.id; 
+  const { user } = useMockUser();
+  const userId = user.id;
   const [flashcards, setFlashcards] = useState<WalletFlashcard[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState("");

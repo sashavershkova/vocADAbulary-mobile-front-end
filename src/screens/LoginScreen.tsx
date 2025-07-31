@@ -15,6 +15,8 @@ import api from '../api/axiosInstance';
 import { MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useMockUser } from '../context/UserContext';
+
 declare global {
   var mockUser: { id: number; role: string };
 }
@@ -22,6 +24,8 @@ declare global {
 type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
 const LoginScreen = ({ navigation }: Props) => {
+
+  const { setUser } = useMockUser();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
@@ -71,7 +75,12 @@ const LoginScreen = ({ navigation }: Props) => {
       const response = await api.post('/api/users/login', { username });
 
       const { id, role } = response.data;
+      
+      // Save in context
+      setUser({ id, username });
+      console.log('✅ User set in context:', { id, username });
 
+      // Set headers for mock backend
       api.defaults.headers.common['X-Mock-User-Id'] = id;
       api.defaults.headers.common['X-Mock-User-Role'] = role;
 

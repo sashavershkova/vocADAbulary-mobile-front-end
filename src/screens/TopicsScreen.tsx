@@ -14,6 +14,7 @@ import { RootStackParamList } from '../types/navigation';
 import { getAllTopics } from '../api/topics';
 import { getFlashcardsByTopic } from '../api/flashcards';
 import TopicsButtons from '../buttons/TopicsButtons';
+import { useMockUser } from '../context/UserContext';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Topics'>;
 
@@ -39,6 +40,8 @@ const topicGradientsActive: [string, string][] = [
 ];
 
 const TopicsScreen = ({ navigation }: Props) => {
+  const { user } = useMockUser();
+  const userId = user.id;
   const [topics, setTopics] = useState<Topic[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeId, setActiveId] = useState<number | null>(null);

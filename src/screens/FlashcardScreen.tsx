@@ -26,9 +26,8 @@ type Flashcard = {
 
 const FlashcardScreen = ({ route, navigation }: Props) => {
   const { topicId, topicName, flashcardId } = route.params;
-  const { id: mockUserId } = useMockUser();
-  const mockUser = useMockUser();
-  const userId = mockUser.id; 
+  const { user } = useMockUser();
+  const userId = user.id;
 
   const [flashcards, setFlashcards] = useState<Flashcard[]>([]);
   const [currentCard, setCurrentCard] = useState<Flashcard | null>(null);

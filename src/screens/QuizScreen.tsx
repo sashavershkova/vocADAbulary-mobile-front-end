@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useMockUser } from '../context/UserContext';
 import { View, Text, SafeAreaView, TouchableOpacity, Alert } from 'react-native';
 import styles from '../styles/quizStyles';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -22,6 +23,8 @@ type Quiz = {
 };
 
 const QuizScreen = ({ navigation }: Props) => {
+  const { user } = useMockUser();
+  const userId = user.id;
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
   const [currentQuizIndex, setCurrentQuizIndex] = useState(0);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);

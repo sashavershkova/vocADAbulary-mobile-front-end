@@ -19,7 +19,12 @@ type ProgressSummary = {
 
 const ProgressScreen = () => {
   const navigation = useNavigation<ProgressNavProp>();
+<<<<<<< HEAD
   const { id: userId } = useMockUser();
+=======
+  const { user } = useMockUser();
+  const userId = user.id;
+>>>>>>> b2efc9372162b74b3800a9a022f3f32eed2e826a
 
   const [summary, setSummary] = useState<ProgressSummary | null>(null);
   const [loading, setLoading] = useState(true);
