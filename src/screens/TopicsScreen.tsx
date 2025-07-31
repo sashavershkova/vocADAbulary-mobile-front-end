@@ -46,6 +46,12 @@ const TopicsScreen = ({ navigation }: Props) => {
   const [loading, setLoading] = useState(true);
   const [activeId, setActiveId] = useState<number | null>(null);
 
+
+  // navigation.navigate('NewFlashcard', { topicId: topic.id }); 
+  // link to creating a new Flashcard screen for the button
+
+
+
   useEffect(() => {
     const fetchTopics = async () => {
       try {

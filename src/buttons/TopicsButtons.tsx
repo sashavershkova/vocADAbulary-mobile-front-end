@@ -33,7 +33,7 @@ const TopicsButtons = () => {
         style={styles.addButton}
         onPress={() => {
           console.log('Add button pressed');
-          // navigation.navigate('AddTopic'); // добавь позже, если нужно
+          navigation.navigate('NewFlashcard', { topicId: topic.id }); 
         }}
       >
         <Ionicons name="add" size={36} color='#8c64b6b1' />

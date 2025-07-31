@@ -37,6 +37,13 @@ const WalletScreen = () => {
   const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState("");
 
+
+  // navigation.navigate('NewFlashcard', { topicId: topic.id }); 
+  // link to creating a new Flashcard screen for the button
+  //need to add a PUT request to provide a new Topic name when adding a card 
+  
+
+
 const fetchWallet = async () => {
   try {
     setLoading(true);

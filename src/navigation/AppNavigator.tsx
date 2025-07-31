@@ -14,6 +14,7 @@ import WalletScreen from '../screens/WalletScreen';
 import QuizScreen from '../screens/QuizScreen';
 import FallbackScreen from '../screens/FallbackScreen';
 import LearnedFlashcardsScreen from '../screens/LearnedFlashcardScreen';
+import NewFlashcardScreen from '../screens/NewFlashcardScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -45,6 +46,7 @@ const AppNavigator = () => (
       <Stack.Screen name="Quiz" component={QuizScreen} options={{ title: 'QUIZ' }} />
       <Stack.Screen name="Progress" component={ProgressScreen} options={{ title: 'PROGRESS' }} />
       <Stack.Screen name="Fallback" component={FallbackScreen} options={{ title: 'ERROR' }} />
+      <Stack.Screen name="NewFlashcard" component={NewFlashcardScreen} options={{ title: 'NEW FLASHCARD' }} />
     </Stack.Navigator>
   </NavigationContainer>
 );
