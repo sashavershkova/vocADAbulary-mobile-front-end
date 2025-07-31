@@ -25,7 +25,8 @@ type ProgressSummary = {
 
 const ProgressScreen = () => {
   const navigation = useNavigation<ProgressNavProp>();
-  const { id: userId, username } = useMockUser();
+  const { user } = useMockUser();
+  const userId = user.id;
 
   const [summary, setSummary] = useState<ProgressSummary | null>(null);
   const [loading, setLoading] = useState(true);

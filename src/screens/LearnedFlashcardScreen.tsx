@@ -22,8 +22,8 @@ type WalletFlashcard = {
 
 const LearnedFlashcardsScreen = () => {
   const navigation = useNavigation<LearnedNavProp>();
-  const mockUser = useMockUser();
-  const userId = mockUser.id;  
+  const { user } = useMockUser();
+  const userId = user.id; 
 
   const [flashcards, setFlashcards] = useState<WalletFlashcard[]>([]);
   const [loading, setLoading] = useState(true);
