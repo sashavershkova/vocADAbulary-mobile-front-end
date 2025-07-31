@@ -5,7 +5,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Audio } from "expo-av";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../../App";
+import { RootStackParamList } from '../types/navigation';
 import { getWalletFlashcards, removeFromWallet, updateWalletFlashcardStatus, getLearnedFlashcards, hideFlashcardCompletely } from "../api/wallet";
 import styles from "../styles/walletStyles";
 

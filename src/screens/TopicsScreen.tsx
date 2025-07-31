@@ -1,10 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, FlatList, Alert } from 'react-native';
-import styles from '../styles/topicsStyles';
+import {
+  Text,
+  TouchableOpacity,
+  FlatList,
+  Alert,
+  ActivityIndicator,
+  View,
+} from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { LinearGradient } from 'expo-linear-gradient';
+import styles from '../styles/topicsStyles';
 import { RootStackParamList } from '../types/navigation';
-import { getAllTopics } from '../api/topics'; // ✅ Axios call
+import { getAllTopics } from '../api/topics';
 import { getFlashcardsByTopic } from '../api/flashcards';
+import TopicsButtons from '../buttons/TopicsButtons';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Topics'>;
 
@@ -13,61 +22,122 @@ type Topic = {
   name: string;
 };
 
+const topicGradients: [string, string][] = [
+  ['#b3e5f9ff', '#e3bef8ff'],
+  ['#FFE8C2', '#FFC1C1'],
+  ['#a0f5cdff', '#f6f690ff'],
+  ['#C6F1F8', '#DFFFEA'],
+  ['#ECD8FF', '#FFE5EC'],
+];
+
+const topicGradientsActive: [string, string][] = [
+  ['#85d9eeff', '#a9f057ff'],
+  ['#f6cb7cff', '#f29898ff'],
+  ['#85f4cbff', '#c6fa72ff'],
+  ['#e0f3f6ff', '#41faeaff'],
+  ['#b295f1ff', '#f5a995ff'],
+];
+
 const TopicsScreen = ({ navigation }: Props) => {
   const [topics, setTopics] = useState<Topic[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [activeId, setActiveId] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchTopics = async () => {
-          try {
-            const data = await getAllTopics(); // ✅ Axios-based fetch
-            setTopics(data);
-          } catch (err) {
-            console.error('Error fetching topics:', err);
-          }
+      try {
+        const data = await getAllTopics();
+        setTopics(data);
+      } catch (err) {
+        console.error('Error fetching topics:', err);
+      } finally {
+        setLoading(false);
+      }
     };
     fetchTopics();
   }, []);
 
-  const handleTopicPress = async (topicId: number, topicName: string) => {
+  const handleTopicPress = (topicId: number, topicName: string) => {
+    setActiveId(topicId);
 
-    // console.log('📘 Load Flashcards from TopicScreen #1');
+    setTimeout(async () => {
+      try {
+        const flashcards = await getFlashcardsByTopic(topicId);
+        if (flashcards.length === 0) {
+          Alert.alert('Ooops! Could this be any more empty?');
+          setActiveId(null);
+          return;
+        }
 
-    try {
-      const flashcards = await getFlashcardsByTopic(topicId);
-      if (flashcards.length === 0) {
-        Alert.alert('No flashcards found for this topic.');
-        return;
+        const randomCard =
+          flashcards[Math.floor(Math.random() * flashcards.length)];
+
+        navigation.navigate('Flashcard', {
+          flashcardId: randomCard.id,
+          topicId,
+          topicName,
+        });
+      } catch (err) {
+        console.error('Error fetching flashcards:', err);
+        Alert.alert('Failed to fetch flashcards');
+      } finally {
+        setActiveId(null);
       }
-      const randomCard = flashcards[Math.floor(Math.random() * flashcards.length)];
-      navigation.navigate('Flashcard', {
-        flashcardId: randomCard.id,
-        topicId,
-        topicName,
-      });
-    } catch (err) {
-      console.error('Error fetching flashcards:', err);
-      Alert.alert('Failed to fetch flashcards');
-    }
+    }, 1500);
   };
 
-  const renderTopic = ({ item }: { item: Topic }) => (
-    <TouchableOpacity
-      style={styles.topicBox}
-      onPress={() => handleTopicPress(item.id, item.name)}
-    >
-      <Text style={styles.topicText}>{item.name}</Text>
-    </TouchableOpacity>
-  );
+  const renderTopic = ({ item, index }: { item: Topic; index: number }) => {
+    const isActive = activeId === item.id;
+
+    const gradient: string[] = isActive
+      ? [...topicGradientsActive[index % topicGradientsActive.length]]
+      : [...topicGradients[index % topicGradients.length]];
+
+    const borderColor = isActive ? '#e8dbf8ff' : '#006400';
+
+    return (
+      <View style={styles.topicBoxWrapper}>
+        <TouchableOpacity
+          style={styles.topicTouchable}
+          activeOpacity={0.9}
+          onPress={() => handleTopicPress(item.id, item.name)}
+        >
+          <View style={isActive ? styles.topicShadowWrapper : undefined}>
+            <LinearGradient
+              colors={gradient}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={[styles.topicBox, { borderColor }]}
+            >
+              <Text style={[styles.topicText, isActive && styles.topicTextActive]}>
+                {item.name}
+              </Text>
+            </LinearGradient>
+          </View>
+        </TouchableOpacity>
+      </View>
+    );
+  };
 
   return (
-    <View style={styles.container}>
-      <FlatList
-        data={topics}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={renderTopic}
-        contentContainerStyle={styles.topicList}
-      />
-    </View>
+    <LinearGradient colors={['#2ecc71', '#f5f7648c']} style={{ flex: 1 }}>
+      <View style={{ flex: 1, paddingBottom: 70 }}>
+        {loading ? (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color="#fff" />
+          </View>
+        ) : (
+          <FlatList
+            data={topics}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={renderTopic}
+            contentContainerStyle={styles.topicList}
+          />
+        )}
+      </View>
+
+      <TopicsButtons />
+    </LinearGradient>
   );
 };
 

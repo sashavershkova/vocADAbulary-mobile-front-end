@@ -17,15 +17,15 @@ const styles = StyleSheet.create({
   },
 
   title: {
-  fontSize: 36,
-  fontWeight: 'bold',
-  textAlign: 'center',
-  fontFamily: 'ArchitectsDaughter',
-  color: '#b869d3ff', // лаванда
-  textShadowColor: '#004d00', // тёмно-зелёная тень
-  textShadowOffset: { width: 1, height: 1 },
-  textShadowRadius: 2,
-},
+    fontSize: 36,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontFamily: 'ArchitectsDaughter',
+    color: '#b869d3ff',
+    textShadowColor: '#006400',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
+  },
 
   avatar: {
     width: 100,
@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
   input: {
     width: '100%',
     borderWidth: 2,
-    borderColor: '#b869d3ff', // ярче
+    borderColor: '#006400',
     padding: 12,
     marginBottom: 15,
     borderRadius: 6,
@@ -52,66 +52,41 @@ const styles = StyleSheet.create({
 
   checkboxText: {
     marginLeft: 8,
-    color: '#0f5b13ff',
+    color: '#006400',
+    fontSize: 16,
+    fontWeight: 'bold',
+    fontFamily: 'ArchitectsDaughter',
   },
 
   forgotText: {
-    color: '#1b5e20',
+    color: '#006400',
     textDecorationLine: 'underline',
     marginTop: 10,
+    fontSize: 16,
+    fontFamily: 'ArchitectsDaughter',
   },
 
-  loginButton: {
-    backgroundColor: '#6f59766b',
+  simpleButton: {
+    backgroundColor: '#e19bf8bf',
     paddingVertical: 12,
     paddingHorizontal: 40,
     borderRadius: 25,
     marginTop: 30,
     alignSelf: 'center',
+    borderWidth: 2,
+    borderColor: '#006400',
   },
 
-  loginButtonText: {
-  color: '#216d25c9', // лаванда
-  fontSize: 18,
-  fontWeight: 'bold',
-  textAlign: 'center',
-  textShadowColor: '#b869d3ff', // тень
-  textShadowOffset: { width: 1, height: 1 },
-  textShadowRadius: 2,
-},
-
-buttonImage: {
-    width: 200,
-    height: 70,
-    resizeMode: 'contain',
-    alignSelf: 'center',
-    marginTop: 30,
+  simpleButtonText: {
+    color: '#006400',
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontFamily: 'ArchitectsDaughter',
+    textShadowColor: '#006400',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
   },
-
-  buttonWrapper: {
-  position: 'relative',
-  alignItems: 'center',
-  justifyContent: 'center',
-  marginTop: 30,
-},
-
-buttonImage: {
-  width: 180,
-  height: 60,
-  resizeMode: 'contain',
-},
-
-buttonText: {
-  position: 'absolute',
-  color: '#b869d3ff',
-  fontSize: 20,
-  fontWeight: 'bold',
-  fontFamily: 'ArchitectsDaughter',
-  textShadowColor: '#004d00',
-  textShadowOffset: { width: 1, height: 1 },
-  textShadowRadius: 2,
-},
-
 });
 
 export default styles;
