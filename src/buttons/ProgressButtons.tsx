@@ -39,7 +39,7 @@ const ProgressButtons = ({ summary }: Props) => {
         {renderButton('stats-chart', 'Total Words', summary.totalCards)}
         {renderButton('bulb', 'Learned', summary.learnedCards)}
         {renderButton('trending-up', 'In Progress', summary.inProgressCards)}
-        {renderButton('flash', 'Comprehension')}
+        {renderButton('flash', 'Comprehension', summary.termComprehension)}
         {renderButton('chatbubble-ellipses', 'Spoken/Written', summary.spokenWritten)}
         {renderButton('create', 'Created', '—')}
       </View>
