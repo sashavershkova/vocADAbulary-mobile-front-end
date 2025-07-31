@@ -4,11 +4,15 @@ import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigation';
+import { useMockUser } from "../context/UserContext";
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Home'>;
 
+
 const TopicsButtons = () => {
   const navigation = useNavigation<NavigationProp>();
+  const { user } = useMockUser();
+  const userId = user.id;
 
   return (
     <View style={styles.bottomBar}>
@@ -16,8 +20,8 @@ const TopicsButtons = () => {
         style={styles.homeButton}
         onPress={() =>
           navigation.navigate('Home', {
-            userId: 1,
-            username: 'Guest',
+            userId: userId,
+            username: user.username,
           })
         }
       >
@@ -45,7 +49,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 40,
     paddingVertical: 20,
     backgroundColor: '#d9bcf7ff',
-    
+
   },
   homeButton: {
     alignItems: 'center',

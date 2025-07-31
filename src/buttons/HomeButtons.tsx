@@ -7,6 +7,9 @@ import styles from '../styles/homeStyles'; // ✅ ВАЖНО: добавлен �
 
 const HomeButtons = () => {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const HomeButtons = () => {
+  const { user } = useMockUser();
+  const userId = user.id;
 
   return (
     <View style={styles.container}>

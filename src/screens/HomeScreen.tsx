@@ -4,11 +4,14 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigation';
 import { LinearGradient } from 'expo-linear-gradient';
 import styles from '../styles/homeStyles';
+import { useMockUser } from "../context/UserContext";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
 const HomeScreen = ({ navigation, route }: Props) => {
-  const { userId, username } = route.params;
+  const { user } = useMockUser();
+  const userId = user.id;
+  const username = user.username;
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerBackVisible: false, // removes back arrow
