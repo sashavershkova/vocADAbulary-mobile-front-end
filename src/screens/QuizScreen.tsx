@@ -12,24 +12,21 @@ type Quiz = {
   id: number;
   topicId: number;
   topicName: string;
-  questions: {
-    id: number;
-    questionText: string;
-    answers: {
-      text: string;
-      correct: boolean;
-    }[];
-  }[];
+  questionText: string;
+  correctAnswer: string;
+  wrongAnswer1: string;
+  wrongAnswer2: string;
+  wrongAnswer3: string;
+  answers?: { text: string; correct: boolean }[]; // added after transform
 };
 
 const QuizScreen = ({ navigation }: Props) => {
   const { user } = useMockUser();
-  const userId = user.id;
   const username = user.username;
   const initials = username?.charAt(0).toUpperCase() || '?';
+
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
   const [currentQuizIndex, setCurrentQuizIndex] = useState(0);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswerId, setSelectedAnswerId] = useState<number | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -38,27 +35,9 @@ const QuizScreen = ({ navigation }: Props) => {
       title: 'QUIZ',
       headerBackVisible: false,
       headerRight: () => (
-        <View
-          style={{
-            width: 36,
-            height: 36,
-            borderRadius: 18,
-            backgroundColor: '#75f96cff',
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginRight: 12,
-          }}
-        >
-          <Text
-            style={{
-              color: '#2c6f33ff',
-              fontWeight: 'bold',
-              fontSize: 16,
-            }}
-          >
-            {initials}
-          </Text>
-        </View>
+        <View style={styles.initialsCircle}>
+        <Text style={styles.initialsText}>{initials}</Text>
+      </View>
       ),
     });
   }, [navigation, initials]);
@@ -71,14 +50,16 @@ const QuizScreen = ({ navigation }: Props) => {
           Alert.alert('No Quizzes', 'There are no quizzes available.');
           navigation.goBack();
         } else {
-          const shuffledQuizzes = shuffleArray(response.data).map(quiz => ({
+          const transformedQuizzes = response.data.map((quiz: Quiz) => ({
             ...quiz,
-            questions: quiz.questions.map(question => ({
-              ...question,
-              answers: shuffleArray(question.answers), // shuffle answers per question
-            })),
+            answers: shuffleArray([
+              { text: quiz.correctAnswer, correct: true },
+              { text: quiz.wrongAnswer1, correct: false },
+              { text: quiz.wrongAnswer2, correct: false },
+              { text: quiz.wrongAnswer3, correct: false },
+            ]),
           }));
-          setQuizzes(shuffledQuizzes);
+          setQuizzes(shuffleArray(transformedQuizzes)); // shuffle quizzes too
         }
       } catch (err) {
         console.error('Failed to load quizzes:', err);
@@ -93,7 +74,6 @@ const QuizScreen = ({ navigation }: Props) => {
   };
 
   const currentQuiz = quizzes[currentQuizIndex];
-  const currentQuestion = currentQuiz?.questions[currentQuestionIndex];
 
   const handleSelect = (answerIndex: number) => {
     if (!isSubmitted) {
@@ -107,23 +87,13 @@ const QuizScreen = ({ navigation }: Props) => {
   };
 
   const handleNext = () => {
-    if (!currentQuiz) return;
-
-    const nextQuestionIndex = currentQuestionIndex + 1;
-    if (nextQuestionIndex < currentQuiz.questions.length) {
-      setCurrentQuestionIndex(nextQuestionIndex);
+    const nextQuizIndex = currentQuizIndex + 1;
+    if (nextQuizIndex < quizzes.length) {
+      setCurrentQuizIndex(nextQuizIndex);
     } else {
-      const nextQuizIndex = currentQuizIndex + 1;
-      if (nextQuizIndex < quizzes.length) {
-        setCurrentQuizIndex(nextQuizIndex);
-        setCurrentQuestionIndex(0);
-      } else {
-        Alert.alert('🎉 Done!', 'You completed all quizzes. Restarting...');
-        setCurrentQuizIndex(0);
-        setCurrentQuestionIndex(0);
-      }
+      Alert.alert('🎉 Done!', 'You completed all quizzes. Restarting...');
+      setCurrentQuizIndex(0);
     }
-
     setSelectedAnswerId(null);
     setIsSubmitted(false);
   };
@@ -133,7 +103,7 @@ const QuizScreen = ({ navigation }: Props) => {
     setIsSubmitted(false);
   };
 
-  if (!currentQuestion) {
+  if (!currentQuiz) {
     return (
       <SafeAreaView style={styles.container}>
         <Text style={styles.termText}>Loading...</Text>
@@ -144,12 +114,11 @@ const QuizScreen = ({ navigation }: Props) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.termBox}>
-        <Text style={styles.termText}>{currentQuestion.questionText}</Text>
+        <Text style={styles.termText}>{currentQuiz.questionText}</Text>
       </View>
 
-      {currentQuestion.answers.map((answer, index) => {
+      {currentQuiz.answers?.map((answer, index) => {
         const isSelected = selectedAnswerId === index;
-
         return (
           <TouchableOpacity
             key={index}

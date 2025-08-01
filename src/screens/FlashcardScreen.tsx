@@ -1,69 +1,83 @@
-import React, { useEffect, useState, useLayoutEffect } from 'react';
-import { View, Text, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
-import { Audio } from 'expo-av';
+import React, { useEffect, useState, useLayoutEffect, useRef } from 'react';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Alert,
+  ActivityIndicator,
+  Animated,
+} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import api from '../api/axiosInstance';
+import { Audio } from 'expo-av';
 import { useMockUser } from '../context/UserContext';
+import api from '../api/axiosInstance';
+import { addToWallet, updateWalletFlashcardStatus } from '../api/wallet';
 import styles from '../styles/flashcardStyles';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigation';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Flashcard'>;
-
-import {
-  addToWallet as addToWalletApi,
-  updateWalletFlashcardStatus
-} from '../api/wallet';
 
 type Flashcard = {
   id: number;
   word: string;
   definition: string;
   example: string;
-  synonyms: string;
-  phonetic: string;
   audioUrl: string;
   createdBy: number;
 };
 
 const FlashcardScreen = ({ route, navigation }: Props) => {
-  const { topicId, topicName, flashcardId } = route.params;
+  const { topicId } = route.params;
   const { user } = useMockUser();
   const userId = user.id;
-  const username = user.username;
-  const initials = username?.charAt(0).toUpperCase() || '?';
-
+  const initials = user.username?.charAt(0).toUpperCase() || '?';
 
   const [flashcards, setFlashcards] = useState<Flashcard[]>([]);
   const [currentCard, setCurrentCard] = useState<Flashcard | null>(null);
   const [loading, setLoading] = useState(true);
-  const [showPhonetic, setShowPhonetic] = useState(false);
+  const [showExample, setShowExample] = useState(false);
+  const [flipped, setFlipped] = useState(false);
+
+  const flipAnim = useRef(new Animated.Value(0)).current;
+
+  const frontInterpolate = flipAnim.interpolate({
+    inputRange: [0, 180],
+    outputRange: ['0deg', '180deg'],
+  });
+
+  const backInterpolate = flipAnim.interpolate({
+    inputRange: [0, 180],
+    outputRange: ['180deg', '360deg'],
+  });
+
+  const flipCard = () => {
+    if (!flipped) {
+      Animated.spring(flipAnim, {
+        toValue: 180,
+        useNativeDriver: true,
+        friction: 8,
+        tension: 10,
+      }).start();
+      setFlipped(true);
+    } else {
+      Animated.spring(flipAnim, {
+        toValue: 0,
+        useNativeDriver: true,
+        friction: 8,
+        tension: 10,
+      }).start();
+      setFlipped(false);
+    }
+  };
 
   useLayoutEffect(() => {
     navigation.setOptions({
       title: 'FLASHCARDS',
       headerBackVisible: false,
       headerRight: () => (
-        <View
-          style={{
-            width: 36,
-            height: 36,
-            borderRadius: 18,
-            backgroundColor: '#edf96cff',
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginRight: 12,
-          }}
-        >
-          <Text
-            style={{
-              color: '#2c6f33ff',
-              fontWeight: 'bold',
-              fontSize: 16,
-            }}
-          >
-            {initials}
-          </Text>
+        <View style={styles.initialsCircle}>
+          <Text style={styles.initialsText}>{initials}</Text>
         </View>
       ),
     });
@@ -99,7 +113,9 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
     if (flashcards.length > 0) {
       const next = flashcards[Math.floor(Math.random() * flashcards.length)];
       setCurrentCard(next);
-      setShowPhonetic(false);
+      setShowExample(false);
+      setFlipped(false);
+      flipAnim.setValue(0); 
     }
   };
 
@@ -129,10 +145,10 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
     }
   };
 
-  const addToWallet = async () => {
+  const handleAddToWallet = async () => {
     if (!currentCard) return;
     try {
-      await addToWalletApi(currentCard.id);
+      await addToWallet(currentCard.id);
       Alert.alert('Added', 'Flashcard added to wallet.');
     } catch (error) {
       console.error('Wallet error:', error);
@@ -146,52 +162,80 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{currentCard.word}</Text>
+      <TouchableOpacity onPress={flipCard} activeOpacity={1}>
+        <View style={{ alignItems: 'center', justifyContent: 'center', height: 250 }}>
+          {/* Front Side */}
+          <Animated.View
+            style={[
+              styles.card,
+              {
+                backfaceVisibility: 'hidden',
+                transform: [{ rotateY: frontInterpolate }],
+              },
+            ]}
+          >
+            <TouchableOpacity style={styles.soundButton} onPress={handlePlayAudio}>
+              <Ionicons name="volume-high-outline" size={24} color="black" />
+            </TouchableOpacity>
 
-      <View style={styles.card}>
-        <TouchableOpacity
-          style={styles.audioIcon}
-          onPress={handlePlayAudio}
-          onLongPress={() => setShowPhonetic(!showPhonetic)}
-        >
-          <Ionicons name="volume-high-outline" size={24} color="black" />
-        </TouchableOpacity>
+            <Text style={styles.word}>{currentCard.word}</Text>
 
-        {showPhonetic && <Text style={styles.phonetic}>{currentCard.phonetic}</Text>}
-        <Text style={styles.definition}>{currentCard.definition}</Text>
+            <View style={styles.cardButtons}>
+              <TouchableOpacity onPress={handleDelete}>
+                <Ionicons name="trash-outline" size={24} color="purple" />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={handleAddToWallet}>
+                <Ionicons name="wallet-outline" size={24} color="purple" />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => updateStatus('learned')}>
+                <Ionicons name="checkmark-circle-outline" size={24} color="purple" />
+              </TouchableOpacity>
+            </View>
+          </Animated.View>
 
-        <View style={styles.actionButtons}>
-          <TouchableOpacity onPress={handleDelete}>
-            <Text style={styles.actionText}>Delete</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={addToWallet}>
-            <Text style={styles.actionText}>Add to Wallet</Text>
-          </TouchableOpacity>
-          {/* <TouchableOpacity onPress={() => updateStatus('in_progress')}> FC are "in_progress" by default
-            <Text style={styles.actionText}>In Progress</Text>
-          </TouchableOpacity> */}
-          <TouchableOpacity onPress={() => updateStatus('learned')}>
-            <Text style={styles.actionText}>Learned</Text>
-          </TouchableOpacity>
+          {/* Back Side */}
+          <Animated.View
+            style={[
+              styles.card,
+              {
+                position: 'absolute',
+                top: 0,
+                backfaceVisibility: 'hidden',
+                transform: [{ rotateY: backInterpolate }],
+              },
+            ]}
+          >
+            <TouchableOpacity style={styles.soundButton} onPress={handlePlayAudio}>
+              <Ionicons name="volume-high-outline" size={24} color="" />
+            </TouchableOpacity>
+            <Text style={styles.definition}>{currentCard.definition}</Text>
+          </Animated.View>
         </View>
-      </View>
+      </TouchableOpacity>
 
-      <View style={styles.exampleBox}>
-        <Text style={styles.exampleText}>Example: {currentCard.example}</Text>
+      <View style={styles.exampleSection}>
+        <TouchableOpacity onPress={() => setShowExample(!showExample)}>
+          <Ionicons name="bulb-outline" size={30} color="green" />
+        </TouchableOpacity>
+        {showExample && (
+          <View style={styles.exampleBubble}>
+            <Text style={styles.exampleText}>{currentCard.example}</Text>
+          </View>
+        )}
       </View>
 
       <View style={styles.navBar}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Text style={styles.navText}>Back</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={handleNext}>
-          <Text style={styles.navText}>Previous</Text>
+        <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+          <Ionicons name="home-outline" size={30} color="green" />
         </TouchableOpacity>
         <TouchableOpacity>
-          <Text style={styles.navText}>?</Text>
+          <Ionicons name="search-outline" size={30} color="green" />
         </TouchableOpacity>
         <TouchableOpacity onPress={handleNext}>
-          <Text style={styles.navText}>Next</Text>
+          <Ionicons name="arrow-back-outline" size={30} color="green" />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleNext}>
+          <Ionicons name="arrow-forward-outline" size={30} color="green" />
         </TouchableOpacity>
       </View>
     </View>
