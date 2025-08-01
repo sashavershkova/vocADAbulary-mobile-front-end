@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useLayoutEffect } from "react";
 import { useMockUser } from "../context/UserContext";
 import {
   View,
@@ -33,6 +33,8 @@ const WalletScreen = () => {
   const navigation = useNavigation<WalletNavProp>();
   const { user } = useMockUser();
   const userId = user.id;
+  const username = user.username;
+  const initials = username?.charAt(0).toUpperCase() || '?';
   const [flashcards, setFlashcards] = useState<WalletFlashcard[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState("");
@@ -68,6 +70,36 @@ const fetchWallet = async () => {
     setLoading(false);
   }
 };
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title: 'WALLET',
+      headerBackVisible: false,
+      headerRight: () => (
+        <View
+          style={{
+            width: 36,
+            height: 36,
+            borderRadius: 18,
+            backgroundColor: '#edf96cff',
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginRight: 12,
+          }}
+        >
+          <Text
+            style={{
+              color: '#2c6f33ff',
+              fontWeight: 'bold',
+              fontSize: 16,
+            }}
+          >
+            {initials}
+          </Text>
+        </View>
+      ),
+    });
+  }, [navigation, initials]);
 
   useEffect(() => {
     fetchWallet();

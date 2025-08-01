@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useLayoutEffect } from 'react';
+import { View, Text } from 'react-native';
 import { ActivityIndicator, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -22,6 +23,8 @@ const ProgressScreen = () => {
   const navigation = useNavigation<ProgressNavProp>();
   const { user } = useMockUser();
   const userId = user.id;
+  const username = user.username;
+  const initials = username?.charAt(0).toUpperCase() || '?';
 
   const [summary, setSummary] = useState<ProgressSummary | null>(null);
   const [loading, setLoading] = useState(true);
@@ -41,6 +44,36 @@ const ProgressScreen = () => {
       setLoading(false);
     }
   };
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title: 'PROGRESS',
+      headerBackVisible: false,
+      headerRight: () => (
+        <View
+          style={{
+            width: 36,
+            height: 36,
+            borderRadius: 18,
+            backgroundColor: '#edf96cff',
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginRight: 12,
+          }}
+        >
+          <Text
+            style={{
+              color: '#2c6f33ff',
+              fontWeight: 'bold',
+              fontSize: 16,
+            }}
+          >
+            {initials}
+          </Text>
+        </View>
+      ),
+    });
+  }, [navigation, initials]);
 
   useEffect(() => {
     fetchSummary();

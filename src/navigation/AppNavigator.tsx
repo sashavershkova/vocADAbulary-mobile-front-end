@@ -24,7 +24,7 @@ const AppNavigator = () => (
       initialRouteName="Splash"
       screenOptions={{
         headerStyle: {
-          backgroundColor: '#E6E6FA', // 💜 лавандовый фон
+          backgroundColor: '#6cdc6cb5', // фон заголовка
         },
         headerTitleStyle: {
           fontFamily: 'ArchitectsDaughter',
@@ -37,7 +37,7 @@ const AppNavigator = () => (
     >
       <Stack.Screen name="Splash" component={SplashScreen} options={{ headerShown: false }} />
       <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
-      <Stack.Screen name="Home" component={HomeScreen} options={{ title: 'HOME' }} />
+      <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: true }} />
       <Stack.Screen name="Topics" component={TopicsScreen} options={{ title: 'TOPICS' }} />
       <Stack.Screen name="Topic" component={TopicScreen} options={{ title: 'TOPIC' }} />
       <Stack.Screen name="Flashcard" component={FlashcardScreen} options={{ title: 'FLASHCARD' }} />

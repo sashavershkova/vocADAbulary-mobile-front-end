@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useLayoutEffect } from 'react';
 import { View, Text, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
 import { Audio } from 'expo-av';
 import { Ionicons } from '@expo/vector-icons';
@@ -10,8 +10,10 @@ import { RootStackParamList } from '../types/navigation';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Flashcard'>;
 
-import { addToWallet as addToWalletApi,
-         updateWalletFlashcardStatus } from '../api/wallet';
+import {
+  addToWallet as addToWalletApi,
+  updateWalletFlashcardStatus
+} from '../api/wallet';
 
 type Flashcard = {
   id: number;
@@ -28,11 +30,44 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
   const { topicId, topicName, flashcardId } = route.params;
   const { user } = useMockUser();
   const userId = user.id;
+  const username = user.username;
+  const initials = username?.charAt(0).toUpperCase() || '?';
+
 
   const [flashcards, setFlashcards] = useState<Flashcard[]>([]);
   const [currentCard, setCurrentCard] = useState<Flashcard | null>(null);
   const [loading, setLoading] = useState(true);
   const [showPhonetic, setShowPhonetic] = useState(false);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title: 'FLASHCARDS',
+      headerBackVisible: false,
+      headerRight: () => (
+        <View
+          style={{
+            width: 36,
+            height: 36,
+            borderRadius: 18,
+            backgroundColor: '#edf96cff',
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginRight: 12,
+          }}
+        >
+          <Text
+            style={{
+              color: '#2c6f33ff',
+              fontWeight: 'bold',
+              fontSize: 16,
+            }}
+          >
+            {initials}
+          </Text>
+        </View>
+      ),
+    });
+  }, [navigation, initials]);
 
   useEffect(() => {
     const fetchFlashcards = async () => {
@@ -94,16 +129,16 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
     }
   };
 
-const addToWallet = async () => {
-  if (!currentCard) return;
-  try {
-    await addToWalletApi(currentCard.id);
-    Alert.alert('Added', 'Flashcard added to wallet.');
-  } catch (error) {
-    console.error('Wallet error:', error);
-    Alert.alert('Error', 'Could not add flashcard to wallet.');
-  }
-};
+  const addToWallet = async () => {
+    if (!currentCard) return;
+    try {
+      await addToWalletApi(currentCard.id);
+      Alert.alert('Added', 'Flashcard added to wallet.');
+    } catch (error) {
+      console.error('Wallet error:', error);
+      Alert.alert('Error', 'Could not add flashcard to wallet.');
+    }
+  };
 
   if (loading || !currentCard) {
     return <ActivityIndicator style={styles.loader} size="large" />;
