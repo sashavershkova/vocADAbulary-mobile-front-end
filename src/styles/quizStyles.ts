@@ -53,6 +53,23 @@ const styles = StyleSheet.create({
     borderColor: '#7e57c2',
     backgroundColor: '#ede7f6',
   },
+  initialsCircle: {
+  width: 36,
+  height: 36,
+  borderRadius: 18,
+  backgroundColor: '#edf96c',
+  justifyContent: 'center',
+  alignItems: 'center',
+  marginRight: 12,
+  borderColor: '#2c6f33',
+  borderWidth: 2,
+},
+initialsText: {
+  fontFamily: 'ArchitectsDaughter-Regular',
+  color: '#2c6f33',
+  fontWeight: 'bold',
+  fontSize: 16,
+},
 });
 
 export default styles;
