@@ -1,6 +1,13 @@
-import React, { useEffect, useState, useLayoutEffect } from 'react';
-import { View, Text, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
-import { Ionicons, Entypo, FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
+import React, { useEffect, useState, useLayoutEffect, useRef } from 'react';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Alert,
+  ActivityIndicator,
+  Animated,
+} from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { Audio } from 'expo-av';
 import { useMockUser } from '../context/UserContext';
 import api from '../api/axiosInstance';
@@ -30,6 +37,39 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
   const [currentCard, setCurrentCard] = useState<Flashcard | null>(null);
   const [loading, setLoading] = useState(true);
   const [showExample, setShowExample] = useState(false);
+  const [flipped, setFlipped] = useState(false);
+
+  const flipAnim = useRef(new Animated.Value(0)).current;
+
+  const frontInterpolate = flipAnim.interpolate({
+    inputRange: [0, 180],
+    outputRange: ['0deg', '180deg'],
+  });
+
+  const backInterpolate = flipAnim.interpolate({
+    inputRange: [0, 180],
+    outputRange: ['180deg', '360deg'],
+  });
+
+  const flipCard = () => {
+    if (!flipped) {
+      Animated.spring(flipAnim, {
+        toValue: 180,
+        useNativeDriver: true,
+        friction: 8,
+        tension: 10,
+      }).start();
+      setFlipped(true);
+    } else {
+      Animated.spring(flipAnim, {
+        toValue: 0,
+        useNativeDriver: true,
+        friction: 8,
+        tension: 10,
+      }).start();
+      setFlipped(false);
+    }
+  };
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -74,6 +114,8 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
       const next = flashcards[Math.floor(Math.random() * flashcards.length)];
       setCurrentCard(next);
       setShowExample(false);
+      setFlipped(false);
+      flipAnim.setValue(0); // сброс поворота
     }
   };
 
@@ -120,30 +162,60 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.card}>
-        <TouchableOpacity style={styles.soundButton} onPress={handlePlayAudio}>
-          <Ionicons name="volume-high-outline" size={24} color="black" />
-        </TouchableOpacity>
+      <TouchableOpacity onPress={flipCard} activeOpacity={1}>
+        <View style={{ alignItems: 'center', justifyContent: 'center', height: 250 }}>
+          {/* Front Side */}
+          <Animated.View
+            style={[
+              styles.card,
+              {
+                backfaceVisibility: 'hidden',
+                transform: [{ rotateY: frontInterpolate }],
+              },
+            ]}
+          >
+            <TouchableOpacity style={styles.soundButton} onPress={handlePlayAudio}>
+              <Ionicons name="volume-high-outline" size={24} color="black" />
+            </TouchableOpacity>
 
-        <Text style={styles.word}>{currentCard.word}</Text>
-        <Text style={styles.definition}>{currentCard.definition}</Text>
+            <Text style={styles.word}>{currentCard.word}</Text>
 
-        <View style={styles.cardButtons}>
-          <TouchableOpacity onPress={handleDelete}>
-            <MaterialCommunityIcons name="trash-can-outline" size={24} color="purple" />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={handleAddToWallet}>
-            <FontAwesome name="money" size={24} color="purple" />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => updateStatus('learned')}>
-            <Ionicons name="checkmark-circle-outline" size={24} color="purple" />
-          </TouchableOpacity>
+            <View style={styles.cardButtons}>
+              <TouchableOpacity onPress={handleDelete}>
+                <Ionicons name="trash-outline" size={24} color="purple" />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={handleAddToWallet}>
+                <Ionicons name="wallet-outline" size={24} color="purple" />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => updateStatus('learned')}>
+                <Ionicons name="checkmark-circle-outline" size={24} color="purple" />
+              </TouchableOpacity>
+            </View>
+          </Animated.View>
+
+          {/* Back Side */}
+          <Animated.View
+            style={[
+              styles.card,
+              {
+                position: 'absolute',
+                top: 0,
+                backfaceVisibility: 'hidden',
+                transform: [{ rotateY: backInterpolate }],
+              },
+            ]}
+          >
+            <TouchableOpacity style={styles.soundButton} onPress={handlePlayAudio}>
+              <Ionicons name="volume-high-outline" size={24} color="" />
+            </TouchableOpacity>
+            <Text style={styles.definition}>{currentCard.definition}</Text>
+          </Animated.View>
         </View>
-      </View>
+      </TouchableOpacity>
 
       <View style={styles.exampleSection}>
         <TouchableOpacity onPress={() => setShowExample(!showExample)}>
-          <Entypo name="light-bulb" size={22} color="black" />
+          <Ionicons name="bulb-outline" size={30} color="green" />
         </TouchableOpacity>
         {showExample && (
           <View style={styles.exampleBubble}>
@@ -154,16 +226,16 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
 
       <View style={styles.navBar}>
         <TouchableOpacity onPress={() => navigation.navigate('Home')}>
-          <Ionicons name="home-outline" size={24} color="green" />
+          <Ionicons name="home-outline" size={30} color="green" />
         </TouchableOpacity>
         <TouchableOpacity>
-          <Ionicons name="search-outline" size={24} color="green" />
+          <Ionicons name="search-outline" size={30} color="green" />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => handleNext()}>
-          <Ionicons name="arrow-back-outline" size={24} color="green" />
+        <TouchableOpacity onPress={handleNext}>
+          <Ionicons name="arrow-back-outline" size={30} color="green" />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => handleNext()}>
-          <Ionicons name="arrow-forward-outline" size={24} color="green" />
+        <TouchableOpacity onPress={handleNext}>
+          <Ionicons name="arrow-forward-outline" size={30} color="green" />
         </TouchableOpacity>
       </View>
     </View>
