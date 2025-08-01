@@ -8,15 +8,20 @@ import {
   FlatList,
   Alert,
   ActivityIndicator,
+  Image,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Audio } from "expo-av";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { RootStackParamList } from '../types/navigation';
-import { getWalletFlashcards, removeFromWallet, updateWalletFlashcardStatus } from "../api/wallet";
-import styles from "../styles/walletStyles"; // Import your styles
-
+import { RootStackParamList } from "../types/navigation";
+import {
+  getWalletFlashcards,
+  removeFromWallet,
+  updateWalletFlashcardStatus,
+} from "../api/wallet";
+import styles from "../styles/walletStyles";
+import { LinearGradient } from "expo-linear-gradient";
 
 type WalletNavProp = NativeStackNavigationProp<RootStackParamList, "Wallet">;
 
@@ -34,68 +39,40 @@ const WalletScreen = () => {
   const { user } = useMockUser();
   const userId = user.id;
   const username = user.username;
-  const initials = username?.charAt(0).toUpperCase() || '?';
+  const initials = username?.charAt(0).toUpperCase() || "?";
+
   const [flashcards, setFlashcards] = useState<WalletFlashcard[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState("");
 
-
-  // navigation.navigate('NewFlashcard', { topicId: topic.id }); 
-  // link to creating a new Flashcard screen for the button
-  //need to add a PUT request to provide a new Topic name when adding a card 
-  
-
-
-const fetchWallet = async () => {
-  try {
-    setLoading(true);
-    const data = await getWalletFlashcards(userId);
-    console.log("Wallet data:", JSON.stringify(data, null, 2));
-
-    // Map backend data (flashcardId) to the format expected by the frontend
-    const normalized = data.map((item: any) => ({
-      id: item.flashcardId,
-      word: item.word,
-      definition: item.definition,
-      status: item.status,
-      lastReviewed: item.lastReviewed,
-      audioUrl: item.audioUrl,
-    }));
-
-    setFlashcards(normalized);
-  } catch (error) {
-    console.error("Error fetching wallet:", error);
-    Alert.alert("Error", "Could not load wallet flashcards.");
-  } finally {
-    setLoading(false);
-  }
-};
+  const fetchWallet = async () => {
+    try {
+      setLoading(true);
+      const data = await getWalletFlashcards(userId);
+      const normalized = data.map((item: any) => ({
+        id: item.flashcardId,
+        word: item.word,
+        definition: item.definition,
+        status: item.status,
+        lastReviewed: item.lastReviewed,
+        audioUrl: item.audioUrl,
+      }));
+      setFlashcards(normalized);
+    } catch (error) {
+      console.error("Error fetching wallet:", error);
+      Alert.alert("Error", "Could not load wallet flashcards.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: 'WALLET',
+      title: "WALLET",
       headerBackVisible: false,
       headerRight: () => (
-        <View
-          style={{
-            width: 36,
-            height: 36,
-            borderRadius: 18,
-            backgroundColor: '#edf96cff',
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginRight: 12,
-          }}
-        >
-          <Text
-            style={{
-              color: '#2c6f33ff',
-              fontWeight: 'bold',
-              fontSize: 16,
-            }}
-          >
-            {initials}
-          </Text>
+        <View style={styles.initialsCircle}>
+          <Text style={styles.initialsText}>{initials}</Text>
         </View>
       ),
     });
@@ -142,8 +119,7 @@ const fetchWallet = async () => {
   }
 
   return (
-    <View style={styles.container}>
-      {/* Search bar */}
+    <LinearGradient colors={["#b0f4e6", "#f5f7648c"]} style={styles.container}>
       <TextInput
         style={styles.searchBar}
         placeholder="Search in wallet..."
@@ -151,45 +127,50 @@ const fetchWallet = async () => {
         onChangeText={setSearchText}
       />
 
-      {/* Flashcards list */}
       <FlatList
         data={filteredFlashcards}
         keyExtractor={(item) => item.id.toString()}
+        contentContainerStyle={styles.cardList}
         renderItem={({ item }) => (
           <View style={styles.cardRow}>
             <TouchableOpacity onPress={() => playAudio(item.audioUrl)}>
-              <Ionicons name="volume-high-outline" size={24} />
+              <Ionicons name="volume-high-outline" size={24} color="#127712ff" />
             </TouchableOpacity>
 
-            <View style={styles.cardContent}>
-              <Text style={styles.word}>{item.word}</Text>
-              <Text numberOfLines={1} style={styles.definition}>
-                {item.definition}
-              </Text>
-            </View>
+            <Text style={styles.word}>{item.word}</Text>
 
-            <View style={styles.actions}>
-              <TouchableOpacity onPress={() => handleDelete(item.id)}>
-                <Text style={styles.actionButton}>Delete</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => markAsLearned(item.id)}>
-                <Text style={styles.actionButton}>Learned</Text>
-              </TouchableOpacity>
-            </View>
+            <TouchableOpacity
+              onPress={() => handleDelete(item.id)}
+              style={styles.minusButton}
+            >
+              <Text style={styles.minusText}>−</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={() => markAsLearned(item.id)}>
+              <Ionicons name="checkmark-circle-outline" size={24} color="#227345ff" />
+            </TouchableOpacity>
           </View>
         )}
       />
 
-      {/* Bottom buttons */}
       <View style={styles.bottomBar}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Text style={styles.bottomButton}>Back</Text>
+        <TouchableOpacity onPress={() => navigation.navigate("Home" as never)}>
+          <Ionicons name="home" size={30} color="#2e9c2eff" />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate("LearnedCards" as never)}>
-          <Text style={styles.bottomButton}>Learned Cards</Text>
+
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate("NewFlashcard" as never, { topicId: 0 } as never)
+          }
+        >
+          <Ionicons name="add-circle" size={36} color="#2e9c2eff" />
+        </TouchableOpacity>
+
+        <TouchableOpacity disabled>
+          <Ionicons name="wallet-outline" size={30} color="#2e9c2eff" />
         </TouchableOpacity>
       </View>
-    </View>
+    </LinearGradient>
   );
 };
 
