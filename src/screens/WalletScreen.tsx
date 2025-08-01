@@ -119,7 +119,7 @@ const WalletScreen = () => {
   }
 
   return (
-    <LinearGradient colors={["#b0f4e6", "#f5f7648c"]} style={styles.container}>
+    <LinearGradient colors={["#b0f4c9ff", "#313bae8c"]} style={styles.container}>
       <TextInput
         style={styles.searchBar}
         placeholder="Search in wallet..."
@@ -155,7 +155,7 @@ const WalletScreen = () => {
 
       <View style={styles.bottomBar}>
         <TouchableOpacity onPress={() => navigation.navigate("Home" as never)}>
-          <Ionicons name="home" size={30} color="#2e9c2eff" />
+          <Ionicons name="home" size={30} color="rgba(3, 48, 138, 1)" />
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -163,11 +163,11 @@ const WalletScreen = () => {
             navigation.navigate("NewFlashcard" as never, { topicId: 0 } as never)
           }
         >
-          <Ionicons name="add-circle" size={36} color="#2e9c2eff" />
+          <Ionicons name="add-circle" size={36} color="rgba(3, 48, 138, 1)" />
         </TouchableOpacity>
 
         <TouchableOpacity disabled>
-          <Ionicons name="wallet-outline" size={30} color="#2e9c2eff" />
+          <Ionicons name="wallet-outline" size={30} color="rgba(3, 48, 138, 1)" />
         </TouchableOpacity>
       </View>
     </LinearGradient>
