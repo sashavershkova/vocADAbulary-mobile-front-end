@@ -115,7 +115,7 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
       setCurrentCard(next);
       setShowExample(false);
       setFlipped(false);
-      flipAnim.setValue(0); // сброс поворота
+      flipAnim.setValue(0); 
     }
   };
 
