@@ -185,6 +185,9 @@ const fetchWallet = async () => {
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Text style={styles.bottomButton}>Back</Text>
         </TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate("NewFlashcard" as never)}>
+          <Text style={styles.bottomButton}>+ New Flashcard</Text>
+        </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate("LearnedCards" as never)}>
           <Text style={styles.bottomButton}>Learned Cards</Text>
         </TouchableOpacity>

@@ -1,29 +1,54 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useMockUser } from "../context/UserContext";
 import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigation';
+import { Dropdown } from 'react-native-element-dropdown';
+import { Ionicons } from '@expo/vector-icons';
 import api from '../api/axiosInstance';
 import styles from '../styles/formStyles';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'NewFlashcard'>;
 
+type Topic = {
+    id: number;
+    name: string;
+};
+
 const NewFlashcardScreen = ({ navigation, route }: Props) => {
-    const { topicId } = route.params as { topicId: string }; // topicId passed from navigation
+    // const { topicId } = route.params as { topicId: string }; // topicId passed from navigation
     const { user } = useMockUser();
     const userId = user.id;
     const [word, setWord] = useState('');
     const [definition, setDefinition] = useState('');
+    const [topics, setTopics] = useState<Topic[]>([]);
+    const [selectedTopicId, setSelectedTopicId] = useState<number | null>(null);
     const [example, setExample] = useState('');
 
+    // Load topics from backend
+    useEffect(() => {
+        const fetchTopics = async () => {
+        try {
+            const response = await api.get('/api/topics');
+            setTopics(response.data)
+            console.log("Fetching topics...");
+            console.log("Topics response:", response.data);
+        } catch (error) {
+            console.error('Error fetching topics:', error);
+            Alert.alert('Error', 'Could not load topics.');
+        }
+        };
+        fetchTopics();
+    }, []);
+
     const handleSave = async () => {
-        if (!word || !definition || !example) {
+        if (!word || !definition || !example || !selectedTopicId) {
         Alert.alert('Missing fields', 'Please fill out all fields.');
         return;
         }
 
         try {
-        const response = await api.post(`/api/topics/${topicId}/flashcards`, {
+        const response = await api.post(`/api/topics/${selectedTopicId}/flashcards`, {
             word,
             definition,
             example
@@ -38,6 +63,18 @@ const NewFlashcardScreen = ({ navigation, route }: Props) => {
 
     return (
         <View style={styles.container}>
+        <Text style={styles.label}>Topic</Text>
+        <Dropdown
+            data={topics.map(topic => ({ label: topic.name, value: topic.id }))}
+            labelField="label"
+            valueField="value"
+            placeholder="Select a topic"
+            value={selectedTopicId}
+            onChange={item => setSelectedTopicId(item.value)}
+            style={styles.dropdown}
+            // style={{ marginBottom: 20, borderWidth: 1, borderColor: 'gray', padding: 8, borderRadius: 5 }}
+        />
+
         <Text style={styles.label}>Word</Text>
         <TextInput
             style={styles.input}

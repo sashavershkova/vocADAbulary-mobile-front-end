@@ -104,7 +104,7 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
   };
 
   const handleDelete = async () => {
-    if (currentCard?.createdBy !== mockUserId) {
+    if (currentCard?.createdBy !== userId) {
       Alert.alert('Permission denied', 'Only your own flashcards can be deleted.');
       return;
     }
@@ -121,7 +121,7 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
   const updateStatus = async (status: string) => {
     if (!currentCard) return;
     try {
-      await updateWalletFlashcardStatus(mockUserId, currentCard.id, status);
+      await updateWalletFlashcardStatus(userId, currentCard.id, status);
       Alert.alert('Updated', `Flashcard marked as ${status}.`);
     } catch (error) {
       console.error('Update error:', error);
@@ -136,7 +136,7 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
       Alert.alert('Added', 'Flashcard added to wallet.');
     } catch (error) {
       console.error('Wallet error:', error);
-      Alert.alert('Error', 'Could not add flashcard to wallet.');
+      Alert.alert('This flashcard is already in your wallet');
     }
   };
 

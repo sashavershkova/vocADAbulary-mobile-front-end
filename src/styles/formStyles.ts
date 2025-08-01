@@ -32,4 +32,12 @@ export default StyleSheet.create({
     fontSize: 16,
     color: '#fff',
   },
+    dropdown: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    padding: 10,
+    fontSize: 16,
+    backgroundColor: '#f9f9f9',
+  },
 });
