@@ -49,18 +49,18 @@ const styles = StyleSheet.create({
   width: 36,
   height: 36,
   borderRadius: 18,
-  backgroundColor: '#edf96c',
+  backgroundColor: '#87CEFA',
   justifyContent: 'center',
   alignItems: 'center',
   marginRight: 12,
   borderColor: '#2c6f33',
-  borderWidth: 2,
+  borderWidth: 1.5,
 },
 initialsText: {
   fontFamily: 'ArchitectsDaughter-Regular',
   color: '#2c6f33',
   fontWeight: 'bold',
-  fontSize: 16,
+  fontSize: 18,
 },
 });
 

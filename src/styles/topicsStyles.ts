@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
 
   topicTouchable: {
     borderRadius: 40,
-    overflow: 'visible', // чтобы тень была видна
+    overflow: 'visible', 
   },
 
   topicBox: {
@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1.5,
-    elevation: 0, // не влияет на iOS, но пусть будет
+    elevation: 0, 
   },
 
   topicText: {
@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
   },
 
   topicShadowWrapper: {
-    shadowColor: '#006400', // 🖤 Чёрная тень
+    shadowColor: '#006400', 
     shadowOffset: { width: 1, height: 3 },
     shadowOpacity: 0.3,
     shadowRadius: 6,
@@ -63,15 +63,15 @@ const styles = StyleSheet.create({
   },
 
   simpleButton: {
-  backgroundColor: '#F8C8DC', // нежно-розовый
+  backgroundColor: '#F8C8DC', 
   borderRadius: 20,
   paddingVertical: 10,
   paddingHorizontal: 30,
   alignItems: 'center',
   justifyContent: 'center',
   borderWidth: 1.5,
-  borderColor: '#006400', // тёмно-зелёный бордер
-  marginTop: 30, // при необходимости
+  borderColor: '#006400', 
+  marginTop: 30, 
 },
 
 simpleButtonText: {
@@ -89,13 +89,13 @@ initialsCircle: {
   alignItems: 'center',
   marginRight: 12,
   borderColor: '#2c6f33',
-  borderWidth: 2,
+  borderWidth: 1.5,
 },
 initialsText: {
   fontFamily: 'ArchitectsDaughter-Regular',
   color: '#2c6f33',
   fontWeight: 'bold',
-  fontSize: 16,
+  fontSize: 18,
 },
 });
 

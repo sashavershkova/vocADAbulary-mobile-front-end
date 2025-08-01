@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 export default StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fcf9b5ff', // fallback if gradient fails
+    // backgroundColor: '#fcf9b5ff', // fallback if gradient fails
     paddingTop: 60,
     justifyContent: 'space-between',
   },
@@ -15,14 +15,14 @@ export default StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
-    borderColor: '#2c6f33', // Тёмно-зелёная обводка
-    borderWidth: 2,
+    borderColor: '#2c6f33', 
+    borderWidth: 1.5,
   },
   initialsText: {
     fontFamily: 'ArchitectsDaughter-Regular',
     color: '#2c6f33',
     fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: 18,
   },
   loader: {
     flex: 1,
@@ -33,7 +33,7 @@ export default StyleSheet.create({
   borderColor: '#4CAF50',
   borderWidth: 2,
   borderRadius: 16,
-  width: 370,              // или '90%' — но не сжимай
+  width: 370,              
   height: 300,
   alignSelf: 'center',
   alignItems: 'center',
@@ -91,4 +91,16 @@ export default StyleSheet.create({
     justifyContent: 'space-around',
     paddingVertical: 16,
   },
+  navItem: {
+  alignItems: 'center',
+  justifyContent: 'center',
+  marginHorizontal: 12,
+},
+
+navText: {
+  fontSize: 16,
+  color: '#246396', 
+  fontFamily: 'ArchitectsDaughter-Regular',
+  marginTop: 4,
+},
 });

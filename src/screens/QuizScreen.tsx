@@ -1,10 +1,12 @@
 import React, { useEffect, useState, useLayoutEffect } from 'react';
 import { useMockUser } from '../context/UserContext';
-import { View, Text, SafeAreaView, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, SafeAreaView, TouchableOpacity, Alert, ScrollView } from 'react-native';
 import styles from '../styles/quizStyles';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigation';
 import api from '../api/axiosInstance';
+import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Quiz'>;
 
@@ -17,7 +19,7 @@ type Quiz = {
   wrongAnswer1: string;
   wrongAnswer2: string;
   wrongAnswer3: string;
-  answers?: { text: string; correct: boolean }[]; // added after transform
+  answers?: { text: string; correct: boolean }[];
 };
 
 const QuizScreen = ({ navigation }: Props) => {
@@ -31,16 +33,24 @@ const QuizScreen = ({ navigation }: Props) => {
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   useLayoutEffect(() => {
-    navigation.setOptions({
-      title: 'QUIZ',
-      headerBackVisible: false,
-      headerRight: () => (
-        <View style={styles.initialsCircle}>
+  navigation.setOptions({
+    title: 'QUIZ',
+    headerBackVisible: false,
+    headerStyle: {
+      backgroundColor: '#f7b4c4d6', 
+    },
+    headerTitleStyle: {
+      fontFamily: 'ArchitectsDaughter-Regular',
+      fontSize: 24,
+      color: '#2c6f33', 
+    },
+    headerRight: () => (
+      <View style={styles.initialsCircle}>
         <Text style={styles.initialsText}>{initials}</Text>
       </View>
-      ),
-    });
-  }, [navigation, initials]);
+    ),
+  });
+}, [navigation]);
 
   useEffect(() => {
     const fetchAllQuizzes = async () => {
@@ -59,7 +69,7 @@ const QuizScreen = ({ navigation }: Props) => {
               { text: quiz.wrongAnswer3, correct: false },
             ]),
           }));
-          setQuizzes(shuffleArray(transformedQuizzes)); // shuffle quizzes too
+          setQuizzes(shuffleArray(transformedQuizzes));
         }
       } catch (err) {
         console.error('Failed to load quizzes:', err);
@@ -112,44 +122,48 @@ const QuizScreen = ({ navigation }: Props) => {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.termBox}>
-        <Text style={styles.termText}>{currentQuiz.questionText}</Text>
-      </View>
+    <LinearGradient colors={['#f7b4c4d6', '#bf86fcc2']} style={styles.container}>
+      <SafeAreaView style={styles.container}>
+        <View style={styles.questionButton}>
+          <Text style={styles.questionText}>{currentQuiz.questionText}</Text>
+        </View>
 
-      {currentQuiz.answers?.map((answer, index) => {
-        const isSelected = selectedAnswerId === index;
-        return (
-          <TouchableOpacity
-            key={index}
-            onPress={() => handleSelect(index)}
-            style={[
-              styles.answerBox,
-              !isSubmitted && isSelected && styles.selectedAnswerBox,
-              isSubmitted && answer.correct && styles.correctAnswerBox,
-              isSubmitted && isSelected && !answer.correct && styles.wrongAnswerBox,
-            ]}
-          >
-            <Text style={styles.answerText}>{answer.text}</Text>
+        <ScrollView contentContainerStyle={styles.answersContainer}>
+          {currentQuiz.answers?.map((answer, index) => {
+            const isSelected = selectedAnswerId === index;
+            return (
+              <TouchableOpacity
+                key={index}
+                onPress={() => handleSelect(index)}
+                style={[
+                  styles.answerBox,
+                  !isSubmitted && isSelected && styles.selectedAnswerBox,
+                  isSubmitted && answer.correct && styles.correctAnswerBox,
+                  isSubmitted && isSelected && !answer.correct && styles.wrongAnswerBox,
+                ]}
+              >
+                <Text style={styles.answerText}>{answer.text}</Text>
+              </TouchableOpacity>
+            );
+          })}
+        </ScrollView>
+
+        <View style={styles.bottomBar}>
+          <TouchableOpacity onPress={() => navigation.goBack()} style={styles.navigationButton}>
+            <Ionicons name="home" size={30} color="#2c6f33" />
           </TouchableOpacity>
-        );
-      })}
-
-      <View style={styles.buttonRow}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.navButton}>
-          <Text style={styles.buttonText}>⬅️</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={handleReset} style={styles.navButton}>
-          <Text style={styles.buttonText}>🔁</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={handleSubmit} style={styles.navButton}>
-          <Text style={styles.buttonText}>✅</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={handleNext} style={styles.navButton}>
-          <Text style={styles.buttonText}>➡️</Text>
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
+          <TouchableOpacity onPress={handleReset} style={styles.navigationButton}>
+            <Ionicons name="refresh-circle" size={30} color="#2c6f33" />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleSubmit} style={styles.navigationButton}>
+            <Ionicons name="checkmark-circle" size={30} color="#2c6f33" />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleNext} style={styles.navigationButton}>
+            <Ionicons name="arrow-forward-circle" size={30} color="#2c6f33" />
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    </LinearGradient>
   );
 };
 

@@ -15,6 +15,7 @@ import { addToWallet, updateWalletFlashcardStatus } from '../api/wallet';
 import styles from '../styles/flashcardStyles';
 import { RootStackParamList } from '../types/navigation';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { LinearGradient } from 'expo-linear-gradient';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Flashcard'>;
 
@@ -161,84 +162,90 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
   }
 
   return (
-    <View style={styles.container}>
-      <TouchableOpacity onPress={flipCard} activeOpacity={1}>
-        <View style={{ alignItems: 'center', justifyContent: 'center', height: 250 }}>
-          {/* Front Side */}
-          <Animated.View
-            style={[
-              styles.card,
-              {
-                backfaceVisibility: 'hidden',
-                transform: [{ rotateY: frontInterpolate }],
-              },
-            ]}
-          >
-            <TouchableOpacity style={styles.soundButton} onPress={handlePlayAudio}>
-              <Ionicons name="volume-high-outline" size={24} color="black" />
-            </TouchableOpacity>
-
-            <Text style={styles.word}>{currentCard.word}</Text>
-
-            <View style={styles.cardButtons}>
-              <TouchableOpacity onPress={handleDelete}>
-                <Ionicons name="trash-outline" size={24} color="purple" />
+    <LinearGradient
+      colors={['#c1f7b5', '#e4ffb5']} // мягкий зелёный градиент
+      style={{ flex: 1 }}
+    >
+      <View style={styles.container}>
+        <TouchableOpacity onPress={flipCard} activeOpacity={1}>
+          <View style={{ alignItems: 'center', justifyContent: 'center', height: 250 }}>
+            {/* Front Side */}
+            <Animated.View
+              style={[
+                styles.card,
+                {
+                  backfaceVisibility: 'hidden',
+                  transform: [{ rotateY: frontInterpolate }],
+                },
+              ]}
+            >
+              <TouchableOpacity style={styles.soundButton} onPress={handlePlayAudio}>
+                <Ionicons name="volume-high-outline" size={24} color="rgba(216, 129, 245, 1)" />
               </TouchableOpacity>
-              <TouchableOpacity onPress={handleAddToWallet}>
-                <Ionicons name="wallet-outline" size={24} color="purple" />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => updateStatus('learned')}>
-                <Ionicons name="checkmark-circle-outline" size={24} color="purple" />
-              </TouchableOpacity>
-            </View>
-          </Animated.View>
 
-          {/* Back Side */}
-          <Animated.View
-            style={[
-              styles.card,
-              {
-                position: 'absolute',
-                top: 0,
-                backfaceVisibility: 'hidden',
-                transform: [{ rotateY: backInterpolate }],
-              },
-            ]}
-          >
-            <TouchableOpacity style={styles.soundButton} onPress={handlePlayAudio}>
-              <Ionicons name="volume-high-outline" size={24} color="" />
-            </TouchableOpacity>
-            <Text style={styles.definition}>{currentCard.definition}</Text>
-          </Animated.View>
-        </View>
-      </TouchableOpacity>
+              <Text style={styles.word}>{currentCard.word}</Text>
 
-      <View style={styles.exampleSection}>
-        <TouchableOpacity onPress={() => setShowExample(!showExample)}>
-          <Ionicons name="bulb-outline" size={30} color="green" />
-        </TouchableOpacity>
-        {showExample && (
-          <View style={styles.exampleBubble}>
-            <Text style={styles.exampleText}>{currentCard.example}</Text>
+              <View style={styles.cardButtons}>
+                <TouchableOpacity onPress={handleDelete}>
+                  <Ionicons name="trash-outline" size={30} color="rgba(216, 129, 245, 1)" />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={handleAddToWallet}>
+                  <Ionicons name="wallet-outline" size={30} color="rgba(216, 129, 245, 1)" />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => updateStatus('learned')}>
+                  <Ionicons name="checkmark-circle-outline" size={30} color="rgba(216, 129, 245, 1)" />
+                </TouchableOpacity>
+              </View>
+            </Animated.View>
+
+            {/* Back Side */}
+            <Animated.View
+              style={[
+                styles.card,
+                {
+                  position: 'absolute',
+                  top: 0,
+                  backfaceVisibility: 'hidden',
+                  transform: [{ rotateY: backInterpolate }],
+                },
+              ]}
+            >
+              <TouchableOpacity style={styles.soundButton} onPress={handlePlayAudio}>
+                <Ionicons name="volume-high-outline" size={30} color="" />
+              </TouchableOpacity>
+              <Text style={styles.definition}>{currentCard.definition}</Text>
+            </Animated.View>
           </View>
-        )}
-      </View>
+        </TouchableOpacity>
 
-      <View style={styles.navBar}>
-        <TouchableOpacity onPress={() => navigation.navigate('Home')}>
-          <Ionicons name="home-outline" size={30} color="green" />
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Ionicons name="search-outline" size={30} color="green" />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={handleNext}>
-          <Ionicons name="arrow-back-outline" size={30} color="green" />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={handleNext}>
-          <Ionicons name="arrow-forward-outline" size={30} color="green" />
-        </TouchableOpacity>
+        <View style={styles.exampleSection}>
+          <TouchableOpacity onPress={() => setShowExample(!showExample)}>
+            <Ionicons name="bulb-outline" size={30} color="rgba(216, 129, 245, 1)" />
+          </TouchableOpacity>
+          {showExample && (
+            <View style={styles.exampleBubble}>
+              <Text style={styles.exampleText}>{currentCard.example}</Text>
+            </View>
+          )}
+        </View>
+
+        <View style={styles.navBar}>
+          <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Home')}>
+            <Ionicons name="home" size={30} color="#246396" />
+            <Text style={styles.navText}>Home</Text>
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <Ionicons name="search-outline" size={30} color="#246396ff" />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleNext}>
+            <Ionicons name="arrow-back-circle" size={30} color="#246396ff" />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleNext}>
+            <Ionicons name="arrow-forward-circle" size={30} color="#246396ff" />
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </LinearGradient>
   );
 };
 
