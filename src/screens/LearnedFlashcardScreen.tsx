@@ -1,4 +1,4 @@
-import React, { use, useEffect, useState } from "react";
+import React, { use, useEffect, useState, useLayoutEffect } from "react";
 import { View, Text, TextInput, TouchableOpacity, FlatList, Alert, ActivityIndicator } from "react-native";
 import { useMockUser } from "../context/UserContext";
 import { Ionicons } from "@expo/vector-icons";
@@ -24,6 +24,8 @@ const LearnedFlashcardsScreen = () => {
   const navigation = useNavigation<LearnedNavProp>();
   const { user } = useMockUser();
   const userId = user.id; 
+  const username = user.username;
+  const initials = username?.charAt(0).toUpperCase() || '?';
 
   const [flashcards, setFlashcards] = useState<WalletFlashcard[]>([]);
   const [loading, setLoading] = useState(true);
@@ -51,6 +53,36 @@ const LearnedFlashcardsScreen = () => {
       setLoading(false);
     }
   };
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title: 'LEARNED CARDS',
+      headerBackVisible: false,
+      headerRight: () => (
+        <View
+          style={{
+            width: 36,
+            height: 36,
+            borderRadius: 18,
+            backgroundColor: '#edf96cff',
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginRight: 12,
+          }}
+        >
+          <Text
+            style={{
+              color: '#2c6f33ff',
+              fontWeight: 'bold',
+              fontSize: 16,
+            }}
+          >
+            {initials}
+          </Text>
+        </View>
+      ),
+    });
+  }, [navigation, initials]);
 
   useEffect(() => {
     fetchLearned();

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useLayoutEffect } from 'react';
 import {
   Text,
   TouchableOpacity,
@@ -42,9 +42,41 @@ const topicGradientsActive: [string, string][] = [
 const TopicsScreen = ({ navigation }: Props) => {
   const { user } = useMockUser();
   const userId = user.id;
+  const username = user.username;
+  const initials = username?.charAt(0).toUpperCase() || '?';
   const [topics, setTopics] = useState<Topic[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeId, setActiveId] = useState<number | null>(null);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title: 'TOPICS',
+      headerBackVisible: false,
+      headerRight: () => (
+        <View
+          style={{
+            width: 36,
+            height: 36,
+            borderRadius: 18,
+            backgroundColor: '#edf96cff',
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginRight: 12,
+          }}
+        >
+          <Text
+            style={{
+              color: '#2c6f33ff',
+              fontWeight: 'bold',
+              fontSize: 16,
+            }}
+          >
+            {initials}
+          </Text>
+        </View>
+      ),
+    });
+  }, [navigation, initials]);
 
   useEffect(() => {
     const fetchTopics = async () => {

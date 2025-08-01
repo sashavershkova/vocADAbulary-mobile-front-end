@@ -1,37 +1,57 @@
-import React from 'react';
-import { View, TouchableOpacity, Text } from 'react-native';
+import React, { useLayoutEffect } from 'react';
+import { View, Text, TouchableOpacity } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigation';
-import { LinearGradient } from 'expo-linear-gradient';
 import styles from '../styles/homeStyles';
-import { useMockUser } from "../context/UserContext";
+import { useMockUser } from '../context/UserContext';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
-const HomeScreen = ({ navigation, route }: Props) => {
+const HomeScreen = ({ navigation }: Props) => {
   const { user } = useMockUser();
   const userId = user.id;
   const username = user.username;
-  React.useLayoutEffect(() => {
+  const initials = username?.charAt(0).toUpperCase() || '?';
+
+  useLayoutEffect(() => {
     navigation.setOptions({
-      headerBackVisible: false, // removes back arrow
-      title: username, // shows username in the header
+      headerBackVisible: false,
+      title: 'HOME',
+      headerRight: () => (
+        <View style={{
+          width: 36,
+          height: 36,
+          borderRadius: 18,
+          backgroundColor: '#edf96cff',
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginRight: 12,
+        }}>
+          <Text style={{
+            color: '#2c6f33ff',
+            fontWeight: 'bold',
+            fontSize: 16,
+          }}>
+            {initials}
+          </Text>
+        </View>
+      ),
     });
-  }, [navigation, username]);
+  }, [navigation, initials]);
 
   return (
-    <LinearGradient colors={['#f9f9b4a5', '#6cdc6cff']} style={styles.container}>
-      {/* Progress — верхний левый */}
+    <LinearGradient
+      colors={['#f9f9b4a5', '#6cdc6cff']}
+      style={styles.container}
+    >
       <TouchableOpacity
         style={styles.progressButton}
-        onPress={() => {
-          navigation.navigate('Progress', { userId, username });
-        }}
+        onPress={() => navigation.navigate('Progress', { userId, username })}
       >
         <Text style={styles.smallButtonText}>PROGRESS</Text>
       </TouchableOpacity>
 
-      {/* Settings — чуть ниже справа */}
       <TouchableOpacity
         style={styles.settingsButton}
         onPress={() => navigation.navigate('Settings')}
@@ -39,7 +59,6 @@ const HomeScreen = ({ navigation, route }: Props) => {
         <Text style={styles.smallButtonText}>SETTINGS</Text>
       </TouchableOpacity>
 
-      {/* Exit — нижний правый */}
       <TouchableOpacity
         style={styles.exitButton}
         onPress={() =>
@@ -52,7 +71,6 @@ const HomeScreen = ({ navigation, route }: Props) => {
         <Text style={styles.buttonText}>EXIT</Text>
       </TouchableOpacity>
 
-      {/* LEARN — большая зелёная кнопка с правильным соотношением */}
       <TouchableOpacity
         style={styles.learnButton}
         onPress={() => navigation.navigate('Topics')}
@@ -60,12 +78,10 @@ const HomeScreen = ({ navigation, route }: Props) => {
         <Text style={styles.learnText}>LEARN</Text>
       </TouchableOpacity>
 
-      {/* Constructor — внизу по центру */}
       <TouchableOpacity style={styles.constructorButton}>
         <Text style={styles.buttonText}>CONSTRUCTOR</Text>
       </TouchableOpacity>
 
-      {/* WALLET — левый нижний угол */}
       <TouchableOpacity
         style={styles.walletButton}
         onPress={() => navigation.navigate('Wallet')}
@@ -73,7 +89,6 @@ const HomeScreen = ({ navigation, route }: Props) => {
         <Text style={styles.buttonText}>WALLET</Text>
       </TouchableOpacity>
 
-      {/* Quiz — левая сторона */}
       <TouchableOpacity
         style={styles.quizButton}
         onPress={() => navigation.navigate('Quiz')}
@@ -85,6 +100,3 @@ const HomeScreen = ({ navigation, route }: Props) => {
 };
 
 export default HomeScreen;
-
-
-

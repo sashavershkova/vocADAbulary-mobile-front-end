@@ -131,6 +131,33 @@ smallButtonText: {
     borderWidth: 1.5,
     borderColor: '#006400',
   },
+headerRow: {
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  paddingHorizontal: 16,
+  paddingTop: 50,
+  paddingBottom: 10,
+  backgroundColor: '#E6E6FA',
+},
+headerTitle: {
+  fontSize: 24,
+  fontFamily: 'ArchitectsDaughter-Bold',
+  color: '#2c6f33ff',
+},
+userCircle: {
+  width: 40,
+  height: 40,
+  borderRadius: 20,
+  backgroundColor: '#87CEFA',
+  justifyContent: 'center',
+  alignItems: 'center',
+},
+initials: {
+  color: '#2c6f33ff',
+  fontWeight: 'bold',
+  fontSize: 16,
+},
 
 
 });

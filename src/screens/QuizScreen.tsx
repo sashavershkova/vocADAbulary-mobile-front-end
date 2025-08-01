@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useLayoutEffect } from 'react';
 import { useMockUser } from '../context/UserContext';
 import { View, Text, SafeAreaView, TouchableOpacity, Alert } from 'react-native';
 import styles from '../styles/quizStyles';
@@ -25,11 +25,43 @@ type Quiz = {
 const QuizScreen = ({ navigation }: Props) => {
   const { user } = useMockUser();
   const userId = user.id;
+  const username = user.username;
+  const initials = username?.charAt(0).toUpperCase() || '?';
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
   const [currentQuizIndex, setCurrentQuizIndex] = useState(0);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswerId, setSelectedAnswerId] = useState<number | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title: 'QUIZ',
+      headerBackVisible: false,
+      headerRight: () => (
+        <View
+          style={{
+            width: 36,
+            height: 36,
+            borderRadius: 18,
+            backgroundColor: '#75f96cff',
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginRight: 12,
+          }}
+        >
+          <Text
+            style={{
+              color: '#2c6f33ff',
+              fontWeight: 'bold',
+              fontSize: 16,
+            }}
+          >
+            {initials}
+          </Text>
+        </View>
+      ),
+    });
+  }, [navigation, initials]);
 
   useEffect(() => {
     const fetchAllQuizzes = async () => {
