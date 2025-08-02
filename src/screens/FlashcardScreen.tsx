@@ -15,6 +15,7 @@ import { addToWallet, updateWalletFlashcardStatus } from '../api/wallet';
 import styles from '../styles/flashcardStyles';
 import { RootStackParamList } from '../types/navigation';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import * as FileSystem from 'expo-file-system';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Flashcard'>;
 
@@ -25,6 +26,7 @@ type Flashcard = {
   example: string;
   audioUrl: string;
   createdBy: number;
+  audioBase64?: string;
 };
 
 const FlashcardScreen = ({ route, navigation }: Props) => {
@@ -89,9 +91,17 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
         const response = await api.get(`api/topics/${topicId}/flashcards`);
         const data = response.data;
         setFlashcards(data);
+        
         if (data.length > 0) {
           const randomIndex = Math.floor(Math.random() * data.length);
-          setCurrentCard(data[randomIndex]);
+          const randomId = data[randomIndex].id;
+
+            // Fetch the full flashcard (with audioBase64) from the backend
+          const detailResponse = await api.get(`/flashcards/${randomId}`);
+          setCurrentCard(detailResponse.data);
+
+            // Store all flashcards for navigation purposes
+          setFlashcards(data);
         }
       } catch (error) {
         console.error('Error loading flashcards:', error);
@@ -102,20 +112,32 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
     fetchFlashcards();
   }, [topicId]);
 
-  const handlePlayAudio = async () => {
-    if (currentCard?.audioUrl) {
-      const { sound } = await Audio.Sound.createAsync({ uri: currentCard.audioUrl });
-      await sound.playAsync();
-    }
-  };
-
   const handleNext = () => {
     if (flashcards.length > 0) {
       const next = flashcards[Math.floor(Math.random() * flashcards.length)];
       setCurrentCard(next);
       setShowExample(false);
       setFlipped(false);
-      flipAnim.setValue(0); 
+      flipAnim.setValue(0);
+    }
+  };
+
+  const handlePlayAudio = async () => {
+    if (currentCard?.audioBase64) {
+      try {
+        // Create a temporary mp3 file
+        const fileUri = FileSystem.cacheDirectory + 'temp-audio.mp3';
+        await FileSystem.writeAsStringAsync(fileUri, currentCard.audioBase64, {
+          encoding: FileSystem.EncodingType.Base64,
+        });
+
+        const { sound } = await Audio.Sound.createAsync({ uri: fileUri });
+        await sound.playAsync();
+      } catch (err) {
+        console.error('Audio playback error:', err);
+      }
+    } else {
+      Alert.alert('No audio available');
     }
   };
 
