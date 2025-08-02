@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
   questionText: {
     fontFamily: 'ArchitectsDaughter',
     fontSize: 40,
-    color: '#333333',
+    color: '#2c6f33',
     textAlign: 'center',
     fontWeight: 'bold',
     textTransform: 'uppercase',
@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
   },
 
   answerBox: {
-    backgroundColor: '#d0f0c0',
+    backgroundColor: '#cbb6faff',
     borderRadius: 30,
     paddingVertical: 12,
     paddingHorizontal: 16,
@@ -73,8 +73,8 @@ const styles = StyleSheet.create({
   },
 
   correctAnswerBox: {
-    backgroundColor: '#a5d6a7',
-    borderColor: '#388e3c',
+    backgroundColor: '#d0f0c0',
+    borderColor: '#2c6f33',
   },
 
   wrongAnswerBox: {
