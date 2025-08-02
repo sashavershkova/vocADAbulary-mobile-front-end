@@ -86,23 +86,6 @@ const WalletScreen = () => {
     ),
   });
 }, [navigation, initials]);
-    title: "WALLET",
-    headerBackVisible: false,
-    headerStyle: {
-      backgroundColor: "#b0f4c9ff", 
-    },
-    headerTitleStyle: {
-      color: "#246396", 
-      fontFamily: "ArchitectsDaughter-Regular", 
-      fontSize: 24,
-    },
-    headerRight: () => (
-      <View style={styles.initialsCircle}>
-        <Text style={styles.initialsText}>{initials}</Text>
-      </View>
-    ),
-  });
-}, [navigation, initials]);
 
   useEffect(() => {
     fetchWallet();

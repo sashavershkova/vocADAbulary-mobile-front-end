@@ -106,20 +106,51 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
   };
 
   const handlePlayAudio = async () => {
-    if (currentCard?.audioBase64) {
-      try {
-        const fileUri = FileSystem.cacheDirectory + 'temp-audio.mp3';
-        await FileSystem.writeAsStringAsync(fileUri, currentCard.audioBase64, {
-          encoding: FileSystem.EncodingType.Base64,
-        });
-        const { sound } = await Audio.Sound.createAsync({ uri: fileUri });
-        await sound.playAsync();
-      } catch (err) {
-        console.error('Audio playback error:', err);
-      }
+    if (!currentCard) return;
+
+try {
+    // Call backend TTS endpoint
+    const response = await api.get(
+      `/api/flashcards/${currentCard.id}/tts`,
+      { responseType: 'arraybuffer' } // Important for binary data
+    );
+
+    // Convert response bytes to base64
+    const base64 = Buffer.from(response.data, 'binary').toString('base64');
+    const fileUri = FileSystem.cacheDirectory + 'temp-audio.mp3';
+
+    // Save to file
+    await FileSystem.writeAsStringAsync(fileUri, base64, {
+      encoding: FileSystem.EncodingType.Base64,
+    });
+
+    const info = await FileSystem.getInfoAsync(fileUri);
+    if (info.exists) {
+      console.log('File saved at:', info.uri, 'size:', info.size);
     } else {
-      Alert.alert('No audio available');
+      console.log('File not found at:', info.uri);
     }
+
+    // Ensure audio mode
+    await Audio.setAudioModeAsync({
+      allowsRecordingIOS: false,
+      staysActiveInBackground: false,
+      playsInSilentModeIOS: true,
+      shouldDuckAndroid: true,
+      playThroughEarpieceAndroid: false,
+    });
+
+    // Play it
+    const { sound } = await Audio.Sound.createAsync(
+      { uri: fileUri },
+      { shouldPlay: true }
+    );
+
+    await sound.playAsync();
+  } catch (err) {
+    console.error('TTS playback error:', err);
+    Alert.alert('Error', 'Could not generate audio');
+  }
   };
 
   const handleDelete = async () => {
@@ -262,16 +293,6 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
           </Animated.View>
         </View>
 
-        <View style={styles.exampleSection}>
-          <TouchableOpacity onPress={() => setShowExample(!showExample)}>
-            <Ionicons name="bulb-outline" size={30} color="rgba(216, 129, 245, 1)" />
-          </TouchableOpacity>
-          {showExample && (
-            <View style={styles.exampleBubble}>
-              <Text style={styles.exampleText}>{currentCard.example}</Text>
-            </View>
-          )}
-        </View>
         <View style={styles.exampleSection}>
           <TouchableOpacity onPress={() => setShowExample(!showExample)}>
             <Ionicons name="bulb-outline" size={30} color="rgba(216, 129, 245, 1)" />

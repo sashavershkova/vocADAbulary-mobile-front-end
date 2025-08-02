@@ -3,6 +3,9 @@ import React from 'react';
 import { useFonts } from 'expo-font';
 import { UserProvider } from './src/context/UserContext';
 import AppNavigator from './src/navigation/AppNavigator';
+import { Buffer } from 'buffer';
+
+global.Buffer = Buffer;
 
 const customFonts = {
   ArchitectsDaughter: require('./src/assets/fonts/ArchitectsDaughter-Regular.ttf'),
