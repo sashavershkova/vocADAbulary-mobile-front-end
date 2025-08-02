@@ -48,7 +48,7 @@ const ProgressScreen = () => {
 
   useLayoutEffect(() => {
   navigation.setOptions({
-    title: 'QUIZ',
+    title: 'PROGRESS',
     headerBackVisible: false,
     headerStyle: {
       backgroundColor: '#f9bcdeff', 
