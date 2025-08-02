@@ -32,8 +32,8 @@ const TopicsButtons = () => {
       <TouchableOpacity
         style={styles.addButton}
         onPress={() => {
-          console.log('Add button pressed');
-          navigation.navigate('NewFlashcard', { topicId: topic.id }); 
+          console.log('Add button pressed (placeholder)');
+          navigation.navigate('Fallback');
         }}
       >
         <Ionicons name="add" size={36} color='#8c64b6b1' />

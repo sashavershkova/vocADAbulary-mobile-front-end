@@ -22,15 +22,18 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: 'ArchitectsDaughter',
     color: '#b869d3ff',
-    textShadowColor: '#006400',
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 2,
+    shadowColor: '#313131ff',        
+    shadowOpacity: 0.8,
+    shadowOffset: { width: 4, height: 6 },
   },
 
   avatar: {
     width: 100,
     height: 100,
     resizeMode: 'contain',
+    shadowColor: '#313131ff',        
+    shadowOpacity: 0.8,
+    shadowOffset: { width: 4, height: 6 },
   },
 
   input: {
@@ -67,7 +70,7 @@ const styles = StyleSheet.create({
   },
 
   simpleButton: {
-    backgroundColor: '#e19bf8bf',
+    backgroundColor: '#e19bf8de',
     paddingVertical: 12,
     paddingHorizontal: 40,
     borderRadius: 25,
@@ -75,6 +78,9 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     borderWidth: 2,
     borderColor: '#006400',
+    shadowColor: '#313131ff',        
+    shadowOpacity: 0.8,
+    shadowOffset: { width: 4, height: 6 },
   },
 
   simpleButtonText: {

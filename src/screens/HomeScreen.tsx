@@ -20,15 +20,15 @@ const HomeScreen = ({ navigation }: Props) => {
       title: 'HOME',
       headerRight: () => (
         <View style={styles.initialsCircle}>
-        <Text style={styles.initialsText}>{initials}</Text>
-      </View>
+          <Text style={styles.initialsText}>{initials}</Text>
+        </View>
       ),
     });
   }, [navigation, initials]);
 
   return (
     <LinearGradient
-      colors={['#f9f9b4a5', '#6cdc6cff']}
+      colors={['#a1f8cda5', '#4b8737ff']}
       style={styles.container}
     >
       <TouchableOpacity
@@ -64,7 +64,10 @@ const HomeScreen = ({ navigation }: Props) => {
         <Text style={styles.learnText}>LEARN</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.constructorButton}>
+      <TouchableOpacity
+        style={styles.constructorButton}
+        onPress={() => navigation.navigate('Constructor')}
+      >
         <Text style={styles.buttonText}>CONSTRUCTOR</Text>
       </TouchableOpacity>
 

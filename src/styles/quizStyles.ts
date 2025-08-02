@@ -5,6 +5,9 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 20,
     paddingTop: 20,
+    shadowColor: '#313131ff',        
+    shadowOpacity: 0.8,
+    shadowOffset: { width: 3, height: 6 },
   },
 
   initialsCircle: {
@@ -34,9 +37,9 @@ const styles = StyleSheet.create({
     minHeight: 60,
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    shadowColor: '#777777',        
+    shadowOpacity: 0.35,
+    shadowOffset: { width: 5, height: 6 },
     elevation: 2,
   },
 
@@ -55,7 +58,7 @@ const styles = StyleSheet.create({
   },
 
   answerBox: {
-    backgroundColor: '#cbb6faff',
+    backgroundColor: '#f8d6f9ee',
     borderRadius: 30,
     paddingVertical: 12,
     paddingHorizontal: 16,
@@ -73,12 +76,12 @@ const styles = StyleSheet.create({
   },
 
   correctAnswerBox: {
-    backgroundColor: '#d0f0c0',
+    backgroundColor: '#cbf6b6ff',
     borderColor: '#2c6f33',
   },
 
   wrongAnswerBox: {
-    backgroundColor: '#ef9a9a',
+    backgroundColor: '#f86a6aff',
     borderColor: '#c62828',
   },
 

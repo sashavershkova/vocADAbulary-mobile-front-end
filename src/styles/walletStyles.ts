@@ -5,6 +5,9 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 20,
     paddingTop: 30,
+    shadowColor: '#313131ff',        
+    shadowOpacity: 0.8,
+    shadowOffset: { width: 3, height: 6 },
   },
   searchBar: {
     backgroundColor: "#ffffffdd",
@@ -17,6 +20,9 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     borderColor: "#acb5fbf3",
     gap: 12,
+    shadowColor: '#313131ff',        
+    shadowOpacity: 0.8,
+    shadowOffset: { width: 3, height: 6 },
   },
   cardList: {
     gap: 12,
@@ -33,7 +39,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#246396",
     gap: 12,
-    
+    shadowColor: '#313131ff',        
+    shadowOpacity: 0.8,
+    shadowOffset: { width: 1, height: 1 },
   },
   word: {
     fontSize: 18,
@@ -59,12 +67,15 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: '#9099f6c1',  
+    backgroundColor: '#9098f6ff',  
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
-    borderColor: '#2c6f33', 
+    // borderColor: '#2c6f33', 
     borderWidth: 1.5,
+    shadowColor: '#727070ff',        
+    shadowOpacity: 0.8,
+    shadowOffset: { width: 1, height: 1 },
   },
 
   initialsText: {
@@ -83,7 +94,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginHorizontal: 6,
     borderWidth: 1,
-    borderColor: '#990000',
+    borderColor: '#f90606ff',
   },
 
   minusText: {
@@ -101,7 +112,7 @@ const styles = StyleSheet.create({
 },
 navText: {
   fontSize: 16,
-  color: '#246396', 
+  color: '#93cbf9ff', 
   fontFamily: 'ArchitectsDaughter-Regular',
   marginTop: 4,
 },

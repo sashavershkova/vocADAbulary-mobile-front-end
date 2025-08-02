@@ -41,7 +41,7 @@ const QuizScreen = ({ navigation }: Props) => {
     },
     headerTitleStyle: {
       fontFamily: 'ArchitectsDaughter-Regular',
-      fontSize: 24,
+      fontSize: 36,
       color: '#2c6f33', 
     },
     headerRight: () => (
@@ -150,16 +150,20 @@ const QuizScreen = ({ navigation }: Props) => {
 
         <View style={styles.bottomBar}>
           <TouchableOpacity onPress={() => navigation.goBack()} style={styles.navigationButton}>
-            <Ionicons name="home" size={30} color="#2c6f33" />
+            <Ionicons name="home" size={36} color="#a8f8b0ff" />
+            <Text style={styles.navText}>Home</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={handleReset} style={styles.navigationButton}>
-            <Ionicons name="refresh-circle" size={30} color="#2c6f33" />
+            <Ionicons name="refresh-circle" size={36} color="#a8f8b0ff" />
+            <Text style={styles.navText}>Reset</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={handleSubmit} style={styles.navigationButton}>
-            <Ionicons name="checkmark-circle" size={30} color="#2c6f33" />
+            <Ionicons name="checkmark-circle" size={36} color="#a8f8b0ff" />
+            <Text style={styles.navText}>Submit</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={handleNext} style={styles.navigationButton}>
-            <Ionicons name="arrow-forward-circle" size={30} color="#2c6f33" />
+            <Ionicons name="arrow-forward-circle" size={36} color="#a8f8b0ff" />
+            <Text style={styles.navText}>Forward</Text>
           </TouchableOpacity>
         </View>
       </SafeAreaView>

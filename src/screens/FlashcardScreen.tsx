@@ -200,6 +200,20 @@ try {
       style={{ flex: 1 }}
     >
       <View style={styles.container}>
+        <TouchableOpacity onPress={flipCard} activeOpacity={1}>
+          <View style={{ alignItems: 'center', justifyContent: 'center', height: 250 }}>
+            {/* Front Side */}
+            <Animated.View
+              style={[
+                styles.card,
+                {
+                  backfaceVisibility: 'hidden',
+                  transform: [{ rotateY: frontInterpolate }],
+                },
+              ]}
+            >
+              <TouchableOpacity style={styles.soundButton} onPress={handlePlayAudio}>
+                <Ionicons name="volume-high" size={40} color="rgba(216, 129, 245, 1)" />
         <View style={{ alignItems: 'center', justifyContent: 'center', height: 250 }}>
           {/* Front Side */}
           <Animated.View
@@ -237,24 +251,27 @@ try {
             <View style={styles.cardButtons}>
               <TouchableOpacity onPress={handleDelete} activeOpacity={0.7}>
                 <Ionicons
-                  name="trash-outline"
-                  size={30}
-                  color="rgba(216, 129, 245, 1)"
+                  name="trash"
+                  size={40}
+                  color="rgba(218, 119, 252, 0.93)"
                 />
+                  <Text style={styles.navText}>Delete</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={handleAddToWallet} activeOpacity={0.7}>
                 <Ionicons
-                  name="wallet-outline"
-                  size={30}
+                  name="wallet"
+                  size={40}
                   color="rgba(216, 129, 245, 1)"
                 />
+                  <Text style={styles.navText}>Add to Wallet</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => updateStatus('learned')} activeOpacity={0.7}>
                 <Ionicons
-                  name="checkmark-circle-outline"
-                  size={30}
+                  name="checkmark-circle"
+                  size={40}
                   color="rgba(216, 129, 245, 1)"
                 />
+                  <Text style={styles.navText}>Learned</Text>
               </TouchableOpacity>
             </View>
           </Animated.View>
@@ -295,7 +312,8 @@ try {
 
         <View style={styles.exampleSection}>
           <TouchableOpacity onPress={() => setShowExample(!showExample)}>
-            <Ionicons name="bulb-outline" size={30} color="rgba(216, 129, 245, 1)" />
+            <Ionicons name="bulb" size={40} color="rgba(216, 129, 245, 1)" />
+            <Text style={styles.navText}>Example</Text>
           </TouchableOpacity>
           {showExample && (
             <View style={styles.exampleBubble}>
@@ -309,17 +327,20 @@ try {
             style={styles.navItem}
             onPress={() => navigation.navigate('Home')}
           >
-            <Ionicons name="home" size={30} color="#246396" />
+            <Ionicons name="home" size={40} color="#57b0faff" />
             <Text style={styles.navText}>Home</Text>
           </TouchableOpacity>
-          <TouchableOpacity>
-            <Ionicons name="search-outline" size={30} color="#246396ff" />
+          <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Search')}>
+            <Ionicons name="search-outline" size={40} color="#57b0faff" />
+            <Text style={styles.navText}>Search</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={handleNext}>
-            <Ionicons name="arrow-back-circle" size={30} color="#246396ff" />
+            <Ionicons name="arrow-back-circle" size={40} color="#57b0faff" />
+            <Text style={styles.navText}>Back</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={handleNext}>
-            <Ionicons name="arrow-forward-circle" size={30} color="#246396ff" />
+            <Ionicons name="arrow-forward-circle" size={40} color="#57b0faff" />
+            <Text style={styles.navText}>Forward</Text>
           </TouchableOpacity>
         </View>
       </View>

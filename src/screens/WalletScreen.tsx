@@ -10,7 +10,7 @@ import {
   ActivityIndicator,
   Image,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
 import { Audio } from "expo-av";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -69,23 +69,23 @@ const WalletScreen = () => {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-    title: "WALLET",
-    headerBackVisible: false,
-    headerStyle: {
-      backgroundColor: "#b0f4c9ff", 
-    },
-    headerTitleStyle: {
-      color: "#246396", 
-      fontFamily: "ArchitectsDaughter-Regular", 
-      fontSize: 24,
-    },
-    headerRight: () => (
-      <View style={styles.initialsCircle}>
-        <Text style={styles.initialsText}>{initials}</Text>
-      </View>
-    ),
-  });
-}, [navigation, initials]);
+      title: "WALLET",
+      headerBackVisible: false,
+      headerStyle: {
+        backgroundColor: "#b0f4c9ff",
+      },
+      headerTitleStyle: {
+        color: "#246396",
+        fontFamily: "ArchitectsDaughter-Regular",
+        fontSize: 36,
+      },
+      headerRight: () => (
+        <View style={styles.initialsCircle}>
+          <Text style={styles.initialsText}>{initials}</Text>
+        </View>
+      ),
+    });
+  }, [navigation, initials]);
 
   useEffect(() => {
     fetchWallet();
@@ -145,7 +145,7 @@ const WalletScreen = () => {
             {/* Левая часть: звук + слово */}
             <View style={{ flexDirection: "row", alignItems: "center", flex: 1 }}>
               <TouchableOpacity onPress={() => playAudio(item.audioUrl)} style={{ marginRight: 8 }}>
-                <Ionicons name="volume-high-outline" size={32} color="#127712ff" />
+                <Ionicons name="play-circle" size={32} color="#7082f6ff" />
               </TouchableOpacity>
 
               <Text style={styles.termText}>{item.word}</Text>
@@ -167,7 +167,7 @@ const WalletScreen = () => {
 
       <View style={styles.bottomBar}>
         <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Home')}>
-          <Ionicons name="home" size={30} color="#246396" />
+          <Ionicons name="home" size={40} color="#97d0feff" />
           <Text style={styles.navText}>Home</Text>
         </TouchableOpacity>
 
@@ -176,7 +176,8 @@ const WalletScreen = () => {
             navigation.navigate("NewFlashcard" as never, { topicId: 0 } as never)
           }
         >
-          <Ionicons name="add-circle" size={38} color="#246396" />
+          <Ionicons name="add-circle" size={40} color="#97d0feff" />
+          <Text style={styles.navText}>Add a New Card</Text>
         </TouchableOpacity>
         <TouchableOpacity 
           onPress={() => 
