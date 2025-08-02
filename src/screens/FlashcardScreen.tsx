@@ -349,4 +349,3 @@ try {
 };
 
 export default FlashcardScreen;
-
