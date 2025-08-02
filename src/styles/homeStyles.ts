@@ -120,10 +120,10 @@ smallButtonText: {
 
   quizButton: {
     position: 'absolute',
-    top: height * 0.12, // сразу под progressButton
-    left: width * 0.05, // такой же отступ как у progressButton
-    width: width * 0.22, // как у progressButton
-    height: height * 0.515, // высота learn - высота progress
+    top: height * 0.12, 
+    left: width * 0.05, 
+    width: width * 0.22, 
+    height: height * 0.515, 
     backgroundColor: '#e19bf8bf',
     justifyContent: 'center',
     alignItems: 'center',
@@ -167,13 +167,13 @@ initialsCircle: {
   alignItems: 'center',
   marginRight: 12,
   borderColor: '#2c6f33',
-  borderWidth: 2,
+  borderWidth: 1.5,
 },
 initialsText: {
   fontFamily: 'ArchitectsDaughter-Regular',
   color: '#2c6f33',
   fontWeight: 'bold',
-  fontSize: 16,
+  fontSize: 18,
 },
 
 });

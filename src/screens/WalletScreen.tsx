@@ -68,15 +68,23 @@ const WalletScreen = () => {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: "WALLET",
-      headerBackVisible: false,
-      headerRight: () => (
-        <View style={styles.initialsCircle}>
-          <Text style={styles.initialsText}>{initials}</Text>
-        </View>
-      ),
-    });
-  }, [navigation, initials]);
+    title: "WALLET",
+    headerBackVisible: false,
+    headerStyle: {
+      backgroundColor: "#b0f4c9ff", 
+    },
+    headerTitleStyle: {
+      color: "#246396", 
+      fontFamily: "ArchitectsDaughter-Regular", 
+      fontSize: 24,
+    },
+    headerRight: () => (
+      <View style={styles.initialsCircle}>
+        <Text style={styles.initialsText}>{initials}</Text>
+      </View>
+    ),
+  });
+}, [navigation, initials]);
 
   useEffect(() => {
     fetchWallet();
@@ -133,29 +141,33 @@ const WalletScreen = () => {
         contentContainerStyle={styles.cardList}
         renderItem={({ item }) => (
           <View style={styles.cardRow}>
-            <TouchableOpacity onPress={() => playAudio(item.audioUrl)}>
-              <Ionicons name="volume-high-outline" size={24} color="#127712ff" />
-            </TouchableOpacity>
+            {/* Левая часть: звук + слово */}
+            <View style={{ flexDirection: "row", alignItems: "center", flex: 1 }}>
+              <TouchableOpacity onPress={() => playAudio(item.audioUrl)} style={{ marginRight: 8 }}>
+                <Ionicons name="volume-high-outline" size={32} color="#127712ff" />
+              </TouchableOpacity>
 
-            <Text style={styles.word}>{item.word}</Text>
+              <Text style={styles.termText}>{item.word}</Text>
+            </View>
 
-            <TouchableOpacity
-              onPress={() => handleDelete(item.id)}
-              style={styles.minusButton}
-            >
-              <Text style={styles.minusText}>−</Text>
-            </TouchableOpacity>
+            {/* Правая часть: удалить + изучено */}
+            <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+              <TouchableOpacity onPress={() => handleDelete(item.id)}>
+                <Ionicons name="remove-circle" size={32} color="#f94949ac" />
+              </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => markAsLearned(item.id)}>
-              <Ionicons name="checkmark-circle-outline" size={24} color="#227345ff" />
-            </TouchableOpacity>
+              <TouchableOpacity onPress={() => markAsLearned(item.id)}>
+                <Ionicons name="checkmark-circle" size={32} color="#227345ff" />
+              </TouchableOpacity>
+            </View>
           </View>
         )}
       />
 
       <View style={styles.bottomBar}>
-        <TouchableOpacity onPress={() => navigation.navigate("Home" as never)}>
-          <Ionicons name="home" size={30} color="rgba(3, 48, 138, 1)" />
+        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Home')}>
+          <Ionicons name="home" size={30} color="#246396" />
+          <Text style={styles.navText}>Home</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -163,11 +175,11 @@ const WalletScreen = () => {
             navigation.navigate("NewFlashcard" as never, { topicId: 0 } as never)
           }
         >
-          <Ionicons name="add-circle" size={36} color="rgba(3, 48, 138, 1)" />
+          <Ionicons name="add-circle" size={38} color="#246396" />
         </TouchableOpacity>
 
         <TouchableOpacity disabled>
-          <Ionicons name="wallet-outline" size={30} color="rgba(3, 48, 138, 1)" />
+          <Ionicons name="wallet" size={30} color="#246396" />
         </TouchableOpacity>
       </View>
     </LinearGradient>
