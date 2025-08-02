@@ -1,8 +1,13 @@
 // src/navigation/AppNavigator.tsx
-import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+import React, { createRef } from 'react';
+import {
+  NavigationContainer,
+  NavigationContainerRef,
+} from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigation';
+
+// импорт экранов
 import SplashScreen from '../screens/SplashScreen';
 import LoginScreen from '../screens/LoginScreen';
 import HomeScreen from '../screens/HomeScreen';
@@ -15,17 +20,29 @@ import QuizScreen from '../screens/QuizScreen';
 import FallbackScreen from '../screens/FallbackScreen';
 import LearnedFlashcardsScreen from '../screens/LearnedFlashcardScreen';
 import NewFlashcardScreen from '../screens/NewFlashcardScreen';
+import ConstructorScreen from '../screens/ConstructorScreen';
+import SearchScreen from '../screens/SearchScreen';
+
+// создаём ссылку на NavigationContainer
+export const navigationRef = createRef<
+  NavigationContainerRef<RootStackParamList>
+>();
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const AppNavigator = () => (
-  <NavigationContainer>
+  <NavigationContainer
+    ref={navigationRef}
+    onUnhandledAction={(action) => {
+      if (action.type === 'NAVIGATE' || action.type === 'PUSH') {
+        navigationRef.current?.navigate('Fallback');
+      }
+    }}
+  >
     <Stack.Navigator
       initialRouteName="Splash"
       screenOptions={{
-        headerStyle: {
-          backgroundColor: '#6cdc6cb5', // фон заголовка
-        },
+        headerStyle: { backgroundColor: '#6cdc6cb5' },
         headerTitleStyle: {
           fontFamily: 'ArchitectsDaughter',
           fontSize: 28,
@@ -47,6 +64,8 @@ const AppNavigator = () => (
       <Stack.Screen name="Progress" component={ProgressScreen} options={{ title: 'PROGRESS' }} />
       <Stack.Screen name="Fallback" component={FallbackScreen} options={{ title: 'ERROR' }} />
       <Stack.Screen name="NewFlashcard" component={NewFlashcardScreen} options={{ title: 'NEW FLASHCARD' }} />
+      <Stack.Screen name="Constructor" component={ConstructorScreen} options={{ title: 'CONSTRUCTOR' }} />
+      <Stack.Screen name="Search" component={SearchScreen} options={{ title: 'SEARCH' }} />
     </Stack.Navigator>
   </NavigationContainer>
 );

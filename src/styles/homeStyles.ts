@@ -7,6 +7,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'transparent',
+    shadowColor: '#313131ff',        
+    shadowOpacity: 0.8,
+    shadowOffset: { width: 3, height: 6 },
   },
 
   learnButton: {
@@ -21,6 +24,9 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     justifyContent: 'center',
     alignItems: 'center',
+    shadowColor: '#313131ff',        
+    shadowOpacity: 0.8,
+    shadowOffset: { width: 3, height: 6 },
   },
 
   learnText: {
@@ -36,19 +42,22 @@ const styles = StyleSheet.create({
     left: width * 0.05,
     width: width * 0.22,
     height: height * 0.09,
-    backgroundColor: '#e19bf8bf', // лаванда
+    backgroundColor: '#e2a4f7ee', // лаванда
     borderRadius: 30,
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1.5,
     borderColor: '#006400',
+    shadowColor: '#313131ff',        
+    shadowOpacity: 0.8,
+    shadowOffset: { width: 3, height: 6 },
   },
 
   settingsButton: {
     position: 'absolute',
     bottom: 115, // чуть выше exitButton
     right: 20,
-    backgroundColor: '#e19bf8bf',
+    backgroundColor: '#e2a4f7e2',
     width: width * 0.22,
     height: height * 0.09,
     borderRadius: 30,
@@ -56,6 +65,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 1.5,
     borderColor: '#006400',
+    shadowColor: '#313131ff',        
+    shadowOpacity: 0.8,
+    shadowOffset: { width: 3, height: 6 },
   },
 
   exitButton: {
@@ -70,6 +82,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 1.5,
     borderColor: '#006400',
+    shadowColor: '#313131ff',        
+    shadowOpacity: 0.8,
+    shadowOffset: { width: 3, height: 6 },
   },
   buttonText: {
   fontSize: 20,
@@ -94,7 +109,7 @@ smallButtonText: {
     position: 'absolute',
     right: 121, // отступ от правого края (если LEARN справа)
     bottom: 15,
-    backgroundColor: '#e19bf8bf',
+    backgroundColor: '#e2a4f7e2',
     width: 160,
     height: 190, // 90 + 90 + отступ
     borderRadius: 30,
@@ -102,6 +117,9 @@ smallButtonText: {
     alignItems: 'center',
     borderWidth: 1.5,
     borderColor: '#006400',
+    shadowColor: '#313131ff',        
+    shadowOpacity: 0.8,
+    shadowOffset: { width: 3, height: 6 },
   },
 
   walletButton: {
@@ -110,12 +128,15 @@ smallButtonText: {
     left: width * 0.05,
     width: width * 0.22, // ширина как у progressButton
     height: 190, // высота как у constructorButton
-    backgroundColor: '#74a5f4ff',
+    backgroundColor: '#a1c1f5d6',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 30,
     borderWidth: 1.5,
     borderColor: '#006400',
+    shadowColor: '#313131ff',        
+    shadowOpacity: 0.8,
+    shadowOffset: { width: 3, height: 6 },
   },
 
   quizButton: {
@@ -130,6 +151,9 @@ smallButtonText: {
     borderRadius: 30,
     borderWidth: 1.5,
     borderColor: '#006400',
+    shadowColor: '#313131ff',        
+    shadowOpacity: 0.8,
+    shadowOffset: { width: 3, height: 6 },
   },
 headerRow: {
   flexDirection: 'row',

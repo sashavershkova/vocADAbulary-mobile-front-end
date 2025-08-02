@@ -1,11 +1,29 @@
+// src/screens/FallbackScreen.tsx
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../types/navigation';
+import { Ionicons } from '@expo/vector-icons';
 
-const FallbackScreen = () => {
+const FallbackScreen: React.FC = () => {
+  // получаем объект навигации
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Oops! Nothing here 🧭</Text>
-      <Text style={styles.subtext}>This screen doesn’t exist yet.</Text>
+      <Text style={styles.subtext}>This screen doesn't exist yet.</Text>
+
+      {/* кнопка "Home" */}
+      <TouchableOpacity
+        style={styles.homeButton}
+        onPress={() => navigation.navigate('Home')}
+      >
+        <Ionicons name="home" size={20} color="#fff" />
+        <Text style={styles.homeButtonText}>Go Home</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -13,7 +31,7 @@ const FallbackScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#d4fcd4',
+    backgroundColor: '#fb3030b5',
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
@@ -21,15 +39,30 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 24,
     fontFamily: 'ArchitectsDaughter',
-    color: '#8000ff',
+    color: '#006400',
     marginBottom: 10,
     textAlign: 'center',
   },
   subtext: {
     fontSize: 16,
     fontFamily: 'ArchitectsDaughter',
-    color: '#555',
+    color: '#006400',
     textAlign: 'center',
+    marginBottom: 20,
+  },
+  homeButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#006400',
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 20,
+  },
+  homeButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    marginLeft: 8,
+    fontFamily: 'ArchitectsDaughter',
   },
 });
 

@@ -8,6 +8,7 @@ export type RootStackParamList = {
   Progress: { userId: number; username: string };
   Quiz: undefined;  // ✅ { topicId?: number };
   Settings: undefined;
+  Constructor: undefined;
   Wallet: undefined;
   Fallback: undefined;
   LearnedCards: undefined; 

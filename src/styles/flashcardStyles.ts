@@ -6,6 +6,9 @@ export default StyleSheet.create({
     // backgroundColor: '#fcf9b5ff', // fallback if gradient fails
     paddingTop: 60,
     justifyContent: 'space-between',
+    shadowColor: '#313131ff',        
+    shadowOpacity: 0.8,
+    shadowOffset: { width: 4, height: 6 },
   },
   initialsCircle: {
     width: 36,
