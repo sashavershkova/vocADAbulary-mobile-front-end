@@ -22,6 +22,7 @@ import {
 } from "../api/wallet";
 import styles from "../styles/walletStyles";
 import { LinearGradient } from "expo-linear-gradient";
+import AntDesign from '@expo/vector-icons/AntDesign';
 
 type WalletNavProp = NativeStackNavigationProp<RootStackParamList, "Wallet">;
 
@@ -178,11 +179,18 @@ const WalletScreen = () => {
           <Ionicons name="add-circle" size={40} color="#97d0feff" />
           <Text style={styles.navText}>Add a New Card</Text>
         </TouchableOpacity>
-
-        <TouchableOpacity disabled>
-          <FontAwesome5 name="piggy-bank" size={40} color="#97d0feff" />
-          <Text style={styles.navText}>Piggy Bank</Text>
+        <TouchableOpacity 
+          onPress={() => 
+            navigation.navigate("LearnedCards" as never)
+          }
+        >
+          <AntDesign name="carryout" size={30} color="#246396" />
+          {/* <Ionicons name="carryout" size={30} color="#246396" /> */}
+            {/* <Text style={styles.bottomButton}>Learned Cards</Text> */}
         </TouchableOpacity>
+        {/* <TouchableOpacity disabled>
+          <Ionicons name="wallet" size={30} color="#246396" /> */}
+        {/* </TouchableOpacity> */}
       </View>
     </LinearGradient>
   );

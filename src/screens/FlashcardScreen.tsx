@@ -15,6 +15,7 @@ import { addToWallet, updateWalletFlashcardStatus } from '../api/wallet';
 import styles from '../styles/flashcardStyles';
 import { RootStackParamList } from '../types/navigation';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import * as FileSystem from 'expo-file-system';
 import { LinearGradient } from 'expo-linear-gradient';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Flashcard'>;
@@ -26,6 +27,7 @@ type Flashcard = {
   example: string;
   audioUrl: string;
   createdBy: number;
+  audioBase64?: string;
 };
 
 const FlashcardScreen = ({ route, navigation }: Props) => {
@@ -53,23 +55,14 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
   });
 
   const flipCard = () => {
-    if (!flipped) {
-      Animated.spring(flipAnim, {
-        toValue: 180,
-        useNativeDriver: true,
-        friction: 8,
-        tension: 10,
-      }).start();
-      setFlipped(true);
-    } else {
-      Animated.spring(flipAnim, {
-        toValue: 0,
-        useNativeDriver: true,
-        friction: 8,
-        tension: 10,
-      }).start();
-      setFlipped(false);
-    }
+    const toValue = flipped ? 0 : 180;
+    Animated.spring(flipAnim, {
+      toValue,
+      useNativeDriver: true,
+      friction: 8,
+      tension: 10,
+    }).start();
+    setFlipped(!flipped);
   };
 
   useLayoutEffect(() => {
@@ -88,12 +81,11 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
     const fetchFlashcards = async () => {
       try {
         const response = await api.get(`api/topics/${topicId}/flashcards`);
-        const data = response.data;
-        setFlashcards(data);
-        if (data.length > 0) {
-          const randomIndex = Math.floor(Math.random() * data.length);
-          setCurrentCard(data[randomIndex]);
-        }
+        setFlashcards(response.data);
+
+        const { flashcardId } = route.params;
+        const detailResponse = await api.get(`api/flashcards/${flashcardId}`);
+        setCurrentCard(detailResponse.data);
       } catch (error) {
         console.error('Error loading flashcards:', error);
       } finally {
@@ -101,14 +93,7 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
       }
     };
     fetchFlashcards();
-  }, [topicId]);
-
-  const handlePlayAudio = async () => {
-    if (currentCard?.audioUrl) {
-      const { sound } = await Audio.Sound.createAsync({ uri: currentCard.audioUrl });
-      await sound.playAsync();
-    }
-  };
+  }, [topicId, route.params.flashcardId]);
 
   const handleNext = () => {
     if (flashcards.length > 0) {
@@ -118,6 +103,54 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
       setFlipped(false);
       flipAnim.setValue(0);
     }
+  };
+
+  const handlePlayAudio = async () => {
+    if (!currentCard) return;
+
+try {
+    // Call backend TTS endpoint
+    const response = await api.get(
+      `/api/flashcards/${currentCard.id}/tts`,
+      { responseType: 'arraybuffer' } // Important for binary data
+    );
+
+    // Convert response bytes to base64
+    const base64 = Buffer.from(response.data, 'binary').toString('base64');
+    const fileUri = FileSystem.cacheDirectory + 'temp-audio.mp3';
+
+    // Save to file
+    await FileSystem.writeAsStringAsync(fileUri, base64, {
+      encoding: FileSystem.EncodingType.Base64,
+    });
+
+    const info = await FileSystem.getInfoAsync(fileUri);
+    if (info.exists) {
+      console.log('File saved at:', info.uri, 'size:', info.size);
+    } else {
+      console.log('File not found at:', info.uri);
+    }
+
+    // Ensure audio mode
+    await Audio.setAudioModeAsync({
+      allowsRecordingIOS: false,
+      staysActiveInBackground: false,
+      playsInSilentModeIOS: true,
+      shouldDuckAndroid: true,
+      playThroughEarpieceAndroid: false,
+    });
+
+    // Play it
+    const { sound } = await Audio.Sound.createAsync(
+      { uri: fileUri },
+      { shouldPlay: true }
+    );
+
+    await sound.playAsync();
+  } catch (err) {
+    console.error('TTS playback error:', err);
+    Alert.alert('Error', 'Could not generate audio');
+  }
   };
 
   const handleDelete = async () => {
@@ -163,63 +196,102 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
 
   return (
     <LinearGradient
-      colors={['#c1f7b5', '#e4ffb5']} 
+      colors={['#c1f7b5', '#e4ffb5']} // мягкий зелёный градиент
       style={{ flex: 1 }}
     >
       <View style={styles.container}>
-        <TouchableOpacity onPress={flipCard} activeOpacity={1}>
-          <View style={{ alignItems: 'center', justifyContent: 'center', height: 250 }}>
-            {/* Front Side */}
-            <Animated.View
-              style={[
-                styles.card,
-                {
-                  backfaceVisibility: 'hidden',
-                  transform: [{ rotateY: frontInterpolate }],
-                },
-              ]}
+        <View style={{ alignItems: 'center', justifyContent: 'center', height: 250 }}>
+          {/* Front Side */}
+          <Animated.View
+            style={[
+              styles.card,
+              {
+                backfaceVisibility: 'hidden',
+                transform: [{ rotateY: frontInterpolate }],
+              },
+            ]}
+            pointerEvents={flipped ? 'none' : 'auto'}
+          >
+            {/* Tap on the center to flip */}
+            <TouchableOpacity
+              style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+              activeOpacity={1}
+              onPress={flipCard}
             >
-              <TouchableOpacity style={styles.soundButton} onPress={handlePlayAudio}>
-                <Ionicons name="volume-high" size={40} color="rgba(216, 129, 245, 1)" />
+              <TouchableOpacity
+                style={styles.soundButton}
+                onPress={handlePlayAudio}
+                activeOpacity={0.7}
+              >
+                <Ionicons
+                  name="volume-high-outline"
+                  size={24}
+                  color="rgba(216, 129, 245, 1)"
+                />
               </TouchableOpacity>
 
               <Text style={styles.word}>{currentCard.word}</Text>
+            </TouchableOpacity>
 
-              <View style={styles.cardButtons}>
-                <TouchableOpacity onPress={handleDelete}>
-                  <Ionicons name="trash" size={40} color="rgba(218, 119, 252, 0.93)" />
-                  <Text style={styles.navText}>Delete</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={handleAddToWallet}>
-                  <Ionicons name="wallet" size={40} color="rgba(216, 129, 245, 1)" />
-                  <Text style={styles.navText}>Add to Wallet</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => updateStatus('learned')}>
-                  <Ionicons name="checkmark-circle" size={40} color="rgba(216, 129, 245, 1)" />
-                  <Text style={styles.navText}>Learned</Text>
-                </TouchableOpacity>
-              </View>
-            </Animated.View>
+            {/* Buttons outside flip touch area */}
+            <View style={styles.cardButtons}>
+              <TouchableOpacity onPress={handleDelete} activeOpacity={0.7}>
+                <Ionicons
+                  name="trash-outline"
+                  size={30}
+                  color="rgba(216, 129, 245, 1)"
+                />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={handleAddToWallet} activeOpacity={0.7}>
+                <Ionicons
+                  name="wallet-outline"
+                  size={30}
+                  color="rgba(216, 129, 245, 1)"
+                />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => updateStatus('learned')} activeOpacity={0.7}>
+                <Ionicons
+                  name="checkmark-circle-outline"
+                  size={30}
+                  color="rgba(216, 129, 245, 1)"
+                />
+              </TouchableOpacity>
+            </View>
+          </Animated.View>
 
-            {/* Back Side */}
-            <Animated.View
-              style={[
-                styles.card,
-                {
-                  position: 'absolute',
-                  top: 0,
-                  backfaceVisibility: 'hidden',
-                  transform: [{ rotateY: backInterpolate }],
-                },
-              ]}
+          {/* Back Side */}
+          <Animated.View
+            style={[
+              styles.card,
+              {
+                position: 'absolute',
+                top: 0,
+                backfaceVisibility: 'hidden',
+                transform: [{ rotateY: backInterpolate }],
+              },
+            ]}
+            pointerEvents={flipped ? 'auto' : 'none'}
+          >
+            <TouchableOpacity
+              style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+              activeOpacity={1}
+              onPress={flipCard}
             >
-              <TouchableOpacity style={styles.soundButton} onPress={handlePlayAudio}>
-                <Ionicons name="volume-high-outline" size={30} color="" />
+              <TouchableOpacity
+                style={styles.soundButton}
+                onPress={handlePlayAudio}
+                activeOpacity={0.7}
+              >
+                <Ionicons
+                  name="volume-high-outline"
+                  size={30}
+                  color="rgba(216, 129, 245, 1)"
+                />
               </TouchableOpacity>
               <Text style={styles.definition}>{currentCard.definition}</Text>
-            </Animated.View>
-          </View>
-        </TouchableOpacity>
+            </TouchableOpacity>
+          </Animated.View>
+        </View>
 
         <View style={styles.exampleSection}>
           <TouchableOpacity onPress={() => setShowExample(!showExample)}>
@@ -234,8 +306,11 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
         </View>
 
         <View style={styles.navBar}>
-          <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Home')}>
-            <Ionicons name="home" size={40} color="#57b0faff" />
+          <TouchableOpacity
+            style={styles.navItem}
+            onPress={() => navigation.navigate('Home')}
+          >
+            <Ionicons name="home" size={30} color="#246396" />
             <Text style={styles.navText}>Home</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Search')}>
@@ -257,3 +332,4 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
 };
 
 export default FlashcardScreen;
+
