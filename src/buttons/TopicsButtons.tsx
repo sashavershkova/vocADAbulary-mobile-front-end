@@ -25,7 +25,7 @@ const TopicsButtons = () => {
           })
         }
       >
-        <Ionicons name="home" size={28} color='#006400' />
+        <Ionicons name="home" size={28} color='#2c6f33' />
         <Text style={styles.buttonText}>Home</Text>
       </TouchableOpacity>
 

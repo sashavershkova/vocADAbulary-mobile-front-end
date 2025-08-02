@@ -32,7 +32,7 @@ const ProgressButtons = ({ summary }: Props) => {
 
   return (
     <LinearGradient
-      colors={['#f9bcdeff', '#e890f8ff']}
+      colors={['#f9bcdeff', '#ef8df9fe']}
       style={styles.container}
     >
       <View style={styles.buttonGroup}>
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
   buttonBar: {
     position: 'absolute',
     bottom: 20,
-    right: 20,
+    left: 20,
   },
   homeButton: {
     alignItems: 'center',

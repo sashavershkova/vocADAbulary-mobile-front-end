@@ -7,6 +7,7 @@ import { RootStackParamList } from '../types/navigation';
 import { useMockUser } from '../context/UserContext';
 import { getUserProgressSummary } from '../api/summary';
 import ProgressButtons from '../buttons/ProgressButtons';
+import styles from '../styles/progressStyles';
 
 
 type ProgressNavProp = NativeStackNavigationProp<RootStackParamList, 'Progress'>;
@@ -46,16 +47,24 @@ const ProgressScreen = () => {
   };
 
   useLayoutEffect(() => {
-    navigation.setOptions({
-      title: 'PROGRESS',
-      headerBackVisible: false,
-      headerRight: () => (
-        <View style={styles.initialsCircle}>
+  navigation.setOptions({
+    title: 'PROGRESS',
+    headerBackVisible: false,
+    headerStyle: {
+      backgroundColor: '#f9bcdeff', 
+    },
+    headerTitleStyle: {
+      fontFamily: 'ArchitectsDaughter-Regular',
+      fontSize: 24,
+      color: '#246396ff', 
+    },
+    headerRight: () => (
+      <View style={styles.initialsCircle}>
         <Text style={styles.initialsText}>{initials}</Text>
       </View>
-      ),
-    });
-  }, [navigation, initials]);
+    ),
+  });
+}, [navigation]);
 
   useEffect(() => {
     fetchSummary();
