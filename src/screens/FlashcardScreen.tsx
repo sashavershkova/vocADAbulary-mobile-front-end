@@ -272,6 +272,16 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
             </View>
           )}
         </View>
+        <View style={styles.exampleSection}>
+          <TouchableOpacity onPress={() => setShowExample(!showExample)}>
+            <Ionicons name="bulb-outline" size={30} color="rgba(216, 129, 245, 1)" />
+          </TouchableOpacity>
+          {showExample && (
+            <View style={styles.exampleBubble}>
+              <Text style={styles.exampleText}>{currentCard.example}</Text>
+            </View>
+          )}
+        </View>
 
         <View style={styles.navBar}>
           <TouchableOpacity
