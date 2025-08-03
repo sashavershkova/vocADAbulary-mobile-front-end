@@ -58,11 +58,41 @@ export default StyleSheet.create({
     color: '#2c6f33',
     fontStyle: 'italic',
   },
-  soundButton: {
+  // uncomment for rolling back to previous
+  // soundButton: {
+  //   position: 'absolute',
+  //   top: 10,
+  //   right: 10,
+  //   // zIndex: 2,
+  // },
+
+  soundWrapper: {
     position: 'absolute',
     top: 10,
     right: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    zIndex: 5,
   },
+  phoneticsBlob: {
+    backgroundColor: 'rgba(255,255,255,0.85)',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 12,
+    marginLeft: 6,
+  },
+  phoneticsText: {
+    fontSize: 14,
+    color: '#333',
+  },
+  soundButton: {
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 6,
+    elevation: 3,
+  },
+//end on newly added code
+
   cardButtons: {
     position: 'absolute',
     bottom: 10,
