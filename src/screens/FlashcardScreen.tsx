@@ -29,6 +29,7 @@ type Flashcard = {
   createdBy: number;
   audioBase64?: string;
   phonetic?: string;
+  synonyms?: string;
 };
 
 const FlashcardScreen = ({ route, navigation }: Props) => {
