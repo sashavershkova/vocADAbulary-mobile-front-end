@@ -86,6 +86,19 @@ const QuizScreen = ({ navigation }: Props) => {
     return [...array].sort(() => Math.random() - 0.5);
   };
 
+  const postQuizAttempt = async (quizId: number, isPassed: boolean) => {
+    try {
+      await api.post('/api/quiz-attempts', {
+        quizId: quizId,
+        is_passed: isPassed,
+      });
+      // Optional: handle success, e.g., show a toast
+    } catch (error) {
+      console.error('Failed to post quiz attempt:', error);
+      // Optional: show error to user
+    }
+  };
+
   const currentQuiz = quizzes[currentQuizIndex];
 
   const handleSelect = (answerIndex: number) => {
@@ -97,6 +110,12 @@ const QuizScreen = ({ navigation }: Props) => {
   const handleSubmit = () => {
     if (selectedAnswerId === null) return;
     setIsSubmitted(true);
+
+    // Figure out if user answered correctly
+    const isPassed = currentQuiz.answers?.[selectedAnswerId]?.correct || false;
+
+    // Post the attempt to the backend
+    postQuizAttempt(currentQuiz.id, isPassed);
   };
 
   const handleNext = () => {
