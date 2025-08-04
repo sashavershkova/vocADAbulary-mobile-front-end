@@ -26,6 +26,9 @@ const styles = StyleSheet.create({
     elevation: 2,
     borderWidth: 1,
     borderColor: '#4682B4',
+    shadowColor: '#313131ff',
+    shadowOpacity: 0.8,
+    shadowOffset: { width: 4, height: 6 }
   },
   metricText: {
     fontSize: 20,
