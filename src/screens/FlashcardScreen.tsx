@@ -162,11 +162,6 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
       console.error('TTS playback error:', err);
       Alert.alert('Error', 'Could not generate audio');
     }
-      await sound.playAsync();
-    } catch (err) {
-      console.error('TTS playback error:', err);
-      Alert.alert('Error', 'Could not generate audio');
-    }
   };
 
   const handleDelete = async () => {
