@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useLayoutEffect } from 'react';
+import React, { useEffect, useState, useLayoutEffect, useCallback } from 'react';
 import { useMockUser } from '../context/UserContext';
 import { View, Text, SafeAreaView, TouchableOpacity, Alert, ScrollView } from 'react-native';
 import styles from '../styles/quizStyles';
@@ -56,39 +56,43 @@ const QuizScreen = ({ navigation }: Props) => {
     });
   }, [navigation]);
 
-  useEffect(() => {
-    const fetchAllQuizzes = async () => {
-      try {
-        const response = await api.get('/api/quizzes');
-        if (!response.data || response.data.length === 0) {
-          Alert.alert('No Quizzes', 'There are no quizzes available.');
-          navigation.goBack();
-        } else {
-          // 🔽 Filter out hidden quizzes here
-          const visibleQuizzes = response.data.filter((quiz: Quiz) => !quiz.hidden);
-
-          const transformedQuizzes = visibleQuizzes.map((quiz: Quiz) => ({
-            ...quiz,
-            answers: shuffleArray([
-              { text: quiz.correctAnswer, correct: true },
-              { text: quiz.wrongAnswer1, correct: false },
-              { text: quiz.wrongAnswer2, correct: false },
-              { text: quiz.wrongAnswer3, correct: false },
-            ]),
-          }));
-          setQuizzes(shuffleArray(transformedQuizzes));
-        }
-      } catch (err) {
-        console.error('Failed to load quizzes:', err);
-      }
-    };
-
-    fetchAllQuizzes();
-  }, []);
-
+  // Helper to shuffle arrays
   const shuffleArray = <T,>(array: T[]): T[] => {
     return [...array].sort(() => Math.random() - 0.5);
   };
+
+  // Helper to fetch and process quizzes
+  const fetchAllQuizzes = useCallback(async () => {
+    try {
+      const response = await api.get('/api/quizzes');
+      if (!response.data || response.data.length === 0) {
+        Alert.alert('No Quizzes', 'There are no quizzes available.');
+        navigation.goBack();
+      } else {
+        const visibleQuizzes = response.data.filter((quiz: Quiz) => !quiz.hidden);
+        const transformedQuizzes = visibleQuizzes.map((quiz: Quiz) => ({
+          ...quiz,
+          answers: shuffleArray([
+            { text: quiz.correctAnswer, correct: true },
+            { text: quiz.wrongAnswer1, correct: false },
+            { text: quiz.wrongAnswer2, correct: false },
+            { text: quiz.wrongAnswer3, correct: false },
+          ]),
+        }));
+        setQuizzes(shuffleArray(transformedQuizzes));
+        setCurrentQuizIndex(0); // reset index after fetch
+      }
+      setSelectedAnswerId(null);
+      setIsSubmitted(false);
+    } catch (err) {
+      console.error('Failed to load quizzes:', err);
+      Alert.alert('Error', 'Failed to load quizzes.');
+    }
+  }, [navigation]);
+
+  useEffect(() => {
+    fetchAllQuizzes();
+  }, [fetchAllQuizzes]);
 
   const postQuizAttempt = async (quizId: number, isPassed: boolean) => {
     try {
@@ -114,24 +118,21 @@ const QuizScreen = ({ navigation }: Props) => {
   const handleSubmit = () => {
     if (selectedAnswerId === null) return;
     setIsSubmitted(true);
-
-    // Figure out if user answered correctly
     const isPassed = currentQuiz.answers?.[selectedAnswerId]?.correct || false;
-
-    // Post the attempt to the backend
     postQuizAttempt(currentQuiz.id, isPassed);
   };
 
-  const handleNext = () => {
+  // NEW: handleNext now re-fetches quizzes when reaching the end
+  const handleNext = async () => {
     const nextQuizIndex = currentQuizIndex + 1;
     if (nextQuizIndex < quizzes.length) {
       setCurrentQuizIndex(nextQuizIndex);
+      setSelectedAnswerId(null);
+      setIsSubmitted(false);
     } else {
-      Alert.alert('🎉 Done!', 'You completed all quizzes. Restarting...');
-      setCurrentQuizIndex(0);
+      await fetchAllQuizzes();
+      Alert.alert('🎉 Done!', 'You completed all available quizzes. Hidden quizzes have been removed!');
     }
-    setSelectedAnswerId(null);
-    setIsSubmitted(false);
   };
 
   const handleReset = () => {
