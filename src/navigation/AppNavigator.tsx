@@ -59,6 +59,7 @@ const AppNavigator = () => (
       <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: true }} />
       <Stack.Screen name="Topics" component={TopicsScreen} options={{ title: 'TOPICS' }} />
       <Stack.Screen name="Topic" component={TopicScreen} options={{ title: 'TOPIC' }} />
+
       <Stack.Screen 
       name="Flashcard" 
       component={FlashcardScreen} 
@@ -90,17 +91,17 @@ const AppNavigator = () => (
       <Stack.Screen name="Progress" component={ProgressScreen} options={{ title: 'PROGRESS' }} />
       <Stack.Screen name="Fallback" component={FallbackScreen} options={{ title: 'ERROR' }} />
       <Stack.Screen 
-      name="NewFlashcard" 
-      component={NewFlashcardScreen} 
-      options={({ navigation }) => ({
-          title: 'NEWFLASHCARDS',
-          headerBackVisible: false, 
-          headerLeft: () => (
-            <TouchableOpacity onPress={() => navigation.goBack()} style={{ marginLeft: 10 }}>
-              <Ionicons name="arrow-back" size={28} color="#2c6f33" />
-            </TouchableOpacity>
-        ),
-        })} 
+        name="NewFlashcard" 
+        component={NewFlashcardScreen} 
+        options={({ navigation }) => ({
+            title: 'NEWFLASHCARDS',
+            headerBackVisible: false, 
+            headerLeft: () => (
+              <TouchableOpacity onPress={() => navigation.goBack()} style={{ marginLeft: 10 }}>
+                <Ionicons name="arrow-back" size={28} color="#2c6f33" />
+              </TouchableOpacity>
+          ),
+          })} 
       />
       <Stack.Screen name="Constructor" component={ConstructorScreen} options={{ title: 'CONSTRUCTOR' }} />
       <Stack.Screen name="Search" component={SearchScreen} options={{ title: 'SEARCH' }} />
