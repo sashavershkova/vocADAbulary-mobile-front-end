@@ -13,7 +13,12 @@ const FallbackScreen: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Oops! Nothing here 🧭</Text>
+      <Text style={styles.text}>
+        Oops! Knock, knock...{'\n'}
+        Who's there?{'\n'}
+        Still nothing's here yet. 🧭
+
+      </Text>
       <Text style={styles.subtext}>This screen doesn't exist yet.</Text>
 
       {/* кнопка "Home" */}
@@ -21,7 +26,7 @@ const FallbackScreen: React.FC = () => {
         style={styles.homeButton}
         onPress={() => navigation.navigate('Home')}
       >
-        <Ionicons name="home" size={20} color="#fff" />
+        <Ionicons name="home" size={20} color="#006400" />
         <Text style={styles.homeButtonText}>Go Home</Text>
       </TouchableOpacity>
     </View>
@@ -53,13 +58,16 @@ const styles = StyleSheet.create({
   homeButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#006400',
+    backgroundColor: '#8ef88eed',
     paddingHorizontal: 16,
     paddingVertical: 10,
     borderRadius: 20,
+    shadowColor: '#313131ff',
+    shadowOpacity: 0.8,
+    shadowOffset: { width: 3, height: 6 },
   },
   homeButtonText: {
-    color: '#fff',
+    color: '#006400',
     fontSize: 16,
     marginLeft: 8,
     fontFamily: 'ArchitectsDaughter',

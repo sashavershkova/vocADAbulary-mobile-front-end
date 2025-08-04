@@ -69,9 +69,20 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
     navigation.setOptions({
       title: 'FLASHCARDS',
       headerBackVisible: false,
+      headerStyle: {
+        backgroundColor: '#abf5ab64',
+      },
+      headerTitleStyle: {
+        fontFamily: 'ArchitectsDaughter-Regular',
+        fontSize: 36,
+        color: '#2c6f33',
+      },
       headerRight: () => (
-        <View style={styles.initialsCircle}>
-          <Text style={styles.initialsText}>{initials}</Text>
+        <View style={styles.userWrapper}>
+          <View style={styles.initialsCircle}>
+            <Text style={styles.initialsText}>{initials}</Text>
+          </View>
+          <Text style={styles.userLabel}>User</Text>
         </View>
       ),
     });
@@ -108,49 +119,49 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
   const handlePlayAudio = async () => {
     if (!currentCard) return;
 
-try {
-    // Call backend TTS endpoint
-    const response = await api.get(
-      `/api/flashcards/${currentCard.id}/tts`,
-      { responseType: 'arraybuffer' } // Important for binary data
-    );
+    try {
+      // Call backend TTS endpoint
+      const response = await api.get(
+        `/api/flashcards/${currentCard.id}/tts`,
+        { responseType: 'arraybuffer' } // Important for binary data
+      );
 
-    // Convert response bytes to base64
-    const base64 = Buffer.from(response.data, 'binary').toString('base64');
-    const fileUri = FileSystem.cacheDirectory + 'temp-audio.mp3';
+      // Convert response bytes to base64
+      const base64 = Buffer.from(response.data, 'binary').toString('base64');
+      const fileUri = FileSystem.cacheDirectory + 'temp-audio.mp3';
 
-    // Save to file
-    await FileSystem.writeAsStringAsync(fileUri, base64, {
-      encoding: FileSystem.EncodingType.Base64,
-    });
+      // Save to file
+      await FileSystem.writeAsStringAsync(fileUri, base64, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
 
-    const info = await FileSystem.getInfoAsync(fileUri);
-    if (info.exists) {
-      console.log('File saved at:', info.uri, 'size:', info.size);
-    } else {
-      console.log('File not found at:', info.uri);
+      const info = await FileSystem.getInfoAsync(fileUri);
+      if (info.exists) {
+        console.log('File saved at:', info.uri, 'size:', info.size);
+      } else {
+        console.log('File not found at:', info.uri);
+      }
+
+      // Ensure audio mode
+      await Audio.setAudioModeAsync({
+        allowsRecordingIOS: false,
+        staysActiveInBackground: false,
+        playsInSilentModeIOS: true,
+        shouldDuckAndroid: true,
+        playThroughEarpieceAndroid: false,
+      });
+
+      // Play it
+      const { sound } = await Audio.Sound.createAsync(
+        { uri: fileUri },
+        { shouldPlay: true }
+      );
+
+      await sound.playAsync();
+    } catch (err) {
+      console.error('TTS playback error:', err);
+      Alert.alert('Error', 'Could not generate audio');
     }
-
-    // Ensure audio mode
-    await Audio.setAudioModeAsync({
-      allowsRecordingIOS: false,
-      staysActiveInBackground: false,
-      playsInSilentModeIOS: true,
-      shouldDuckAndroid: true,
-      playThroughEarpieceAndroid: false,
-    });
-
-    // Play it
-    const { sound } = await Audio.Sound.createAsync(
-      { uri: fileUri },
-      { shouldPlay: true }
-    );
-
-    await sound.playAsync();
-  } catch (err) {
-    console.error('TTS playback error:', err);
-    Alert.alert('Error', 'Could not generate audio');
-  }
   };
 
   const handleDelete = async () => {
@@ -196,7 +207,7 @@ try {
 
   return (
     <LinearGradient
-      colors={['#c1f7b5', '#e4ffb5']} // мягкий зелёный градиент
+      colors={['#abf5ab64', '#347134bc']}
       style={{ flex: 1 }}
     >
       <View style={styles.container}>
@@ -305,24 +316,24 @@ try {
           )}
         </View>
 
-        <View style={styles.navBar}>
+        <View style={styles.bottomBar}>
           <TouchableOpacity
             style={styles.navItem}
             onPress={() => navigation.navigate('Home')}
           >
-            <Ionicons name="home" size={30} color="#246396" />
+            <Ionicons name="home" size={30} color="#8feda0ff" />
             <Text style={styles.navText}>Home</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Search')}>
-            <Ionicons name="search-outline" size={40} color="#57b0faff" />
+            <Ionicons name="search-outline" size={40} color="#8feda0ff" />
             <Text style={styles.navText}>Search</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={handleNext}>
-            <Ionicons name="arrow-back-circle" size={40} color="#57b0faff" />
+            <Ionicons name="arrow-back-circle" size={40} color="#8feda0ff" />
             <Text style={styles.navText}>Back</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={handleNext}>
-            <Ionicons name="arrow-forward-circle" size={40} color="#57b0faff" />
+            <Ionicons name="arrow-forward-circle" size={40} color="#8feda0ff" />
             <Text style={styles.navText}>Forward</Text>
           </TouchableOpacity>
         </View>

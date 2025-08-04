@@ -28,33 +28,33 @@ const NewFlashcardScreen = ({ navigation, route }: Props) => {
     // Load topics from backend
     useEffect(() => {
         const fetchTopics = async () => {
-        try {
-            const response = await api.get('/api/topics');
-            setTopics(response.data)
-            console.log("Fetching topics...");
-            console.log("Topics response:", response.data);
-        } catch (error) {
-            console.error('Error fetching topics:', error);
-            Alert.alert('Error', 'Could not load topics.');
-        }
+            try {
+                const response = await api.get('/api/topics');
+                setTopics(response.data)
+                console.log("Fetching topics...");
+                console.log("Topics response:", response.data);
+            } catch (error) {
+                console.error('Error fetching topics:', error);
+                Alert.alert('Error', 'Could not load topics.');
+            }
         };
         fetchTopics();
     }, []);
 
     const handleSave = async () => {
         if (!word || !definition || !example || !selectedTopicId) {
-        Alert.alert('Missing fields', 'Please fill out all fields.');
-        return;
+            Alert.alert('Missing fields', 'Please fill out all fields.');
+            return;
         }
 
         try {
-        const response = await api.post(`/api/topics/${selectedTopicId}/flashcards`, {
-            word,
-            definition,
-            example
-        });
-        Alert.alert('Success', 'Flashcard saved!');
-        navigation.navigate({ name: 'Home', params: { userId, username: user.username } }); // navigate back to home after saving
+            const response = await api.post(`/api/topics/${selectedTopicId}/flashcards`, {
+                word,
+                definition,
+                example
+            });
+            Alert.alert('Success', 'Flashcard saved!');
+            navigation.navigate({ name: 'Home', params: { userId, username: user.username } }); // navigate back to home after saving
         } catch (error) {
             console.error('Error saving flashcard:', error);
             Alert.alert('Error', 'Could not save flashcard.');
@@ -63,65 +63,58 @@ const NewFlashcardScreen = ({ navigation, route }: Props) => {
 
     return (
         <View style={styles.container}>
-        <Text style={styles.label}>Topic</Text>
-        <Dropdown
-            data={topics.map(topic => ({ label: topic.name, value: topic.id }))}
-            labelField="label"
-            valueField="value"
-            placeholder="Select a topic"
-            value={selectedTopicId}
-            onChange={item => setSelectedTopicId(item.value)}
-            style={styles.dropdown}
+            <Text style={styles.label}>Topic</Text>
+            <Dropdown
+                data={topics.map(topic => ({ label: topic.name, value: topic.id }))}
+                labelField="label"
+                valueField="value"
+                placeholder="Select a topic"
+                value={selectedTopicId}
+                onChange={item => setSelectedTopicId(item.value)}
+                style={styles.dropdown}
             // style={{ marginBottom: 20, borderWidth: 1, borderColor: 'gray', padding: 8, borderRadius: 5 }}
-        />
+            />
 
-        <Text style={styles.label}>Word</Text>
-        <TextInput
-            style={styles.input}
-            placeholder="Enter word"
-            value={word}
-            onChangeText={setWord}
-        />
+            <Text style={styles.label}>Word</Text>
+            <TextInput
+                style={styles.input}
+                placeholder="Enter word"
+                value={word}
+                onChangeText={setWord}
+            />
 
-        <Text style={styles.label}>Definition</Text>
-        <TextInput
-            style={styles.input}
-            placeholder="Enter definition"
-            value={definition}
-            onChangeText={setDefinition}
-            multiline
-        />
+            <Text style={styles.label}>Definition</Text>
+            <TextInput
+                style={styles.input}
+                placeholder="Enter definition"
+                value={definition}
+                onChangeText={setDefinition}
+                multiline
+            />
 
-        <Text style={styles.label}>Example</Text>
-        <TextInput
-            style={styles.input}
-            placeholder="Enter example"
-            value={example}
-            onChangeText={setExample}
-            multiline
-        />
+            <Text style={styles.label}>Example</Text>
+            <TextInput
+                style={styles.input}
+                placeholder="Enter example"
+                value={example}
+                onChangeText={setExample}
+                multiline
+            />
 
-        <View style={styles.buttonRow}>
-        <TouchableOpacity
-            style={styles.homeButton}
-            onPress={() =>
-            navigation.navigate('Home', {
-                userId: userId,
-                username: user.username,
-            })
-            }
-        >
-            <Ionicons name="home" size={28} color='#006400' />
-            <Text style={styles.buttonText}>Home</Text>
-        </TouchableOpacity>
+            <View style={styles.buttonRow}>
+                <TouchableOpacity
+                    style={styles.navItem}
+                    onPress={() => navigation.navigate('Home')}
+                >
+                    <Ionicons name="home" size={30} color="#97d0feff" />
+                    <Text style={styles.navText}>Home</Text>
+                </TouchableOpacity>
 
-            <TouchableOpacity
-            style={[styles.button, { backgroundColor: '#228B22' }]}
-            onPress={handleSave}
-            >
-            <Text style={styles.buttonText}>Save</Text>
-            </TouchableOpacity>
-        </View>
+                <TouchableOpacity onPress={handleSave} style={styles.navItem}>
+                    <Ionicons name="checkmark-circle" size={30} color="#a8f8b0ff" />
+                    <Text style={styles.navText}>Submit</Text>
+                </TouchableOpacity>
+            </View>
         </View>
     );
 };

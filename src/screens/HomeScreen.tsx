@@ -16,11 +16,22 @@ const HomeScreen = ({ navigation }: Props) => {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerBackVisible: false,
       title: 'HOME',
+      headerBackVisible: false,
+      headerStyle: {
+      backgroundColor: '#abf5ab64', 
+    },
+    headerTitleStyle: {
+      fontFamily: 'ArchitectsDaughter-Regular',
+      fontSize: 36,
+      color: '#2c6f33', 
+    },
       headerRight: () => (
-        <View style={styles.initialsCircle}>
-          <Text style={styles.initialsText}>{initials}</Text>
+        <View style={styles.userWrapper}>
+          <View style={styles.initialsCircle}>
+            <Text style={styles.initialsText}>{initials}</Text>
+          </View>
+          <Text style={styles.userLabel}>User</Text>
         </View>
       ),
     });
@@ -28,7 +39,7 @@ const HomeScreen = ({ navigation }: Props) => {
 
   return (
     <LinearGradient
-      colors={['#a1f8cda5', '#4b8737ff']}
+      colors={['#abf5ab64', '#347134bc']}
       style={styles.container}
     >
       <TouchableOpacity

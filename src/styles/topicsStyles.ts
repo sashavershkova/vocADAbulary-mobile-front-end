@@ -4,7 +4,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
-    
   },
 
   topicList: {
@@ -18,7 +17,7 @@ const styles = StyleSheet.create({
 
   topicTouchable: {
     borderRadius: 40,
-    overflow: 'visible', 
+    overflow: 'visible',
   },
 
   topicBox: {
@@ -30,7 +29,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1.5,
-    elevation: 0, 
+    elevation: 0,
   },
 
   topicText: {
@@ -49,7 +48,7 @@ const styles = StyleSheet.create({
   },
 
   topicShadowWrapper: {
-    shadowColor: '#006400', 
+    shadowColor: '#006400',
     shadowOffset: { width: 1, height: 3 },
     shadowOpacity: 0.3,
     shadowRadius: 6,
@@ -64,40 +63,100 @@ const styles = StyleSheet.create({
   },
 
   simpleButton: {
-  backgroundColor: '#F8C8DC', 
-  borderRadius: 20,
-  paddingVertical: 10,
-  paddingHorizontal: 30,
-  alignItems: 'center',
-  justifyContent: 'center',
-  borderWidth: 1.5,
-  borderColor: '#006400', 
-  marginTop: 30, 
-},
+    backgroundColor: '#F8C8DC',
+    borderRadius: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1.5,
+    borderColor: '#006400',
+    marginTop: 30,
+  },
 
-simpleButtonText: {
-  fontSize: 20,
-  fontWeight: 'bold',
-  color: '#006400',
-  fontFamily: 'ArchitectsDaughter',
+  simpleButtonText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#006400',
+    fontFamily: 'ArchitectsDaughter',
+  },
+  initialsCircle: {
+    backgroundColor: '#8feda0ff',
+    borderColor: '#2c6f33',
+    width: 25,
+    height: 25,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1.5,
+    borderRadius: 20,
+  },
+  initialsText: {
+    fontFamily: 'ArchitectsDaughter-Regular',
+    color: '#2c6f33',
+    fontWeight: 'bold',
+    fontSize: 18,
+  },
+
+  bottomBar: {
+  position: "absolute",       
+  bottom: 20,                 
+  left: 20,
+  right: 20,                  
+  flexDirection: "row",       
+  justifyContent: "space-around", 
+  alignItems: "center",       
+  shadowColor: '#313131ff',   
+  shadowOpacity: 0.8,         
+  shadowOffset: { width: 4, height: 6 }, 
 },
-initialsCircle: {
-  width: 36,
-  height: 36,
-  borderRadius: 18,
-  backgroundColor: '#edf96c',
-  justifyContent: 'center',
+  
+  homeButton: {
+    alignItems: 'center',
+  },
+
+  addButton: {
+    width: 56,
+    height: 56,
+    backgroundColor: '#9edd81ff',
+    borderRadius: 28,
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 5,
+  },
+
+  buttonText: {
+    color: '#006400',
+    marginTop: 4,
+    fontFamily: 'ArchitectsDaughter',
+    fontSize: 14,
+  },
+userWrapper: {
   alignItems: 'center',
-  marginRight: 12,
-  borderColor: '#2c6f33',
-  borderWidth: 1.5,
+  justifyContent: 'flex-start',
+  marginRight: 8,
+  paddingTop: 8, 
+  minWidth: 60, 
 },
-initialsText: {
-  fontFamily: 'ArchitectsDaughter-Regular',
+userLabel: {
+  fontSize: 16,
   color: '#2c6f33',
-  fontWeight: 'bold',
-  fontSize: 18,
+  fontFamily: 'ArchitectsDaughter-Regular',
+  marginTop: -2,
+  textAlign: 'center',
 },
+navText: {
+    fontSize: 16,
+    fontFamily: 'ArchitectsDaughter',
+    color: '#8feda0ff',
+    textAlign: 'center',
+  },
+  navItem: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'column',
+    marginHorizontal: 10
+  },
+
 });
 
 export default styles;
