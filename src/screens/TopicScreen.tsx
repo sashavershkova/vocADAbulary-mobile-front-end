@@ -42,7 +42,7 @@ const TopicScreen = ({ route }: Props) => {
       }
     };
 
-    fetchFlashcards(); // ✅ Call the async function
+    fetchFlashcards(); 
   }, [topicId]);
 
   if (loading) {

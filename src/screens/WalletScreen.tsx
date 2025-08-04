@@ -146,7 +146,6 @@ const WalletScreen = () => {
         contentContainerStyle={styles.cardList}
         renderItem={({ item }) => (
           <View style={styles.cardRow}>
-            {/* Левая часть: звук + слово */}
             <View style={{ flexDirection: "row", alignItems: "center", flex: 1 }}>
               <TouchableOpacity onPress={() => playAudio(item.audioUrl)} style={{ marginRight: 8 }}>
                 <Ionicons name="play-circle" size={32} color="#97d0feff" />
@@ -155,7 +154,6 @@ const WalletScreen = () => {
               <Text style={styles.termText}>{item.word}</Text>
             </View>
 
-            {/* Правая часть: удалить + изучено */}
             <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
               <TouchableOpacity onPress={() => handleDelete(item.id)}>
                 <Ionicons name="remove-circle" size={32} color="#f94949ac" />
@@ -168,7 +166,7 @@ const WalletScreen = () => {
           </View>
         )}
       
-      ListFooterComponent={<View style={{ height: 100 }} />} // отступ под bottom bar
+      ListFooterComponent={<View style={{ height: 100 }} />} 
       />
 
       <View style={styles.bottomBar}>

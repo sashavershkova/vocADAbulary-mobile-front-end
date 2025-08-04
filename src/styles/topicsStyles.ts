@@ -5,21 +5,17 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
   },
-
   topicList: {
     paddingBottom: 20,
   },
-
   topicBoxWrapper: {
     marginVertical: 10,
     alignItems: 'center',
   },
-
   topicTouchable: {
     borderRadius: 40,
     overflow: 'visible',
   },
-
   topicBox: {
     width: 300,
     height: 80,
@@ -31,7 +27,6 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     elevation: 0,
   },
-
   topicText: {
     fontSize: 25,
     fontWeight: 'bold',
@@ -39,14 +34,12 @@ const styles = StyleSheet.create({
     fontFamily: 'ArchitectsDaughter-Regular',
     color: '#006400',
   },
-
   topicTextActive: {
     color: '#b67ef6ff',
     textShadowColor: '#006400',
     textShadowOffset: { width: 1, height: 2 },
     textShadowRadius: 2,
   },
-
   topicShadowWrapper: {
     shadowColor: '#006400',
     shadowOffset: { width: 1, height: 3 },
@@ -55,13 +48,11 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     backgroundColor: 'transparent',
   },
-
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
-
   simpleButton: {
     backgroundColor: '#F8C8DC',
     borderRadius: 20,
@@ -73,7 +64,6 @@ const styles = StyleSheet.create({
     borderColor: '#006400',
     marginTop: 30,
   },
-
   simpleButtonText: {
     fontSize: 20,
     fontWeight: 'bold',
@@ -96,24 +86,21 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 18,
   },
-
   bottomBar: {
-  position: "absolute",       
-  bottom: 20,                 
-  left: 20,
-  right: 20,                  
-  flexDirection: "row",       
-  justifyContent: "space-around", 
-  alignItems: "center",       
-  shadowColor: '#313131ff',   
-  shadowOpacity: 0.8,         
-  shadowOffset: { width: 4, height: 6 }, 
-},
-  
+    position: "absolute",
+    bottom: 20,
+    left: 20,
+    right: 20,
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
+    shadowColor: '#313131ff',
+    shadowOpacity: 0.8,
+    shadowOffset: { width: 4, height: 6 },
+  },
   homeButton: {
     alignItems: 'center',
   },
-
   addButton: {
     width: 56,
     height: 56,
@@ -123,28 +110,27 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     elevation: 5,
   },
-
   buttonText: {
     color: '#006400',
     marginTop: 4,
     fontFamily: 'ArchitectsDaughter',
     fontSize: 14,
   },
-userWrapper: {
-  alignItems: 'center',
-  justifyContent: 'flex-start',
-  marginRight: 8,
-  paddingTop: 8, 
-  minWidth: 60, 
-},
-userLabel: {
-  fontSize: 16,
-  color: '#2c6f33',
-  fontFamily: 'ArchitectsDaughter-Regular',
-  marginTop: -2,
-  textAlign: 'center',
-},
-navText: {
+  userWrapper: {
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    marginRight: 8,
+    paddingTop: 8,
+    minWidth: 60,
+  },
+  userLabel: {
+    fontSize: 16,
+    color: '#2c6f33',
+    fontFamily: 'ArchitectsDaughter-Regular',
+    marginTop: -2,
+    textAlign: 'center',
+  },
+  navText: {
     fontSize: 16,
     fontFamily: 'ArchitectsDaughter',
     color: '#8feda0ff',
@@ -156,7 +142,6 @@ navText: {
     flexDirection: 'column',
     marginHorizontal: 10
   },
-
 });
 
 export default styles;

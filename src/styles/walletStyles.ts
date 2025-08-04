@@ -15,8 +15,6 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 30,
     fontSize: 16,
-    borderWidth: 1,
-    borderColor: "#ccc",
     borderWidth: 3,
     borderColor: "#acb5fbf3",
     gap: 12,
@@ -70,7 +68,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 18,
   },
-
   minusButton: {
     width: 24,
     height: 24,
@@ -81,7 +78,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#f90606ff',
   },
-
   minusText: {
     color: '#f10909ff',
     fontSize: 20,
@@ -92,7 +88,6 @@ const styles = StyleSheet.create({
     fontFamily: 'ArchitectsDaughter-Regular',
     fontSize: 18,
     color: '#2c6f33',
-
     fontWeight: 'normal',
   },
   bottomBar: {
@@ -101,33 +96,31 @@ const styles = StyleSheet.create({
     left: 20,
     right: 20,
     flexDirection: "row",
-    justifyContent: "space-around", // равномерное распределение
+    justifyContent: "space-around",
     alignItems: "center",
     shadowColor: '#313131ff',
     shadowOpacity: 0.8,
     shadowOffset: { width: 4, height: 6 },
   },
-
   navItem: {
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
   },
-
   navText: {
     fontSize: 14,
     color: '#93cbf9ff',
     fontFamily: 'ArchitectsDaughter-Regular',
     marginTop: 4,
     textAlign: 'center',
-    width: '100%', // добавлено для центрирования многострочных надписей
+    width: '100%',
   },
   userWrapper: {
     alignItems: 'center',
     justifyContent: 'flex-start',
     marginRight: 8,
-    paddingTop: 8, // ← ОТДВИГАЕТ ВЕСЬ БЛОК ОТ ПОТОЛКА
-    minWidth: 60, // ← ФИКСИРУЕТ ширину, чтобы текст и кружок совпадали
+    paddingTop: 8,
+    minWidth: 60,
   },
   userLabel: {
     fontSize: 16,
@@ -136,8 +129,6 @@ const styles = StyleSheet.create({
     marginTop: -2,
     textAlign: 'center',
   },
-
-
 });
 
 export default styles;

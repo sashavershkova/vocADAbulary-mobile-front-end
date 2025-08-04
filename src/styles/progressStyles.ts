@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
   },
   metricButton: {
     width: '85%',
-    backgroundColor: '#87CEFA', // голубая заливка
+    backgroundColor: '#87CEFA',
     borderRadius: 40,
     paddingVertical: 14,
     paddingHorizontal: 20,
@@ -44,12 +44,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.8,
     shadowOffset: { width: 4, height: 6 },
   },
-
   homeButton: {
     alignItems: 'center',
   },
-
-
   buttonText: {
     fontSize: 14,
     fontFamily: 'ArchitectsDaughter',
@@ -72,7 +69,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 18,
   },
-
   userWrapper: {
     alignItems: 'center',
     justifyContent: 'flex-start',

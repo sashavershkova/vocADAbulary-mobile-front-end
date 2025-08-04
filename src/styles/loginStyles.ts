@@ -8,34 +8,30 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 20,
   },
-
   titleRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 50,
   },
-
   title: {
     fontSize: 45,
     fontWeight: 'bold',
     textAlign: 'center',
     fontFamily: 'ArchitectsDaughter',
     color: '#b869d3ff',
-    shadowColor: '#313131ff',        
+    shadowColor: '#313131ff',
     shadowOpacity: 0.8,
     shadowOffset: { width: 4, height: 6 },
   },
-
   avatar: {
     width: 100,
     height: 100,
     resizeMode: 'contain',
-    shadowColor: '#313131ff',        
+    shadowColor: '#313131ff',
     shadowOpacity: 0.8,
     shadowOffset: { width: 4, height: 6 },
   },
-
   input: {
     width: '100%',
     borderWidth: 2,
@@ -45,14 +41,12 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     fontSize: 16,
   },
-
   checkboxRow: {
     flexDirection: 'row',
     alignItems: 'center',
     alignSelf: 'flex-start',
     marginTop: 10,
   },
-
   checkboxText: {
     marginLeft: 8,
     color: '#006400',
@@ -60,7 +54,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontFamily: 'ArchitectsDaughter',
   },
-
   forgotText: {
     color: '#006400',
     textDecorationLine: 'underline',
@@ -68,7 +61,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'ArchitectsDaughter',
   },
-
   simpleButton: {
     backgroundColor: '#e19bf8de',
     paddingVertical: 12,
@@ -78,11 +70,10 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     borderWidth: 2,
     borderColor: '#006400',
-    shadowColor: '#313131ff',        
+    shadowColor: '#313131ff',
     shadowOpacity: 0.8,
     shadowOffset: { width: 4, height: 6 },
   },
-
   simpleButtonText: {
     color: '#006400',
     fontSize: 20,

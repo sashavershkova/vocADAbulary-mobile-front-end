@@ -7,7 +7,7 @@ export const splashStyles = StyleSheet.create({
     alignItems: 'center',
   },
   overlay: {
-    backgroundColor: 'transparent', // не затемняем, текст сам контрастный
+    backgroundColor: 'transparent',
     padding: 20,
     borderRadius: 10,
   },
@@ -15,10 +15,10 @@ export const splashStyles = StyleSheet.create({
     fontSize: 28,
     fontWeight: 'normal',
     fontFamily: 'ArchitectsDaughter',
-    color: '#004d00', // тёмно-зелёный
+    color: '#004d00',
     textAlign: 'center',
     paddingHorizontal: 30,
-    textShadowColor: '#ffff66', // светло-жёлтая тень
+    textShadowColor: '#ffff66',
     textShadowOffset: { width: 2, height: 2 },
     textShadowRadius: 3,
   },

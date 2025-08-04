@@ -151,7 +151,6 @@ const QuizScreen = ({ navigation }: Props) => {
           })}
         </ScrollView>
 
-
         <View style={styles.bottomBar}>
           <TouchableOpacity
             style={styles.navItem}
