@@ -8,16 +8,15 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'transparent',
   },
-
   learnButton: {
     position: 'absolute',
     top: height * 0.015,
     right: width * 0.04,
     width: width * (2 / 3),
     height: height * (2.5 / 4),
-    backgroundColor: '#b0fbb0e4', // зелёная
+    backgroundColor: '#b0fbb0e4',
     borderWidth: 1.5,
-    borderColor: '#006400', // тёмно-зелёная рамка
+    borderColor: '#006400',
     borderRadius: 30,
     justifyContent: 'center',
     alignItems: 'center',
@@ -25,14 +24,12 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.8,
     shadowOffset: { width: 3, height: 6 },
   },
-
   learnText: {
     fontSize: 32,
     fontWeight: 'bold',
     color: '#006400',
     fontFamily: 'ArchitectsDaughter',
   },
-
   progressButton: {
     position: 'absolute',
     top: height * 0.015,
@@ -49,7 +46,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.8,
     shadowOffset: { width: 3, height: 6 },
   },
-
   settingsButton: {
     position: 'absolute',
     bottom: 115,
@@ -66,7 +62,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.8,
     shadowOffset: { width: 3, height: 6 },
   },
-
   exitButton: {
     position: 'absolute',
     bottom: 13,
@@ -86,7 +81,7 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 19,
     fontFamily: 'ArchitectsDaughter',
-    color: '#006400', // темно-зелёный
+    color: '#006400',
     textAlign: 'center',
   },
   smallButtonText: {
@@ -101,14 +96,13 @@ const styles = StyleSheet.create({
     right: 30,
     alignItems: 'center',
   },
-
   constructorButton: {
     position: 'absolute',
-    right: 121, // отступ от правого края (если LEARN справа)
+    right: 121,
     bottom: 15,
     backgroundColor: '#e2a4f7e2',
     width: 160,
-    height: 190, // 90 + 90 + отступ
+    height: 190,
     borderRadius: 30,
     justifyContent: 'center',
     alignItems: 'center',
@@ -118,13 +112,12 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.8,
     shadowOffset: { width: 3, height: 6 },
   },
-
   walletButton: {
     position: 'absolute',
     bottom: 15,
     left: width * 0.05,
-    width: width * 0.22, // ширина как у progressButton
-    height: 190, // высота как у constructorButton
+    width: width * 0.22, 
+    height: 190, 
     backgroundColor: '#a1c1f5d6',
     justifyContent: 'center',
     alignItems: 'center',
@@ -135,7 +128,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.8,
     shadowOffset: { width: 3, height: 6 },
   },
-
   quizButton: {
     position: 'absolute',
     top: height * 0.12,
@@ -178,7 +170,6 @@ const styles = StyleSheet.create({
     color: '#2c6f33ff',
     fontWeight: 'bold',
     fontSize: 16,
-
   },
   initialsCircle: {
     backgroundColor: '#8feda0ff',
@@ -210,7 +201,6 @@ const styles = StyleSheet.create({
     marginTop: -2,
     textAlign: 'center',
   },
-
 });
 
 export default styles;

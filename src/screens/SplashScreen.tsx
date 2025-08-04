@@ -44,7 +44,7 @@ const SplashScreen = ({ navigation }: Props) => {
             } else {
               navigation.replace('Login');
             }
-          }, 3000);
+          }, 1500);
         }
       }, 80);
     };

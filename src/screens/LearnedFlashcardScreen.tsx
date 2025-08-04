@@ -34,7 +34,7 @@ const LearnedFlashcardsScreen = () => {
   const fetchLearned = async () => {
     try {
       setLoading(true);
-      const data = await getLearnedFlashcards(userId); // same endpoint
+      const data = await getLearnedFlashcards(userId); 
 
       const learned = data.map((item: any) => ({
         id: item.flashcardId,

@@ -9,7 +9,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.8,
     shadowOffset: { width: 4, height: 6 },
   },
-
   initialsCircle: {
     backgroundColor: '#97d0feff',
     borderRadius: 20,
@@ -20,14 +19,12 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     borderColor: "#246396",
   },
-
   initialsText: {
     fontFamily: 'ArchitectsDaughter',
     fontSize: 18,
     color: '#246396',
     fontWeight: 'bold'
   },
-
   questionButton: {
     backgroundColor: '#fff176',
     borderRadius: 30,
@@ -42,7 +39,6 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 5, height: 6 },
     elevation: 2,
   },
-
   questionText: {
     fontFamily: 'ArchitectsDaughter',
     fontSize: 40,
@@ -51,12 +47,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textTransform: 'uppercase',
   },
-
   answersContainer: {
     gap: 15,
     paddingBottom: 100,
   },
-
   answerBox: {
     backgroundColor: '#f9dafafd',
     borderRadius: 30,
@@ -69,32 +63,25 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     elevation: 1,
   },
-
   selectedAnswerBox: {
     backgroundColor: '#97d0feff',
     borderColor: '#246396',
     borderWidth: 2,
   },
-
   correctAnswerBox: {
     backgroundColor: '#cbf6b6ff',
     borderColor: '#2c6f33',
   },
-
   wrongAnswerBox: {
     backgroundColor: '#f86a6aff',
     borderColor: '#c62828',
   },
-
   answerText: {
     fontFamily: 'ArchitectsDaughter',
-    fontSize: 18,
+    fontSize: 25,
     color: '#2c6f33',
     textAlign: 'center',
-    fontFamily: 'ArchitectsDaughter',
-    fontSize: 25,
   },
-
   bottomBar: {
     position: "absolute",
     bottom: 20,
@@ -107,8 +94,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.8,
     shadowOffset: { width: 4, height: 6 },
   },
-
-
   navigationButton: {
     backgroundColor: 'transparent',
     padding: 10,
@@ -124,7 +109,7 @@ const styles = StyleSheet.create({
     fontFamily: 'ArchitectsDaughter-Regular',
     marginTop: 4,
     textAlign: 'center',
-    width: '100%', // добавлено для центрирования многострочных надписей
+    width: '100%', 
   },
   userWrapper: {
     alignItems: 'center',
@@ -140,7 +125,6 @@ const styles = StyleSheet.create({
     marginTop: -2,
     textAlign: 'center',
   },
-
 });
 
 export default styles;
