@@ -11,6 +11,9 @@ const styles = StyleSheet.create({
   topicBoxWrapper: {
     marginVertical: 10,
     alignItems: 'center',
+    shadowColor: '#313131ff',
+    shadowOpacity: 0.8,
+    shadowOffset: { width: 4, height: 6 }
   },
   topicTouchable: {
     borderRadius: 40,

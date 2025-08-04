@@ -6,7 +6,7 @@ import { RootStackParamList } from '../types/navigation';
 import { Dropdown } from 'react-native-element-dropdown';
 import { Ionicons } from '@expo/vector-icons';
 import api from '../api/axiosInstance';
-import styles from '../styles/formStyles';
+import styles from '../styles/newflashcardStyles';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'NewFlashcard'>;
 
@@ -16,6 +16,7 @@ type Topic = {
 };
 
 const NewFlashcardScreen = ({ navigation, route }: Props) => {
+    // const { topicId } = route.params as { topicId: string }; // topicId passed from navigation
     const { user } = useMockUser();
     const userId = user.id;
     const [word, setWord] = useState('');
@@ -24,6 +25,7 @@ const NewFlashcardScreen = ({ navigation, route }: Props) => {
     const [selectedTopicId, setSelectedTopicId] = useState<number | null>(null);
     const [example, setExample] = useState('');
 
+    // Load topics from backend
     useEffect(() => {
         const fetchTopics = async () => {
             try {
@@ -52,7 +54,7 @@ const NewFlashcardScreen = ({ navigation, route }: Props) => {
                 example
             });
             Alert.alert('Success', 'Flashcard saved!');
-            navigation.navigate({ name: 'Home', params: { userId, username: user.username } }); 
+            navigation.navigate({ name: 'Home', params: { userId, username: user.username } }); // navigate back to home after saving
         } catch (error) {
             console.error('Error saving flashcard:', error);
             Alert.alert('Error', 'Could not save flashcard.');
@@ -70,6 +72,7 @@ const NewFlashcardScreen = ({ navigation, route }: Props) => {
                 value={selectedTopicId}
                 onChange={item => setSelectedTopicId(item.value)}
                 style={styles.dropdown}
+            // style={{ marginBottom: 20, borderWidth: 1, borderColor: 'gray', padding: 8, borderRadius: 5 }}
             />
 
             <Text style={styles.label}>Word</Text>

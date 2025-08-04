@@ -56,11 +56,22 @@ const LearnedFlashcardsScreen = () => {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: 'LEARNED CARDS',
+      title: "WALLET",
       headerBackVisible: false,
+      headerStyle: {
+        backgroundColor: "#b0f4c9ff",
+      },
+      headerTitleStyle: {
+        color: "#246396",
+        fontFamily: "ArchitectsDaughter-Regular",
+        fontSize: 36,
+      },
       headerRight: () => (
-        <View style={styles.initialsCircle}>
-          <Text style={styles.initialsText}>{initials}</Text>
+        <View style={styles.userWrapper}>
+          <View style={styles.initialsCircle}>
+            <Text style={styles.initialsText}>{initials}</Text>
+          </View>
+          <Text style={styles.userLabel}>User</Text>
         </View>
       ),
     });
