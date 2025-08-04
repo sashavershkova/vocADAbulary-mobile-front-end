@@ -33,24 +33,27 @@ const QuizScreen = ({ navigation }: Props) => {
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   useLayoutEffect(() => {
-  navigation.setOptions({
-    title: 'QUIZ',
-    headerBackVisible: false,
-    headerStyle: {
-      backgroundColor: '#f7b4c4d6', 
-    },
-    headerTitleStyle: {
-      fontFamily: 'ArchitectsDaughter-Regular',
-      fontSize: 36,
-      color: '#2c6f33', 
-    },
-    headerRight: () => (
-      <View style={styles.initialsCircle}>
-        <Text style={styles.initialsText}>{initials}</Text>
-      </View>
-    ),
-  });
-}, [navigation]);
+    navigation.setOptions({
+      title: 'QUIZ',
+      headerBackVisible: false,
+      headerStyle: {
+        backgroundColor: '#f7b4c4d6',
+      },
+      headerTitleStyle: {
+        fontFamily: 'ArchitectsDaughter-Regular',
+        fontSize: 36,
+        color: '#246396',
+      },
+      headerRight: () => (
+        <View style={styles.userWrapper}>
+          <View style={styles.initialsCircle}>
+            <Text style={styles.initialsText}>{initials}</Text>
+          </View>
+          <Text style={styles.userLabel}>User</Text>
+        </View>
+      ),
+    });
+  }, [navigation]);
 
   useEffect(() => {
     const fetchAllQuizzes = async () => {
@@ -148,21 +151,25 @@ const QuizScreen = ({ navigation }: Props) => {
           })}
         </ScrollView>
 
+
         <View style={styles.bottomBar}>
-          <TouchableOpacity onPress={() => navigation.goBack()} style={styles.navigationButton}>
-            <Ionicons name="home" size={36} color="#a8f8b0ff" />
+          <TouchableOpacity
+            style={styles.navItem}
+            onPress={() => navigation.navigate('Home')}
+          >
+            <Ionicons name="home" size={30} color="#97d0feff" />
             <Text style={styles.navText}>Home</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={handleReset} style={styles.navigationButton}>
-            <Ionicons name="refresh-circle" size={36} color="#a8f8b0ff" />
+            <Ionicons name="refresh-circle" size={35} color="#97d0feff" />
             <Text style={styles.navText}>Reset</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={handleSubmit} style={styles.navigationButton}>
-            <Ionicons name="checkmark-circle" size={36} color="#a8f8b0ff" />
+            <Ionicons name="checkmark-circle" size={35} color="#97d0feff" />
             <Text style={styles.navText}>Submit</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={handleNext} style={styles.navigationButton}>
-            <Ionicons name="arrow-forward-circle" size={36} color="#a8f8b0ff" />
+            <Ionicons name="arrow-forward-circle" size={35} color="#97d0feff" />
             <Text style={styles.navText}>Forward</Text>
           </TouchableOpacity>
         </View>

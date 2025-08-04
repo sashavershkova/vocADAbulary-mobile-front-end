@@ -4,28 +4,28 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 20,
-    paddingTop: 20,
-    shadowColor: '#313131ff',        
+    paddingTop: 30,
+    shadowColor: '#313131ff',
     shadowOpacity: 0.8,
-    shadowOffset: { width: 3, height: 6 },
+    shadowOffset: { width: 4, height: 6 },
   },
 
   initialsCircle: {
-    backgroundColor: '#d0f0c0',
+    backgroundColor: '#97d0feff',
     borderRadius: 20,
-    width: 40,
-    height: 40,
+    width: 25,
+    height: 25,
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 10,
     borderWidth: 1.5,
-    borderColor: "#0c5b08f3",
+    borderColor: "#246396",
   },
 
   initialsText: {
     fontFamily: 'ArchitectsDaughter',
     fontSize: 18,
-    color: '#2c6f33',
+    color: '#246396',
+    fontWeight: 'bold'
   },
 
   questionButton: {
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     minHeight: 60,
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#777777',        
+    shadowColor: '#777777',
     shadowOpacity: 0.35,
     shadowOffset: { width: 5, height: 6 },
     elevation: 2,
@@ -58,12 +58,12 @@ const styles = StyleSheet.create({
   },
 
   answerBox: {
-    backgroundColor: '#f8d6f9ee',
+    backgroundColor: '#f9dafafd',
     borderRadius: 30,
     paddingVertical: 12,
     paddingHorizontal: 16,
     borderWidth: 1.5,
-    borderColor: '#2c6f33',
+    borderColor: '#97d0feff',
     shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowRadius: 2,
@@ -71,7 +71,8 @@ const styles = StyleSheet.create({
   },
 
   selectedAnswerBox: {
-    borderColor: '#1e8449',
+    backgroundColor: '#97d0feff',
+    borderColor: '#246396',
     borderWidth: 2,
   },
 
@@ -95,14 +96,18 @@ const styles = StyleSheet.create({
   },
 
   bottomBar: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 20,
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    alignItems: 'center',
-    paddingHorizontal: 20,
+    left: 20,
+    right: 20,
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
+    shadowColor: '#313131ff',
+    shadowOpacity: 0.8,
+    shadowOffset: { width: 4, height: 6 },
   },
+
 
   navigationButton: {
     backgroundColor: 'transparent',
@@ -113,6 +118,29 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     elevation: 2,
   },
+  navText: {
+    fontSize: 14,
+    color: '#97d0feff',
+    fontFamily: 'ArchitectsDaughter-Regular',
+    marginTop: 4,
+    textAlign: 'center',
+    width: '100%', // добавлено для центрирования многострочных надписей
+  },
+  userWrapper: {
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    marginRight: 8,
+    paddingTop: 8,
+    minWidth: 60,
+  },
+  userLabel: {
+    fontSize: 16,
+    color: '#246396',
+    fontFamily: 'ArchitectsDaughter-Regular',
+    marginTop: -2,
+    textAlign: 'center',
+  },
+
 });
 
 export default styles;

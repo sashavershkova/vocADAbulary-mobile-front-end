@@ -22,7 +22,7 @@ import {
 } from "../api/wallet";
 import styles from "../styles/walletStyles";
 import { LinearGradient } from "expo-linear-gradient";
-import AntDesign from '@expo/vector-icons/AntDesign';
+import { ScrollView } from 'react-native';
 
 type WalletNavProp = NativeStackNavigationProp<RootStackParamList, "Wallet">;
 
@@ -80,8 +80,11 @@ const WalletScreen = () => {
         fontSize: 36,
       },
       headerRight: () => (
-        <View style={styles.initialsCircle}>
-          <Text style={styles.initialsText}>{initials}</Text>
+        <View style={styles.userWrapper}>
+          <View style={styles.initialsCircle}>
+            <Text style={styles.initialsText}>{initials}</Text>
+          </View>
+          <Text style={styles.userLabel}>User</Text>
         </View>
       ),
     });
@@ -139,13 +142,14 @@ const WalletScreen = () => {
       <FlatList
         data={filteredFlashcards}
         keyExtractor={(item) => item.id.toString()}
+        style={{ marginBottom: 90 }}
         contentContainerStyle={styles.cardList}
         renderItem={({ item }) => (
           <View style={styles.cardRow}>
             {/* Левая часть: звук + слово */}
             <View style={{ flexDirection: "row", alignItems: "center", flex: 1 }}>
               <TouchableOpacity onPress={() => playAudio(item.audioUrl)} style={{ marginRight: 8 }}>
-                <Ionicons name="play-circle" size={32} color="#7082f6ff" />
+                <Ionicons name="play-circle" size={32} color="#97d0feff" />
               </TouchableOpacity>
 
               <Text style={styles.termText}>{item.word}</Text>
@@ -163,34 +167,34 @@ const WalletScreen = () => {
             </View>
           </View>
         )}
+      
+      ListFooterComponent={<View style={{ height: 100 }} />} // отступ под bottom bar
       />
 
       <View style={styles.bottomBar}>
-        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Home')}>
-          <Ionicons name="home" size={40} color="#97d0feff" />
+        <TouchableOpacity
+          style={styles.navItem}
+          onPress={() => navigation.navigate("Home")}
+        >
+          <Ionicons name="home" size={35} color="#97d0feff" />
           <Text style={styles.navText}>Home</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-          onPress={() =>
-            navigation.navigate("NewFlashcard" as never, { topicId: 0 } as never)
-          }
+          style={styles.navItem}
+          onPress={() => navigation.navigate("NewFlashcard" as never, { topicId: 0 } as never)}
         >
-          <Ionicons name="add-circle" size={40} color="#97d0feff" />
-          <Text style={styles.navText}>Add a New Card</Text>
+          <Ionicons name="add-circle" size={35} color="#97d0feff" />
+          <Text style={styles.navText}>Add</Text>
         </TouchableOpacity>
-        <TouchableOpacity 
-          onPress={() => 
-            navigation.navigate("LearnedCards" as never)
-          }
+
+        <TouchableOpacity
+          style={styles.navItem}
+          onPress={() => navigation.navigate("LearnedCards" as never)}
         >
-          <AntDesign name="carryout" size={30} color="#246396" />
-          {/* <Ionicons name="carryout" size={30} color="#246396" /> */}
-            {/* <Text style={styles.bottomButton}>Learned Cards</Text> */}
+          <FontAwesome5 name="piggy-bank" size={35} color="#97d0feff" />
+          <Text style={styles.navText}>Piggy Bank</Text>
         </TouchableOpacity>
-        {/* <TouchableOpacity disabled>
-          <Ionicons name="wallet" size={30} color="#246396" /> */}
-        {/* </TouchableOpacity> */}
       </View>
     </LinearGradient>
   );

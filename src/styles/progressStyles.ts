@@ -1,67 +1,104 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: "#fff",
+    paddingTop: 40,
+    paddingHorizontal: 10,
+    alignItems: 'center',
+    justifyContent: 'flex-start',
   },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 20,
+  buttonGroup: {
+    marginTop: 20,
+    width: '100%',
+    alignItems: 'center',
   },
-  row: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginBottom: 15,
+  metricButton: {
+    width: '85%',
+    backgroundColor: '#87CEFA', // голубая заливка
+    borderRadius: 40,
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    marginVertical: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    elevation: 2,
+    borderWidth: 1,
+    borderColor: '#4682B4',
   },
-  placeholderButton: {
-    width: 32,
-    height: 32,
-    backgroundColor: "#888",
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 16,
+  metricText: {
+    fontSize: 20,
+    fontFamily: 'ArchitectsDaughter',
+    color: '#246396ff',
   },
-  label: {
-    flex: 1,
-    textAlign: "center",
-    fontSize: 16,
-  },
-  value: {
-    fontSize: 16,
-    fontWeight: "bold",
-    minWidth: 40,
-    textAlign: "right",
-  },
-  homeLink: {
+  buttonBar: {
     position: "absolute",
     bottom: 20,
+    left: 20,
     right: 20,
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
+    shadowColor: '#313131ff',
+    shadowOpacity: 0.8,
+    shadowOffset: { width: 4, height: 6 },
   },
-  homeLinkText: {
-    color: "blue",
-    fontSize: 16,
+
+  homeButton: {
+    alignItems: 'center',
+  },
+
+
+  buttonText: {
+    fontSize: 14,
+    fontFamily: 'ArchitectsDaughter',
+    color: '#246396ff',
+    marginTop: 4,
   },
   initialsCircle: {
-  width: 36,
-  height: 36,
-  borderRadius: 18,
-  backgroundColor: '#87CEFA',
-  justifyContent: 'center',
-  alignItems: 'center',
-  marginRight: 12,
-  borderColor: '#2c6f33',
-  borderWidth: 1.5,
-},
-initialsText: {
-  fontFamily: 'ArchitectsDaughter-Regular',
-  color: '#2c6f33',
-  fontWeight: 'bold',
-  fontSize: 18,
-},
+    backgroundColor: '#87CEFA',
+    borderColor: '#246396',
+    width: 25,
+    height: 25,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 20,
+    borderWidth: 1.5,
+  },
+  initialsText: {
+    fontFamily: 'ArchitectsDaughter-Regular',
+    color: '#246396',
+    fontWeight: 'bold',
+    fontSize: 18,
+  },
+
+  userWrapper: {
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    marginRight: 8,
+    paddingTop: 8,
+    minWidth: 60,
+  },
+  userLabel: {
+    fontSize: 16,
+    color: '#077bb4ff',
+    fontFamily: 'ArchitectsDaughter-Regular',
+    marginTop: -2,
+    textAlign: 'center',
+  },
+  navText: {
+    fontSize: 16,
+    fontFamily: 'ArchitectsDaughter',
+    color: '#82c0f3ff',
+    textAlign: 'center',
+  },
+  navItem: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'column',
+    marginHorizontal: 10
+  },
 });
 
 export default styles;

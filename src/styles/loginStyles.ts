@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    fontSize: 36,
+    fontSize: 45,
     fontWeight: 'bold',
     textAlign: 'center',
     fontFamily: 'ArchitectsDaughter',

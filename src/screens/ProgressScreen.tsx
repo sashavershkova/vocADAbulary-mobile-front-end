@@ -1,14 +1,13 @@
 import React, { useEffect, useState, useLayoutEffect } from 'react';
-import { View, Text } from 'react-native';
-import { ActivityIndicator, Alert } from 'react-native';
+import { View, Text, ActivityIndicator, Alert, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigation';
 import { useMockUser } from '../context/UserContext';
 import { getUserProgressSummary } from '../api/summary';
-import ProgressButtons from '../buttons/ProgressButtons';
+import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 import styles from '../styles/progressStyles';
-
 
 type ProgressNavProp = NativeStackNavigationProp<RootStackParamList, 'Progress'>;
 
@@ -47,24 +46,27 @@ const ProgressScreen = () => {
   };
 
   useLayoutEffect(() => {
-  navigation.setOptions({
-    title: 'PROGRESS',
-    headerBackVisible: false,
-    headerStyle: {
-      backgroundColor: '#f9bcdeff', 
-    },
-    headerTitleStyle: {
-      fontFamily: 'ArchitectsDaughter-Regular',
-      fontSize: 24,
-      color: '#246396ff', 
-    },
-    headerRight: () => (
-      <View style={styles.initialsCircle}>
-        <Text style={styles.initialsText}>{initials}</Text>
-      </View>
-    ),
-  });
-}, [navigation]);
+    navigation.setOptions({
+      title: 'PROGRESS',
+      headerBackVisible: false,
+      headerStyle: {
+        backgroundColor: '#f9bcdeff',
+      },
+      headerTitleStyle: {
+        fontFamily: 'ArchitectsDaughter-Regular',
+        fontSize: 24,
+        color: '#246396ff',
+      },
+      headerRight: () => (
+        <View style={styles.userWrapper}>
+          <View style={styles.initialsCircle}>
+            <Text style={styles.initialsText}>{initials}</Text>
+          </View>
+          <Text style={styles.userLabel}>User</Text>
+        </View>
+      ),
+    });
+  }, [navigation]);
 
   useEffect(() => {
     fetchSummary();
@@ -78,7 +80,37 @@ const ProgressScreen = () => {
     return null;
   }
 
-  return <ProgressButtons summary={summary} />;
+  const renderButton = (icon: any, label: string, value: string | number) => (
+    <TouchableOpacity style={styles.metricButton}>
+      <Ionicons name={icon} size={24} color="#077bb4ff" />
+      <Text style={styles.metricText}>
+        {label}: {value}
+      </Text>
+    </TouchableOpacity>
+  );
+
+  return (
+    <LinearGradient colors={['#f9bcdeff', '#b96bf1fe']} style={styles.container}>
+      <View style={styles.buttonGroup}>
+        {renderButton('stats-chart', 'Total Words', summary.totalCards)}
+        {renderButton('bulb', 'Learned', summary.learnedCards)}
+        {renderButton('trending-up', 'In Progress', summary.inProgressCards)}
+        {renderButton('flash', 'Comprehension', summary.termComprehension)}
+        {renderButton('chatbubble-ellipses', 'Spoken/Written', summary.spokenWritten)}
+        {renderButton('create', 'Created', '—')}
+      </View>
+
+      <View style={styles.buttonBar}>
+        <TouchableOpacity
+          style={styles.navItem}
+          onPress={() => navigation.navigate('Home')}
+        >
+          <Ionicons name="home" size={30} color="#97d0feff" />
+          <Text style={styles.navText}>Home</Text>
+        </TouchableOpacity>
+      </View>
+    </LinearGradient>
+  );
 };
 
 export default ProgressScreen;

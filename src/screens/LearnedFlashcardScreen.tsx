@@ -23,7 +23,7 @@ type WalletFlashcard = {
 const LearnedFlashcardsScreen = () => {
   const navigation = useNavigation<LearnedNavProp>();
   const { user } = useMockUser();
-  const userId = user.id; 
+  const userId = user.id;
   const username = user.username;
   const initials = username?.charAt(0).toUpperCase() || '?';
 
@@ -43,7 +43,7 @@ const LearnedFlashcardsScreen = () => {
         status: item.status,
         lastReviewed: item.lastReviewed,
         audioUrl: item.audioUrl,
-    }));
+      }));
 
       setFlashcards(learned);
     } catch (error) {
@@ -60,8 +60,8 @@ const LearnedFlashcardsScreen = () => {
       headerBackVisible: false,
       headerRight: () => (
         <View style={styles.initialsCircle}>
-        <Text style={styles.initialsText}>{initials}</Text>
-      </View>
+          <Text style={styles.initialsText}>{initials}</Text>
+        </View>
       ),
     });
   }, [navigation, initials]);
@@ -76,46 +76,46 @@ const LearnedFlashcardsScreen = () => {
     await sound.playAsync();
   };
 
-const handleDelete = (id: number) => {
-  Alert.alert(
-    "Remove Learned Flashcard",
-    "What would you like to do with this flashcard?",
-    [
-      {
-        text: "Mark Unlearned",
-        onPress: async () => {
-          try {
-            await updateWalletFlashcardStatus(userId, id, "IN_PROGRESS");
-            Alert.alert("Updated", "Flashcard moved back to the main deck.");
-            fetchLearned();
-          } catch (error) {
-            console.error(error);
-            Alert.alert("Error", "Could not move flashcard.");
-          }
+  const handleDelete = (id: number) => {
+    Alert.alert(
+      "Remove Learned Flashcard",
+      "What would you like to do with this flashcard?",
+      [
+        {
+          text: "Mark Unlearned",
+          onPress: async () => {
+            try {
+              await updateWalletFlashcardStatus(userId, id, "IN_PROGRESS");
+              Alert.alert("Updated", "Flashcard moved back to the main deck.");
+              fetchLearned();
+            } catch (error) {
+              console.error(error);
+              Alert.alert("Error", "Could not move flashcard.");
+            }
+          },
         },
-      },
-      {
-        text: "Hide Completely",
-        style: "destructive",
-        onPress: async () => {
-          try {
-            await hideFlashcardCompletely(userId, id);
-            Alert.alert("Removed", "Flashcard removed completely.");
-            fetchLearned();
-          } catch (error) {
-            console.error(error);
-            Alert.alert("Error", "Could not remove flashcard.");
-          }
+        {
+          text: "Hide Completely",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              await hideFlashcardCompletely(userId, id);
+              Alert.alert("Removed", "Flashcard removed completely.");
+              fetchLearned();
+            } catch (error) {
+              console.error(error);
+              Alert.alert("Error", "Could not remove flashcard.");
+            }
+          },
         },
-      },
-      { text: "Cancel", style: "cancel" },
-    ]
-  );
-};
+        { text: "Cancel", style: "cancel" },
+      ]
+    );
+  };
 
   const moveBackToMainDeck = async (id: number) => {
     try {
-      await updateWalletFlashcardStatus(userId,id, "IN_PROGRESS");
+      await updateWalletFlashcardStatus(userId, id, "IN_PROGRESS");
       Alert.alert("Updated", "Moved back to main deck.");
       fetchLearned();
     } catch (error) {
@@ -168,8 +168,12 @@ const handleDelete = (id: number) => {
       />
 
       <View style={styles.bottomBar}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Text style={styles.bottomButton}>Back</Text>
+        <TouchableOpacity
+          style={styles.navItem}
+          onPress={() => navigation.navigate('Home')}
+        >
+          <Ionicons name="home" size={30} color="#97d0feff" />
+          <Text style={styles.navText}>Home</Text>
         </TouchableOpacity>
       </View>
     </View>

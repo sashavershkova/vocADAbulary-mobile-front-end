@@ -9,11 +9,11 @@ import {
 } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Ionicons } from '@expo/vector-icons';
 import styles from '../styles/topicsStyles';
 import { RootStackParamList } from '../types/navigation';
 import { getAllTopics } from '../api/topics';
 import { getFlashcardsByTopic } from '../api/flashcards';
-import TopicsButtons from '../buttons/TopicsButtons';
 import { useMockUser } from '../context/UserContext';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Topics'>;
@@ -48,14 +48,26 @@ const TopicsScreen = ({ navigation }: Props) => {
   const [loading, setLoading] = useState(true);
   const [activeId, setActiveId] = useState<number | null>(null);
 
+
   useLayoutEffect(() => {
     navigation.setOptions({
       title: 'TOPICS',
       headerBackVisible: false,
+      headerStyle: {
+        backgroundColor: '#abf5ab64',
+      },
+      headerTitleStyle: {
+        fontFamily: 'ArchitectsDaughter-Regular',
+        fontSize: 36,
+        color: '#2c6f33',
+      },
       headerRight: () => (
-        <View style={styles.initialsCircle}>
-        <Text style={styles.initialsText}>{initials}</Text>
-      </View>
+        <View style={styles.userWrapper}>
+          <View style={styles.initialsCircle}>
+            <Text style={styles.initialsText}>{initials}</Text>
+          </View>
+          <Text style={styles.userLabel}>User</Text>
+        </View>
       ),
     });
   }, [navigation, initials]);
@@ -137,7 +149,7 @@ const TopicsScreen = ({ navigation }: Props) => {
   };
 
   return (
-    <LinearGradient colors={['#2ecc71', '#f5f7648c']} style={{ flex: 1 }}>
+    <LinearGradient colors={['#abf5ab64', '#347134bc']} style={{ flex: 1 }}>
       <View style={{ flex: 1, paddingBottom: 70 }}>
         {loading ? (
           <View style={styles.loadingContainer}>
@@ -153,7 +165,26 @@ const TopicsScreen = ({ navigation }: Props) => {
         )}
       </View>
 
-      <TopicsButtons />
+      <View style={styles.bottomBar}>
+        <TouchableOpacity
+          style={styles.navItem}
+          onPress={() => navigation.navigate('Home')}
+        >
+          <Ionicons name="home" size={30} color="#8feda0ff" />
+          <Text style={styles.navText}>Home</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.navItem}
+          onPress={() => {
+            console.log('Add button pressed (placeholder)');
+            navigation.navigate('Fallback');
+          }}
+        >
+          <Ionicons name="add-circle" size={35} color="#8feda0ff" />
+          <Text style={styles.navText}>Add</Text>
+        </TouchableOpacity>
+      </View>
     </LinearGradient>
   );
 };
