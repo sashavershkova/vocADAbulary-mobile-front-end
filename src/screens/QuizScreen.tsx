@@ -19,6 +19,7 @@ type Quiz = {
   wrongAnswer1: string;
   wrongAnswer2: string;
   wrongAnswer3: string;
+  hidden: boolean;
   answers?: { text: string; correct: boolean }[];
 };
 
@@ -63,7 +64,10 @@ const QuizScreen = ({ navigation }: Props) => {
           Alert.alert('No Quizzes', 'There are no quizzes available.');
           navigation.goBack();
         } else {
-          const transformedQuizzes = response.data.map((quiz: Quiz) => ({
+          // 🔽 Filter out hidden quizzes here
+          const visibleQuizzes = response.data.filter((quiz: Quiz) => !quiz.hidden);
+
+          const transformedQuizzes = visibleQuizzes.map((quiz: Quiz) => ({
             ...quiz,
             answers: shuffleArray([
               { text: quiz.correctAnswer, correct: true },
