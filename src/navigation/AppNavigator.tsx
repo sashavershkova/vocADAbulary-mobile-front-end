@@ -81,7 +81,7 @@ const AppNavigator = () => (
           headerBackVisible: false, 
           headerLeft: () => (
             <TouchableOpacity onPress={() => navigation.goBack()} style={{ marginLeft: 10 }}>
-              <Ionicons name="arrow-back" size={28} color="#2c6f33" />
+              <Ionicons name="arrow-back" size={28} color="#246396" />
             </TouchableOpacity>
           ),
         })}

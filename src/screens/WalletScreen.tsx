@@ -193,19 +193,19 @@ const WalletScreen = () => {
               <Text style={styles.termText}>{item.word}</Text>
             </View>
 
-            <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+            <View style={styles.iconRow}>
               <TouchableOpacity onPress={() => handleDelete(item.id)}>
                 <Ionicons name="remove-circle" size={32} color="#f94949ac" />
               </TouchableOpacity>
 
               <TouchableOpacity onPress={() => markAsLearned(item.id)}>
-                <Ionicons name="checkmark-circle" size={32} color="#227345ff" />
+                <Ionicons name="checkmark-circle" size={32} color="#006400" />
               </TouchableOpacity>
             </View>
           </View>
         )}
-      
-      ListFooterComponent={<View style={{ height: 100 }} />} 
+
+        ListFooterComponent={<View style={{ height: 100 }} />}
       />
 
       <View style={styles.bottomBar}>
