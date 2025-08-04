@@ -32,14 +32,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     paddingVertical: 10,
-    paddingHorizontal: 8,
+    paddingHorizontal: 20,
     justifyContent: "space-between",
     borderWidth: 1,
     borderColor: "#246396",
     gap: 12,
     shadowColor: '#313131ff',
     shadowOpacity: 0.8,
-    shadowOffset: { width: 1, height: 1 },
+    shadowOffset: { width: 3, height: 6 },
     width: '99%',
   },
   word: {
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
   termText: {
     fontFamily: 'ArchitectsDaughter-Regular',
     fontSize: 18,
-    color: '#2c6f33',
+    color: '#246396',
     fontWeight: 'normal',
   },
   bottomBar: {
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     shadowColor: '#313131ff',
     shadowOpacity: 0.8,
-    shadowOffset: { width: 4, height: 6 },
+    shadowOffset: { width: 3, height: 6 },
   },
   navItem: {
     alignItems: 'center',
@@ -127,6 +127,35 @@ const styles = StyleSheet.create({
     color: '#246396',
     fontFamily: 'ArchitectsDaughter-Regular',
     marginTop: -2,
+    textAlign: 'center',
+  },
+  iconRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+  returnCircleWrapper: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  returnCircle: {
+    width: 24,
+    height: 24,
+    borderRadius: 18,
+    backgroundColor: '#93cbf9ff',
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#313131ff',
+    shadowOpacity: 0.8,
+    shadowOffset: { width: 3, height: 6 },
+  },
+
+  returnLabel: {
+    fontSize: 12,
+    color: '#246396',
+    fontFamily: 'ArchitectsDaughter-Regular',
+    marginTop: 2,
     textAlign: 'center',
   },
 });

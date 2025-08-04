@@ -2,23 +2,14 @@ import React, { use, useEffect, useState, useLayoutEffect } from "react";
 import { View, Text, TextInput, TouchableOpacity, FlatList, Alert, ActivityIndicator } from "react-native";
 import { useMockUser } from "../context/UserContext";
 import { Ionicons } from "@expo/vector-icons";
-import { Audio } from "expo-av";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from '../types/navigation';
-import { getWalletFlashcards, removeFromWallet, updateWalletFlashcardStatus, getLearnedFlashcards, hideFlashcardCompletely } from "../api/wallet";
+import { getWalletFlashcards, updateWalletFlashcardStatus, getLearnedFlashcards, hideFlashcardCompletely } from "../api/wallet";
 import styles from "../styles/walletStyles";
+import { LinearGradient } from "expo-linear-gradient";
 
 type LearnedNavProp = NativeStackNavigationProp<RootStackParamList, "LearnedCards">;
-
-type WalletFlashcard = {
-  id: number;
-  word: string;
-  definition: string;
-  status: string;
-  lastReviewed: string;
-  audioUrl?: string;
-};
 
 const LearnedFlashcardsScreen = () => {
   const navigation = useNavigation<LearnedNavProp>();
@@ -34,15 +25,13 @@ const LearnedFlashcardsScreen = () => {
   const fetchLearned = async () => {
     try {
       setLoading(true);
-      const data = await getLearnedFlashcards(userId); 
+      const data = await getLearnedFlashcards(userId);
 
       const learned = data.map((item: any) => ({
         id: item.flashcardId,
         word: item.word,
-        definition: item.definition,
         status: item.status,
         lastReviewed: item.lastReviewed,
-        audioUrl: item.audioUrl,
       }));
 
       setFlashcards(learned);
@@ -56,8 +45,7 @@ const LearnedFlashcardsScreen = () => {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: "WALLET",
-      headerBackVisible: false,
+      title: "PIGGY BANK",
       headerStyle: {
         backgroundColor: "#b0f4c9ff",
       },
@@ -81,49 +69,6 @@ const LearnedFlashcardsScreen = () => {
     fetchLearned();
   }, []);
 
-  const playAudio = async (url?: string) => {
-    if (!url) return;
-    const { sound } = await Audio.Sound.createAsync({ uri: url });
-    await sound.playAsync();
-  };
-
-  const handleDelete = (id: number) => {
-    Alert.alert(
-      "Remove Learned Flashcard",
-      "What would you like to do with this flashcard?",
-      [
-        {
-          text: "Mark Unlearned",
-          onPress: async () => {
-            try {
-              await updateWalletFlashcardStatus(userId, id, "IN_PROGRESS");
-              Alert.alert("Updated", "Flashcard moved back to the main deck.");
-              fetchLearned();
-            } catch (error) {
-              console.error(error);
-              Alert.alert("Error", "Could not move flashcard.");
-            }
-          },
-        },
-        {
-          text: "Hide Completely",
-          style: "destructive",
-          onPress: async () => {
-            try {
-              await hideFlashcardCompletely(userId, id);
-              Alert.alert("Removed", "Flashcard removed completely.");
-              fetchLearned();
-            } catch (error) {
-              console.error(error);
-              Alert.alert("Error", "Could not remove flashcard.");
-            }
-          },
-        },
-        { text: "Cancel", style: "cancel" },
-      ]
-    );
-  };
-
   const moveBackToMainDeck = async (id: number) => {
     try {
       await updateWalletFlashcardStatus(userId, id, "IN_PROGRESS");
@@ -144,7 +89,7 @@ const LearnedFlashcardsScreen = () => {
   }
 
   return (
-    <View style={styles.container}>
+    <LinearGradient colors={["#b0f4c9ff", "#313bae8c"]} style={styles.container}>
       <TextInput
         style={styles.searchBar}
         placeholder="Search in learned..."
@@ -155,23 +100,22 @@ const LearnedFlashcardsScreen = () => {
       <FlatList
         data={filteredFlashcards}
         keyExtractor={(item) => item.id.toString()}
+        style={{ marginBottom: 90 }}
+        contentContainerStyle={styles.cardList}
         renderItem={({ item }) => (
           <View style={styles.cardRow}>
-            <TouchableOpacity onPress={() => playAudio(item.audioUrl)}>
-              <Ionicons name="volume-high-outline" size={24} />
-            </TouchableOpacity>
-
-            <View style={styles.cardContent}>
-              <Text style={styles.word}>{item.word}</Text>
-              <Text numberOfLines={1} style={styles.definition}>{item.definition}</Text>
+            <View style={{ flexDirection: "row", alignItems: "center", flex: 1 }}>
+              <Text style={styles.termText}>{item.word}</Text>
             </View>
 
-            <View style={styles.actions}>
-              <TouchableOpacity onPress={() => handleDelete(item.id)}>
-                <Text style={styles.actionButton}>Delete</Text>
-              </TouchableOpacity>
+            <View style={styles.iconRow}>
               <TouchableOpacity onPress={() => moveBackToMainDeck(item.id)}>
-                <Text style={styles.actionButton}>Return</Text>
+                <View style={styles.returnCircleWrapper}>
+                  <View style={styles.returnCircle}>
+                    <Ionicons name="return-up-back" size={24} color="#246396" />
+                  </View>
+                  <Text style={styles.returnLabel}>Unwallet</Text>
+                </View>
               </TouchableOpacity>
             </View>
           </View>
@@ -187,8 +131,9 @@ const LearnedFlashcardsScreen = () => {
           <Text style={styles.navText}>Home</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </LinearGradient>
   );
+
 };
 
 export default LearnedFlashcardsScreen;
