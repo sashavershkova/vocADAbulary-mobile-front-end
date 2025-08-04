@@ -17,6 +17,7 @@ type ProgressSummary = {
   learnedCards: number;
   termComprehension: number;
   spokenWritten: number;
+  quizzesPassed: number;
 };
 
 const ProgressScreen = () => {
@@ -95,7 +96,7 @@ const ProgressScreen = () => {
         {renderButton('stats-chart', 'Total Words', summary.totalCards)}
         {renderButton('bulb', 'Learned', summary.learnedCards)}
         {renderButton('trending-up', 'In Progress', summary.inProgressCards)}
-        {renderButton('flash', 'Comprehension', summary.termComprehension)}
+        {renderButton('flash', 'Quizzes Passed', summary.quizzesPassed)}
         {renderButton('chatbubble-ellipses', 'Spoken/Written', summary.spokenWritten)}
         {renderButton('create', 'Created', '—')}
       </View>
