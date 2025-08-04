@@ -131,7 +131,7 @@ const QuizScreen = ({ navigation }: Props) => {
       setIsSubmitted(false);
     } else {
       await fetchAllQuizzes();
-      Alert.alert('🎉 Done!', 'You completed all available quizzes. Hidden quizzes have been removed!');
+      Alert.alert('🎉 Done!', 'You completed all available quizzes. Solved quizzes have been removed!');
     }
   };
 
