@@ -7,7 +7,7 @@ const styles = StyleSheet.create({
     paddingTop: 30,
     shadowColor: '#313131ff',
     shadowOpacity: 0.8,
-    shadowOffset: { width: 4, height: 6 },
+    shadowOffset: { width: 3, height: 6 },
   },
   initialsCircle: {
     backgroundColor: '#97d0feff',
@@ -34,9 +34,9 @@ const styles = StyleSheet.create({
     minHeight: 60,
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#777777',
-    shadowOpacity: 0.35,
-    shadowOffset: { width: 5, height: 6 },
+    shadowColor: '#313131ff',
+    shadowOpacity: 0.8,
+    shadowOffset: { width: 3, height: 6 },
     elevation: 2,
   },
   questionText: {
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     shadowColor: '#313131ff',
     shadowOpacity: 0.8,
-    shadowOffset: { width: 4, height: 6 },
+    shadowOffset: { width: 3, height: 6 },
   },
   navigationButton: {
     backgroundColor: 'transparent',

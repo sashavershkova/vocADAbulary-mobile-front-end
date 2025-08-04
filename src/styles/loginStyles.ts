@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: 'ArchitectsDaughter',
     textShadowColor: '#006400',
-    textShadowOffset: { width: 1, height: 1 },
+    shadowOffset: { width: 3, height: 6 },
     textShadowRadius: 2,
   },
 });
