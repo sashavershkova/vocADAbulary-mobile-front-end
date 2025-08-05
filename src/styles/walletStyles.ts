@@ -7,7 +7,7 @@ const styles = StyleSheet.create({
     paddingTop: 30,
     shadowColor: '#313131ff',
     shadowOpacity: 0.8,
-    shadowOffset: { width: 4, height: 6 },
+    shadowOffset: { width: 3, height: 6 },
   },
   searchBar: {
     backgroundColor: "#ffffffdd",
