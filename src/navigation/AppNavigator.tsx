@@ -7,8 +7,9 @@ import {
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigation';
 
-// импорт экранов
+// screens import
 import SplashScreen from '../screens/SplashScreen';
+import SettingsScreen from '../screens/SettingsScreen';
 import LoginScreen from '../screens/LoginScreen';
 import HomeScreen from '../screens/HomeScreen';
 import TopicsScreen from '../screens/TopicsScreen';
@@ -59,6 +60,7 @@ const AppNavigator = () => (
       <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: true }} />
       <Stack.Screen name="Topics" component={TopicsScreen} options={{ title: 'TOPICS' }} />
       <Stack.Screen name="Topic" component={TopicScreen} options={{ title: 'TOPIC' }} />
+      <Stack.Screen name="Settings" component={SettingsScreen} options={{ title: 'SETTINGS' }} />
       <Stack.Screen 
       name="Flashcard" 
       component={FlashcardScreen} 
