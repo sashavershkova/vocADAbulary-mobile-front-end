@@ -54,6 +54,13 @@ const signUpStyles = StyleSheet.create({
     fontFamily: 'ArchitectsDaughter-Regular',
     letterSpacing: 1,
   },
+  backToLoginText: {
+    color: '#006400',
+    textDecorationLine: 'underline',
+    marginTop: 10,
+    fontSize: 16,
+    fontFamily: 'ArchitectsDaughter',
+  },
 });
 
 export default signUpStyles;

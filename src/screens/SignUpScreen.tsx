@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
-import styles from '../styles/signUpStyles'; // <-- now using dedicated signup styles
+import styles from '../styles/signUpStyles';
 import { useNavigation } from '@react-navigation/native';
 
 const SignUpScreen = () => {
@@ -10,18 +10,16 @@ const SignUpScreen = () => {
   const navigation = useNavigation();
 
   const handleSignUp = () => {
-    // Just a mock handler!
     if (!username || !email) {
       Alert.alert('Error', 'Please fill in all required fields.');
       return;
     }
     Alert.alert('Success', `Registered with username: ${username}`);
-    navigation.goBack(); // or navigate('Login');
+    navigation.goBack(); // or navigation.navigate('Login');
   };
 
   return (
     <View style={styles.container}>
-      
       <TextInput
         placeholder="Username"
         style={styles.input}
@@ -49,6 +47,11 @@ const SignUpScreen = () => {
 
       <TouchableOpacity onPress={handleSignUp} style={styles.simpleButton}>
         <Text style={styles.simpleButtonText}>Create Account</Text>
+      </TouchableOpacity>
+
+      {/* Small "Back to Login" link */}
+      <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+        <Text style={styles.backToLoginText}>Back to Login</Text>
       </TouchableOpacity>
     </View>
   );
