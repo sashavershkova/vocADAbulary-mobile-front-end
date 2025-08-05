@@ -87,12 +87,22 @@ const TopicsScreen = ({ navigation }: Props) => {
   }, []);
 
   const handleTopicPress = (topicId: number, topicName: string) => {
+    console.log(`${new Date().toISOString()} 👆 Topic pressed: ${topicId} (${topicName})`);
+
     setActiveId(topicId);
 
     setTimeout(async () => {
+      console.log(`${new Date().toISOString()} ⏳ Starting flashcard fetch for topic ${topicId}`);
+
       try {
+        const fetchStart = Date.now();
         const flashcards = await getFlashcardsByTopic(topicId);
+        const fetchDuration = Date.now() - fetchStart;
+
+        console.log(`${new Date().toISOString()} 📥 Fetched ${flashcards.length} flashcards in ${fetchDuration} ms`);
+
         if (flashcards.length === 0) {
+          console.log(`${new Date().toISOString()} ⚠️ No flashcards found`);
           Alert.alert('Ooops! Could this be any more empty?');
           setActiveId(null);
           return;
@@ -100,19 +110,25 @@ const TopicsScreen = ({ navigation }: Props) => {
 
         const randomCard =
           flashcards[Math.floor(Math.random() * flashcards.length)];
+          console.log(`${new Date().toISOString()} 🎯 Random card selected: ${randomCard.id}`);
 
+        console.log(`${new Date().toISOString()} ⏩ Navigating to Flashcard screen...`);
         navigation.navigate('Flashcard', {
           flashcardId: randomCard.id,
           topicId,
           topicName,
+          flashcards, // Passing all flashcards for the topic
         });
+
       } catch (err) {
+        console.error(`${new Date().toISOString()} ❌ Error fetching flashcards:`, err);
         console.error('Error fetching flashcards:', err);
         Alert.alert('Failed to fetch flashcards');
       } finally {
+        console.log(`${new Date().toISOString()} ✅ Done handling topic press`);
         setActiveId(null);
       }
-    }, 1500);
+    }, 100);
   };
 
   const renderTopic = ({ item, index }: { item: Topic; index: number }) => {
