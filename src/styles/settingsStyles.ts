@@ -56,6 +56,20 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16,
   },
+  homeButton: {
+    marginTop: 32,
+    backgroundColor: '#b5e5b6',
+    paddingVertical: 12,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  homeButtonText: {
+    color: '#205720',
+    fontSize: 18,
+    fontWeight: '600',
+    letterSpacing: 1,
+  },
+  
 });
 
 export default styles;

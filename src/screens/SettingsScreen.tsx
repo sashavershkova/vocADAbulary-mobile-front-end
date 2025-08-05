@@ -1,16 +1,42 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, TextInput, Alert, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useMockUser } from '../context/UserContext';
 import api from '../api/axiosInstance';
 import styles from '../styles/settingsStyles';
+import { useNavigation } from '@react-navigation/native';
 
 const SettingsScreen = () => {
   const { user } = useMockUser();
   const userId = user.id;
+  const navigation = useNavigation();
+
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [currentUsername, setCurrentUsername] = useState('');
+  const [currentEmail, setCurrentEmail] = useState('');
   const [loading, setLoading] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
+
+  // Fetch actual username/email when the screen mounts
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await api.get(`/api/users/${userId}/simple`, {
+          headers: {
+            'X-Mock-User-Id': userId,
+            'X-Mock-User-Role': user.role,
+          },
+        });
+        setCurrentUsername(res.data.username || '');
+        setCurrentEmail(res.data.email || '');
+      } catch (error) {
+        Alert.alert('Error', 'Could not load user data.');
+      } finally {
+        setInitialLoading(false);
+      }
+    };
+    fetchUser();
+  }, [userId, user.role]);
 
   const handleSave = async () => {
     setLoading(true);
@@ -18,7 +44,6 @@ const SettingsScreen = () => {
       await api.patch(`/api/users/${userId}`, {
         username: username || undefined,
         email: email || undefined,
-        // password, // not implemented yet
       }, {
         headers: {
           'X-Mock-User-Id': userId,
@@ -26,6 +51,11 @@ const SettingsScreen = () => {
         }
       });
       Alert.alert('Success', 'Profile updated!');
+      // Optionally, refresh current values
+      if (username) setCurrentUsername(username);
+      if (email) setCurrentEmail(email);
+      setUsername('');
+      setEmail('');
     } catch (error) {
       Alert.alert('Error', 'Could not update profile.');
     } finally {
@@ -52,7 +82,10 @@ const SettingsScreen = () => {
                 }
               });
               Alert.alert('Deleted', 'Account deleted!');
-              // Optionally: navigate away or log out user
+              navigation.reset({
+                index: 0,
+                routes: [{ name: 'Login' }],
+              });
             } catch (error) {
               Alert.alert('Error', 'Could not delete account.');
             } finally {
@@ -64,11 +97,18 @@ const SettingsScreen = () => {
     );
   };
 
+  if (initialLoading) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
-      <Text style={styles.heading}>Settings</Text>
 
-      <Text style={styles.label}>Username: {user.username}</Text>
+      <Text style={styles.label}>Username: <Text style={{ fontWeight: 'bold' }}>{currentUsername}</Text></Text>
       <TextInput
         style={styles.input}
         value={username}
@@ -77,7 +117,7 @@ const SettingsScreen = () => {
         autoCapitalize="none"
       />
 
-      <Text style={styles.label}>Email: {user.email}</Text>
+      <Text style={styles.label}>Email: <Text style={{ fontWeight: 'bold' }}>{currentEmail}</Text></Text>
       <TextInput
         style={styles.input}
         value={email}
@@ -90,9 +130,7 @@ const SettingsScreen = () => {
       <Text style={styles.label}>Password</Text>
       <TextInput
         style={[styles.input, { backgroundColor: '#f4f4f4', color: '#888' }]}
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
+        value={"Not implemented yet"}
         editable={false}
         placeholder="Not implemented yet"
       />
@@ -103,6 +141,14 @@ const SettingsScreen = () => {
 
       <TouchableOpacity style={styles.deleteButton} onPress={handleDelete} disabled={loading}>
         <Text style={styles.deleteButtonText}>Delete Account</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.homeButton}
+        onPress={() => navigation.navigate('Home')}
+        disabled={loading}
+      >
+        <Text style={styles.homeButtonText}>Home</Text>
       </TouchableOpacity>
     </View>
   );
