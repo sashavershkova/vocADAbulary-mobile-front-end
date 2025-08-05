@@ -309,13 +309,20 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
         <View style={styles.exampleSection}>
           <TouchableOpacity onPress={() => setShowExample(!showExample)}>
             <Ionicons name="bulb" size={40} color="rgba(216, 129, 245, 1)" />
-            <Text style={styles.navText}>Example</Text>
+            <Text style={styles.navText}>Hints</Text>
           </TouchableOpacity>
-          {showExample && (
-            <View style={styles.exampleBubble}>
-              <Text style={styles.exampleText}>{currentCard.example}</Text>
-            </View>
-          )}
+            {showExample && (
+              <View style={styles.exampleBubble}>
+                <Text style={styles.exampleText}>
+                  Example:
+                  {"\n"}
+                  {currentCard.example}
+                  {currentCard.synonyms
+                    ? `\n\nSynonyms:\n${currentCard.synonyms}`
+                    : ""}
+                </Text>
+              </View>
+            )}
         </View>
 
         <View style={styles.bottomBar}>
