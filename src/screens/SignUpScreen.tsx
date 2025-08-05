@@ -1,21 +1,38 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
 import styles from '../styles/signUpStyles';
 import { useNavigation } from '@react-navigation/native';
+import { signUpUser } from '../api/auth'; // import from the file above
 
 const SignUpScreen = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [password, setPassword] = useState(''); // Mock only
+  const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
 
-  const handleSignUp = () => {
+  const handleSignUp = async () => {
     if (!username || !email) {
       Alert.alert('Error', 'Please fill in all required fields.');
       return;
     }
-    Alert.alert('Success', `Registered with username: ${username}`);
-    navigation.goBack(); // or navigation.navigate('Login');
+    setLoading(true);
+    try {
+      await signUpUser(username, email);
+      Alert.alert('Success', `Registered with username: ${username}`);
+      setUsername('');
+      setEmail('');
+      setPassword('');
+      navigation.navigate('Login');
+    } catch (error: any) {
+      if (error.response && error.response.data) {
+        Alert.alert('Error', error.response.data || 'Signup failed.');
+      } else {
+        Alert.alert('Error', 'Could not sign up.');
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -45,11 +62,18 @@ const SignUpScreen = () => {
         secureTextEntry
       />
 
-      <TouchableOpacity onPress={handleSignUp} style={styles.simpleButton}>
-        <Text style={styles.simpleButtonText}>Create Account</Text>
+      <TouchableOpacity
+        onPress={handleSignUp}
+        style={styles.simpleButton}
+        disabled={loading}
+      >
+        {loading ? (
+          <ActivityIndicator color="#fff" />
+        ) : (
+          <Text style={styles.simpleButtonText}>Create Account</Text>
+        )}
       </TouchableOpacity>
 
-      {/* Small "Back to Login" link */}
       <TouchableOpacity onPress={() => navigation.navigate('Login')}>
         <Text style={styles.backToLoginText}>Back to Login</Text>
       </TouchableOpacity>
