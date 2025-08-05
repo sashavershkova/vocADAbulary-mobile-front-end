@@ -23,6 +23,7 @@ import LearnedFlashcardsScreen from '../screens/LearnedFlashcardScreen';
 import NewFlashcardScreen from '../screens/NewFlashcardScreen';
 import ConstructorScreen from '../screens/ConstructorScreen';
 import SearchScreen from '../screens/SearchScreen';
+import SignUpScreen from '../screens/SignUpScreen';
 import { TouchableOpacity } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
@@ -61,6 +62,7 @@ const AppNavigator = () => (
       <Stack.Screen name="Topics" component={TopicsScreen} options={{ title: 'TOPICS' }} />
       <Stack.Screen name="Topic" component={TopicScreen} options={{ title: 'TOPIC' }} />
       <Stack.Screen name="Settings" component={SettingsScreen} options={{ title: 'SETTINGS' }} />
+      <Stack.Screen name="SignUp" component={SignUpScreen} options={{ title: 'Sign Up' }} />
       <Stack.Screen 
       name="Flashcard" 
       component={FlashcardScreen} 

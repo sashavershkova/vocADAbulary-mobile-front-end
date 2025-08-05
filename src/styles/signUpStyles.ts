@@ -1,0 +1,59 @@
+import { StyleSheet } from 'react-native';
+
+const signUpStyles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#d5f7db',
+    padding: 24,
+  },
+  title: {
+    fontSize: 34,
+    fontWeight: 'bold',
+    color: '#b94ed8',
+    marginBottom: 30,
+    fontFamily: 'ArchitectsDaughter-Regular',
+    letterSpacing: 2,
+    textShadowColor: '#a0a0a099',
+    textShadowOffset: { width: 3, height: 3 },
+    textShadowRadius: 6,
+  },
+  input: {
+    width: '100%',
+    maxWidth: 370,
+    borderWidth: 2,
+    borderColor: '#006400',
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    fontSize: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 18,
+    marginBottom: 18,
+    fontFamily: 'ArchitectsDaughter-Regular',
+    color: '#222',
+    elevation: 1,
+  },
+  simpleButton: {
+    backgroundColor: '#d5a2e6',
+    paddingVertical: 12,
+    paddingHorizontal: 35,
+    borderRadius: 22,
+    alignItems: 'center',
+    marginTop: 12,
+    shadowColor: '#222',
+    shadowOpacity: 0.3,
+    shadowOffset: { width: 2, height: 3 },
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  simpleButtonText: {
+    color: '#40396e',
+    fontSize: 22,
+    fontWeight: '600',
+    fontFamily: 'ArchitectsDaughter-Regular',
+    letterSpacing: 1,
+  },
+});
+
+export default signUpStyles;

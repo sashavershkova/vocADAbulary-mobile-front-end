@@ -14,4 +14,5 @@ export type RootStackParamList = {
   Wallet: undefined;
   Fallback: undefined;
   LearnedCards: undefined; 
+  SignUp: undefined;
 };
