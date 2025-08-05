@@ -51,7 +51,6 @@ const SettingsScreen = () => {
         }
       });
       Alert.alert('Success', 'Profile updated!');
-      // Optionally, refresh current values
       if (username) setCurrentUsername(username);
       if (email) setCurrentEmail(email);
       setUsername('');
@@ -61,6 +60,12 @@ const SettingsScreen = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  // 🆕 Add reset logic
+  const handleReset = () => {
+    setUsername('');
+    setEmail('');
   };
 
   const handleDelete = async () => {
@@ -134,6 +139,15 @@ const SettingsScreen = () => {
         editable={false}
         placeholder="Not implemented yet"
       />
+
+      {/* 🆕 Reset Button */}
+      <TouchableOpacity
+        style={[styles.saveButton, { backgroundColor: '#aaa', marginBottom: 12 }]}
+        onPress={handleReset}
+        disabled={loading || (username === '' && email === '')}
+      >
+        <Text style={styles.saveButtonText}>Reset</Text>
+      </TouchableOpacity>
 
       <TouchableOpacity style={styles.saveButton} onPress={handleSave} disabled={loading}>
         {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.saveButtonText}>Save Changes</Text>}
