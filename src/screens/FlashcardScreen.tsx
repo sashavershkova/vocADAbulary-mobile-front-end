@@ -17,6 +17,13 @@ import { RootStackParamList } from '../types/navigation';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as FileSystem from 'expo-file-system';
 import { LinearGradient } from 'expo-linear-gradient';
+import {
+  ensureCacheDirExists,
+  isAudioCached,
+  fetchAndCacheTTS,
+  getCachedAudioPath,
+  playTTS,
+} from '../utils/ttsUtils';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Flashcard'>;
 
@@ -27,13 +34,20 @@ type Flashcard = {
   example: string;
   audioUrl: string;
   createdBy: number;
-  audioBase64?: string;
+  // audioBase64?: string;
   phonetic?: string;
   synonyms?: string;
 };
 
+const logTime = (label: string) => {
+  const now = new Date();
+  console.log(`${now.toISOString()} ⏱️ ${label}`);
+};
+
+console.log(`${new Date().toISOString()} 🧭 FlashcardScreen mounted`);
+
 const FlashcardScreen = ({ route, navigation }: Props) => {
-  const { topicId } = route.params;
+  const { topicId, topicName, flashcardId} = route.params;
   const { user } = useMockUser();
   const userId = user.id;
   const initials = user.username?.charAt(0).toUpperCase() || '?';
@@ -41,10 +55,12 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
   const [flashcards, setFlashcards] = useState<Flashcard[]>([]);
   const [currentCard, setCurrentCard] = useState<Flashcard | null>(null);
   const [loading, setLoading] = useState(true);
+  const [ttsLoading, setTtsLoading] = useState(false);
   const [showExample, setShowExample] = useState(false);
   const [flipped, setFlipped] = useState(false);
 
   const flipAnim = useRef(new Animated.Value(0)).current;
+  const hasEnsuredDir = useRef(false);
 
   const frontInterpolate = flipAnim.interpolate({
     inputRange: [0, 180],
@@ -68,6 +84,7 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
   };
 
   useLayoutEffect(() => {
+    console.log(`${new Date().toISOString()} 🎨 Setting header options`);
     navigation.setOptions({
       title: 'FLASHCARDS',
       headerBackVisible: false,
@@ -91,22 +108,57 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
   }, [navigation, initials]);
 
   useEffect(() => {
+    console.log(`${new Date().toISOString()} 🕵️ useEffect triggered`);
+
+    // Ensure the cache directory exists before anything else
+      if (!hasEnsuredDir.current) {
+        ensureCacheDirExists();
+        hasEnsuredDir.current = true;
+      }
+
     const fetchFlashcards = async () => {
+      logTime("⏳ Starting fetchFlashcards");
+
       try {
-        const response = await api.get(`api/topics/${topicId}/flashcards`);
-        setFlashcards(response.data);
+        setFlashcards([/* preload later from route.params if needed */]);
+        logTime("📥 Fetched topic flashcards");
 
         const { flashcardId } = route.params;
         const detailResponse = await api.get(`api/flashcards/${flashcardId}`);
+        logTime(`📘 Loaded current flashcard ID: ${flashcardId}`);
+
         setCurrentCard(detailResponse.data);
       } catch (error) {
         console.error('Error loading flashcards:', error);
       } finally {
         setLoading(false);
+        logTime("✅ Finished fetchFlashcards")
       }
     };
     fetchFlashcards();
   }, [topicId, route.params.flashcardId]);
+
+  const handlePlayAudio = async () => {
+    if (!currentCard) return;
+
+    const flashcardId = currentCard.id;
+    const audioPath = getCachedAudioPath(flashcardId);
+
+    try {
+      const cached = await isAudioCached(flashcardId);
+      if (!cached) {
+        console.log('🎤 Audio not cached. Fetching...');
+        await fetchAndCacheTTS(flashcardId);
+      } else {
+        console.log('📦 Using cached audio');
+      }
+
+      await playTTS(audioPath);
+    } catch (err) {
+      console.error('TTS playback error:', err);
+      Alert.alert('Error', 'Could not play pronunciation');
+    }
+  };
 
   const handleNext = () => {
     if (flashcards.length > 0) {
@@ -115,53 +167,6 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
       setShowExample(false);
       setFlipped(false);
       flipAnim.setValue(0);
-    }
-  };
-
-  const handlePlayAudio = async () => {
-    if (!currentCard) return;
-
-    try {
-      const response = await api.get(
-        `/api/flashcards/${currentCard.id}/tts`,
-        { responseType: 'arraybuffer' }
-      );
-
-      const base64 = Buffer.from(response.data, 'binary').toString('base64');
-      const fileUri = FileSystem.cacheDirectory + 'temp-audio.mp3';
-
-      await FileSystem.writeAsStringAsync(fileUri, base64, {
-        encoding: FileSystem.EncodingType.Base64,
-      });
-
-      const info = await FileSystem.getInfoAsync(fileUri);
-      if (info.exists) {
-        console.log('File saved at:', info.uri, 'size:', info.size);
-      }
-
-      await Audio.setAudioModeAsync({
-        allowsRecordingIOS: false,
-        staysActiveInBackground: false,
-        playsInSilentModeIOS: true,
-        shouldDuckAndroid: true,
-        playThroughEarpieceAndroid: false,
-      });
-
-      const { sound } = await Audio.Sound.createAsync(
-        { uri: fileUri },
-        { shouldPlay: true }
-      );
-
-      sound.setOnPlaybackStatusUpdate((status) => {
-        if (status.isLoaded && status.didJustFinish) {
-          sound.unloadAsync();
-        }
-      });
-
-      await sound.playAsync();
-    } catch (err) {
-      console.error('TTS playback error:', err);
-      Alert.alert('Error', 'Could not generate audio');
     }
   };
 
@@ -221,11 +226,11 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
                 onPress={handlePlayAudio}
                 activeOpacity={0.7}
               >
-                <Ionicons
-                  name="volume-high"
-                  size={30}
-                  color="rgba(216, 129, 245, 1)"
-                />
+                {ttsLoading ? (
+                  <ActivityIndicator size="small" color="rgba(216, 129, 245, 1)" />
+                ) : (
+                  <Ionicons name="volume-high" size={30} color="rgba(216, 129, 245, 1)" />
+                )}
               </TouchableOpacity>
               {currentCard?.phonetic && (
                 <View style={styles.phoneticsBlob}>

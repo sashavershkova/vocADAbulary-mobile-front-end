@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useLayoutEffect } from "react";
+import React, { useEffect, useState, useLayoutEffect, useRef } from "react";
 import api from "../api/axiosInstance";
 import { useMockUser } from "../context/UserContext";
 import {
@@ -23,9 +23,15 @@ import {
 } from "../api/wallet";
 import styles from "../styles/walletStyles";
 import { LinearGradient } from "expo-linear-gradient";
-import { ScrollView } from 'react-native';
 import * as FileSystem from 'expo-file-system';
 import { Buffer } from 'buffer'; 
+import {
+  ensureCacheDirExists,
+  getCachedAudioPath,
+  isAudioCached,
+  fetchAndCacheTTS,
+  playTTS,
+} from "../utils/ttsUtils";
 
 type WalletNavProp = NativeStackNavigationProp<RootStackParamList, "Wallet">;
 
@@ -48,9 +54,16 @@ const WalletScreen = () => {
   const [flashcards, setFlashcards] = useState<WalletFlashcard[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState("");
+  const hasEnsuredDir = useRef(false);
+  const [ttsLoadingId, setTtsLoadingId] = useState<number | null>(null);
 
 
   const fetchWallet = async () => {
+    if (!hasEnsuredDir.current) {
+      await ensureCacheDirExists();
+      hasEnsuredDir.current = true;
+  }
+
     try {
       setLoading(true);
       const data = await getWalletFlashcards(userId);
@@ -99,45 +112,22 @@ const WalletScreen = () => {
   }, []);
 
   const playAudio = async (flashcardId: number) => {
-    try {
-      const response = await api.get(`/api/flashcards/${flashcardId}/tts`, {
-        responseType: 'arraybuffer',
-      });
+  const audioPath = getCachedAudioPath(flashcardId);
+  setTtsLoadingId(flashcardId);
 
-      const base64 = Buffer.from(response.data, 'binary').toString('base64');
-      const fileUri = FileSystem.cacheDirectory + `temp-audio-${flashcardId}.mp3`;
-
-      await FileSystem.writeAsStringAsync(fileUri, base64, {
-        encoding: FileSystem.EncodingType.Base64,
-      });
-
-      await Audio.setAudioModeAsync({
-        allowsRecordingIOS: false,
-        staysActiveInBackground: false,
-        playsInSilentModeIOS: true,
-        shouldDuckAndroid: true,
-        playThroughEarpieceAndroid: false,
-      });
-
-      const { sound } = await Audio.Sound.createAsync(
-        { uri: fileUri },
-        { shouldPlay: true }
-      );
-
-      // await sound.playAsync();
-
-      sound.setOnPlaybackStatusUpdate((status) => {
-        if (status.isLoaded && status.didJustFinish) {
-          sound.unloadAsync();
-        }
-      });
-
-      await sound.playAsync();
-    } catch (err) {
-      console.error(`Playback error for flashcard ${flashcardId}:`, err);
-      Alert.alert('Error', 'Could not generate audio.');
+  try {
+    const cached = await isAudioCached(flashcardId);
+    if (!cached) {
+      await fetchAndCacheTTS(flashcardId);
     }
-  };
+    await playTTS(audioPath);
+  } catch (err) {
+    console.error(`Playback error for flashcard ${flashcardId}:`, err);
+    Alert.alert('Error', 'Could not generate audio.');
+  } finally {
+    setTtsLoadingId(null);
+  }
+};
 
   const handleDelete = async (id: number) => {
     try {
@@ -187,7 +177,11 @@ const WalletScreen = () => {
           <View style={styles.cardRow}>
             <View style={{ flexDirection: "row", alignItems: "center", flex: 1 }}>
               <TouchableOpacity onPress={() => playAudio(item.id)} style={{ marginRight: 8 }}>
-                <Ionicons name="play-circle" size={32} color="#97d0feff" />
+                {ttsLoadingId === item.id ? (
+                  <ActivityIndicator size="small" color="#97d0feff" />
+                ) : (
+                  <Ionicons name="play-circle" size={32} color="#97d0feff" />
+                )}
               </TouchableOpacity>
 
               <Text style={styles.termText}>{item.word}</Text>
