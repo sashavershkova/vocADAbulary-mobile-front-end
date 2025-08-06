@@ -34,7 +34,6 @@ type Flashcard = {
   example: string;
   audioUrl: string;
   createdBy: number;
-  // audioBase64?: string;
   phonetic?: string;
   synonyms?: string;
 };
@@ -47,7 +46,7 @@ const logTime = (label: string) => {
 console.log(`${new Date().toISOString()} 🧭 FlashcardScreen mounted`);
 
 const FlashcardScreen = ({ route, navigation }: Props) => {
-  const { topicId, topicName, flashcardId} = route.params;
+  const { topicId, topicName, flashcardId, flashcards: passedFlashcards } = route.params;
   const { user } = useMockUser();
   const userId = user.id;
   const initials = user.username?.charAt(0).toUpperCase() || '?';
@@ -84,7 +83,6 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
   };
 
   useLayoutEffect(() => {
-    console.log(`${new Date().toISOString()} 🎨 Setting header options`);
     navigation.setOptions({
       title: 'FLASHCARDS',
       headerBackVisible: false,
@@ -108,65 +106,74 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
   }, [navigation, initials]);
 
   useEffect(() => {
-    console.log(`${new Date().toISOString()} 🕵️ useEffect triggered`);
-
     // Ensure the cache directory exists before anything else
-      if (!hasEnsuredDir.current) {
-        ensureCacheDirExists();
-        hasEnsuredDir.current = true;
-      }
+    if (!hasEnsuredDir.current) {
+      ensureCacheDirExists();
+      hasEnsuredDir.current = true;
+    }
 
-    const fetchFlashcards = async () => {
-      logTime("⏳ Starting fetchFlashcards");
+    // If flashcards are passed from navigation, use them!
+    if (passedFlashcards && Array.isArray(passedFlashcards) && passedFlashcards.length > 0) {
+      setFlashcards(passedFlashcards);
+      const card = passedFlashcards.find(fc => fc.id === flashcardId) || passedFlashcards[0];
+      setCurrentCard(card);
+      setLoading(false);
+    } else {
+      // Fallback: fetch only the current card
+      const fetchSingle = async () => {
+        setLoading(true);
+        try {
+          const detailResponse = await api.get(`/api/flashcards/${flashcardId}`);
+          setCurrentCard(detailResponse.data);
+          setFlashcards([detailResponse.data]);
+        } catch (error) {
+          console.error('Error loading flashcard:', error);
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchSingle();
+    }
+  }, [route.params]);
 
-      try {
-        setFlashcards([/* preload later from route.params if needed */]);
-        logTime("📥 Fetched topic flashcards");
+  // Index helpers for navigation
+  const getCurrentIndex = () =>
+    flashcards.findIndex(fc => currentCard && fc.id === currentCard.id);
 
-        const { flashcardId } = route.params;
-        const detailResponse = await api.get(`/api/flashcards/${flashcardId}`);
-        logTime(`📘 Loaded current flashcard ID: ${flashcardId}`);
+  const handleNext = () => {
+    if (!currentCard || flashcards.length < 2) return;
+    const idx = getCurrentIndex();
+    const nextIdx = (idx + 1) % flashcards.length;
+    setCurrentCard(flashcards[nextIdx]);
+    setShowExample(false);
+    setFlipped(false);
+    flipAnim.setValue(0);
+  };
 
-        setCurrentCard(detailResponse.data);
-      } catch (error) {
-        console.error('Error loading flashcards:', error);
-      } finally {
-        setLoading(false);
-        logTime("✅ Finished fetchFlashcards")
-      }
-    };
-    fetchFlashcards();
-  }, [topicId, route.params.flashcardId]);
+  const handlePrev = () => {
+    if (!currentCard || flashcards.length < 2) return;
+    const idx = getCurrentIndex();
+    const prevIdx = (idx - 1 + flashcards.length) % flashcards.length;
+    setCurrentCard(flashcards[prevIdx]);
+    setShowExample(false);
+    setFlipped(false);
+    flipAnim.setValue(0);
+  };
 
   const handlePlayAudio = async () => {
     if (!currentCard) return;
-
     const flashcardId = currentCard.id;
     const audioPath = getCachedAudioPath(flashcardId);
 
     try {
       const cached = await isAudioCached(flashcardId);
       if (!cached) {
-        console.log('🎤 Audio not cached. Fetching...');
         await fetchAndCacheTTS(flashcardId);
-      } else {
-        console.log('📦 Using cached audio');
       }
-
       await playTTS(audioPath);
     } catch (err) {
       console.error('TTS playback error:', err);
       Alert.alert('Error', 'Could not play pronunciation');
-    }
-  };
-
-  const handleNext = () => {
-    if (flashcards.length > 0) {
-      const next = flashcards[Math.floor(Math.random() * flashcards.length)];
-      setCurrentCard(next);
-      setShowExample(false);
-      setFlipped(false);
-      flipAnim.setValue(0);
     }
   };
 
@@ -199,7 +206,7 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
   const handleAddToWallet = async () => {
     if (!currentCard) return;
     try {
-      await addToWallet(userId,currentCard.id);
+      await addToWallet(userId, currentCard.id);
       Alert.alert('Added', 'Flashcard added to wallet.');
     } catch (error) {
       console.error('Wallet error:', error);
@@ -219,7 +226,7 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
       <View style={styles.container}>
         <View style={{ alignItems: 'center', justifyContent: 'center', height: 250 }}>
           <View style={{ width: '100%', maxWidth: 350, position: 'relative' }}>
-            {/* Fixed sound button + phonetics */}
+            {/* Sound button + phonetics */}
             <View style={styles.soundWrapper}>
               <TouchableOpacity
                 style={styles.soundButton}
@@ -316,18 +323,18 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
             <Ionicons name="bulb" size={40} color="rgba(216, 129, 245, 1)" />
             <Text style={styles.navText}>Hints</Text>
           </TouchableOpacity>
-            {showExample && (
-              <View style={styles.exampleBubble}>
-                <Text style={styles.exampleText}>
-                  Example:
-                  {"\n"}
-                  {currentCard.example}
-                  {currentCard.synonyms
-                    ? `\n\nSynonyms:\n${currentCard.synonyms}`
-                    : ""}
-                </Text>
-              </View>
-            )}
+          {showExample && (
+            <View style={styles.exampleBubble}>
+              <Text style={styles.exampleText}>
+                Example:
+                {"\n"}
+                {currentCard.example}
+                {currentCard.synonyms
+                  ? `\n\nSynonyms:\n${currentCard.synonyms}`
+                  : ""}
+              </Text>
+            </View>
+          )}
         </View>
 
         <View style={styles.bottomBar}>
@@ -342,7 +349,7 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
             <Ionicons name="search-outline" size={40} color="#8feda0ff" />
             <Text style={styles.navText}>Search</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={handleNext}>
+          <TouchableOpacity onPress={handlePrev}>
             <Ionicons name="arrow-back-circle" size={40} color="#8feda0ff" />
             <Text style={styles.navText}>Back</Text>
           </TouchableOpacity>
