@@ -124,7 +124,7 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
         logTime("📥 Fetched topic flashcards");
 
         const { flashcardId } = route.params;
-        const detailResponse = await api.get(`api/flashcards/${flashcardId}`);
+        const detailResponse = await api.get(`/api/flashcards/${flashcardId}`);
         logTime(`📘 Loaded current flashcard ID: ${flashcardId}`);
 
         setCurrentCard(detailResponse.data);
