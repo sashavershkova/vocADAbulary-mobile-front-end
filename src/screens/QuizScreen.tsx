@@ -149,56 +149,54 @@ const QuizScreen = ({ navigation }: Props) => {
   }
 
   return (
-    <LinearGradient colors={['#f7b4c4d6', '#bf86fcc2']} style={styles.container}>
-      <SafeAreaView style={styles.container}>
-        <View style={styles.questionButton}>
-          <Text style={styles.questionText}>{currentQuiz.questionText}</Text>
-        </View>
+  <LinearGradient colors={['#f7b4c4d6', '#bf86fcc2']} style={styles.container}>
+    <View style={styles.questionButton}>
+      <Text style={styles.questionText}>{currentQuiz.questionText}</Text>
+    </View>
 
-        <ScrollView contentContainerStyle={styles.answersContainer}>
-          {currentQuiz.answers?.map((answer, index) => {
-            const isSelected = selectedAnswerId === index;
-            return (
-              <TouchableOpacity
-                key={index}
-                onPress={() => handleSelect(index)}
-                style={[
-                  styles.answerBox,
-                  !isSubmitted && isSelected && styles.selectedAnswerBox,
-                  isSubmitted && answer.correct && styles.correctAnswerBox,
-                  isSubmitted && isSelected && !answer.correct && styles.wrongAnswerBox,
-                ]}
-              >
-                <Text style={styles.answerText}>{answer.text}</Text>
-              </TouchableOpacity>
-            );
-          })}
-        </ScrollView>
-
-        <View style={styles.bottomBar}>
+    <ScrollView contentContainerStyle={styles.answersContainer}>
+      {currentQuiz.answers?.map((answer, index) => {
+        const isSelected = selectedAnswerId === index;
+        return (
           <TouchableOpacity
-            style={styles.navItem}
-            onPress={() => navigation.navigate('Home')}
+            key={index}
+            onPress={() => handleSelect(index)}
+            style={[
+              styles.answerBox,
+              !isSubmitted && isSelected && styles.selectedAnswerBox,
+              isSubmitted && answer.correct && styles.correctAnswerBox,
+              isSubmitted && isSelected && !answer.correct && styles.wrongAnswerBox,
+            ]}
           >
-            <Ionicons name="home" size={30} color="#97d0feff" />
-            <Text style={styles.navText}>Home</Text>
+            <Text style={styles.answerText}>{answer.text}</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={handleReset} style={styles.navigationButton}>
-            <Ionicons name="refresh-circle" size={35} color="#97d0feff" />
-            <Text style={styles.navText}>Reset</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={handleSubmit} style={styles.navigationButton}>
-            <Ionicons name="checkmark-circle" size={35} color="#97d0feff" />
-            <Text style={styles.navText}>Submit</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={handleNext} style={styles.navigationButton}>
-            <Ionicons name="arrow-forward-circle" size={35} color="#97d0feff" />
-            <Text style={styles.navText}>Forward</Text>
-          </TouchableOpacity>
-        </View>
-      </SafeAreaView>
-    </LinearGradient>
-  );
+        );
+      })}
+    </ScrollView>
+
+    <View style={styles.bottomBar}>
+      <TouchableOpacity
+        style={styles.navItem}
+        onPress={() => navigation.navigate('Home')}
+      >
+        <Ionicons name="home" size={35} color="#97d0feff" />
+        <Text style={styles.navText}>HOME</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={handleReset} style={styles.navigationButton}>
+        <Ionicons name="refresh-circle" size={35} color="#97d0feff" />
+        <Text style={styles.navText}>RESET</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={handleSubmit} style={styles.navigationButton}>
+        <Ionicons name="checkmark-circle" size={35} color="#97d0feff" />
+        <Text style={styles.navText}>SUBMIT</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={handleNext} style={styles.navigationButton}>
+        <Ionicons name="arrow-forward-circle" size={35} color="#97d0feff" />
+        <Text style={styles.navText}>NEXT</Text>
+      </TouchableOpacity>
+    </View>
+  </LinearGradient>
+);
 };
 
 export default QuizScreen;

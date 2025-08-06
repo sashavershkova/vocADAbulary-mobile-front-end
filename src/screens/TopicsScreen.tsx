@@ -186,8 +186,8 @@ const TopicsScreen = ({ navigation }: Props) => {
           style={styles.navItem}
           onPress={() => navigation.navigate('Home')}
         >
-          <Ionicons name="home" size={30} color="#8feda0ff" />
-          <Text style={styles.navText}>Home</Text>
+          <Ionicons name="home" size={35} color="#8feda0ff" />
+          <Text style={styles.navText}>HOME</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -198,7 +198,7 @@ const TopicsScreen = ({ navigation }: Props) => {
           }}
         >
           <Ionicons name="add-circle" size={35} color="#8feda0ff" />
-          <Text style={styles.navText}>Add</Text>
+          <Text style={styles.navText}>ADD</Text>
         </TouchableOpacity>
       </View>
     </LinearGradient>

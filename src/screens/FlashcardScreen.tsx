@@ -313,8 +313,8 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
 
         <View style={styles.exampleSection}>
           <TouchableOpacity onPress={() => setShowExample(!showExample)}>
-            <Ionicons name="bulb" size={40} color="rgba(216, 129, 245, 1)" />
-            <Text style={styles.navText}>Hints</Text>
+            <Ionicons name="bulb" size={50} color="rgba(216, 129, 245, 1)" />
+            <Text style={styles.navText}>HINT</Text>
           </TouchableOpacity>
             {showExample && (
               <View style={styles.exampleBubble}>
@@ -335,20 +335,20 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
             style={styles.navItem}
             onPress={() => navigation.navigate('Home')}
           >
-            <Ionicons name="home" size={30} color="#8feda0ff" />
-            <Text style={styles.navText}>Home</Text>
+            <Ionicons name="home" size={35} color="#8feda0ff" />
+            <Text style={styles.navText}>HOME</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Search')}>
-            <Ionicons name="search-outline" size={40} color="#8feda0ff" />
-            <Text style={styles.navText}>Search</Text>
+            <Ionicons name="search-outline" size={35} color="#8feda0ff" />
+            <Text style={styles.navText}>SEARCH</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={handleNext}>
-            <Ionicons name="arrow-back-circle" size={40} color="#8feda0ff" />
-            <Text style={styles.navText}>Back</Text>
+            <Ionicons name="arrow-back-circle" size={35} color="#8feda0ff" />
+            <Text style={styles.navText}>BACK</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={handleNext}>
-            <Ionicons name="arrow-forward-circle" size={40} color="#8feda0ff" />
-            <Text style={styles.navText}>Forward</Text>
+            <Ionicons name="arrow-forward-circle" size={35} color="#8feda0ff" />
+            <Text style={styles.navText}>NEXT</Text>
           </TouchableOpacity>
         </View>
       </View>

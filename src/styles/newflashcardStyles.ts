@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
 
   dropdownHeader: {
     backgroundColor: '#ffffff',
-    borderRadius: 20,
+    borderRadius: 30,
     paddingVertical: 12,
     paddingHorizontal: 16,
     flexDirection: 'row',
@@ -124,23 +124,23 @@ const styles = StyleSheet.create({
     // fontFamily: 'ArchitectsDaughter-Regular',
   },
 
-  // dropdownOverlay: {
-  //   position: 'absolute',
-  //   top: 60,
-  //   left: 0,
-  //   right: 0,
-  //   backgroundColor: '#ffffffee',
-  //   borderRadius: 20,
-  //   maxHeight: 200,
-  //   zIndex: 100,
-  //   shadowColor: '#000',
-  //   shadowOpacity: 0.2,
-  //   shadowOffset: { width: 0, height: 4 },
-  // },
+  dropdownOverlay: {
+    position: 'absolute',
+    top: 60,
+    left: 0,
+    right: 0,
+    backgroundColor: '#ffffffee',
+    borderRadius: 20,
+    maxHeight: 200,
+    zIndex: 100,
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowOffset: { width: 0, height: 4 },
+  },
 
-  // dropdownList: {
-  //   paddingVertical: 6,
-  // },
+  dropdownList: {
+    paddingVertical: 6,
+  },
 
   dropdownItem: {
     paddingVertical: 10,

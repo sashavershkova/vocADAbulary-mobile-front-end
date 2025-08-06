@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
   answerText: {
     fontFamily: 'ArchitectsDaughter',
     fontSize: 25,
-    color: '#2c6f33',
+    color: '#246396',
     textAlign: 'center',
   },
   bottomBar: {
