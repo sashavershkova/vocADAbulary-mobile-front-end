@@ -199,7 +199,7 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
   const handleAddToWallet = async () => {
     if (!currentCard) return;
     try {
-      await addToWallet(currentCard.id);
+      await addToWallet(userId,currentCard.id);
       Alert.alert('Added', 'Flashcard added to wallet.');
     } catch (error) {
       console.error('Wallet error:', error);
@@ -276,7 +276,7 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
                       color="rgba(216, 129, 245, 1)"
                     />
                   </TouchableOpacity>
-                  <TouchableOpacity onPress={() => updateStatus('learned')} activeOpacity={0.7}>
+                  <TouchableOpacity onPress={() => updateStatus('LEARNED')} activeOpacity={0.7}>
                     <Ionicons
                       name="checkmark-circle"
                       size={30}

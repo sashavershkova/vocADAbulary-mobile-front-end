@@ -2,8 +2,8 @@
 import api from "./axiosInstance";
 
 // 1. Add a flashcard to the wallet
-export const addToWallet = async (flashcardId: number) => {
-  const response = await api.post(`/api/flashcards/${flashcardId}/wallet`);
+export const addToWallet = async (userId: number, flashcardId: number) => {
+  const response = await api.post(`/api/users/${userId}/flashcards/${flashcardId}/wallet`);
   return response.data;
 };
 
