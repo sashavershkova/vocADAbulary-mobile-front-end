@@ -165,6 +165,11 @@ const LoginScreen = ({ navigation }: Props) => {
       <TouchableOpacity onPress={handleLogin} style={styles.simpleButton}>
         <Text style={styles.simpleButtonText}>Sign In</Text>
       </TouchableOpacity>
+
+      <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
+        <Text style={styles.forgotText}>Sign Up</Text>
+      </TouchableOpacity>
+      
     </LinearGradient>
   );
 };

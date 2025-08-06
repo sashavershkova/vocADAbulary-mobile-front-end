@@ -7,8 +7,9 @@ import {
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigation';
 
-// импорт экранов
+// screens import
 import SplashScreen from '../screens/SplashScreen';
+import SettingsScreen from '../screens/SettingsScreen';
 import LoginScreen from '../screens/LoginScreen';
 import HomeScreen from '../screens/HomeScreen';
 import TopicsScreen from '../screens/TopicsScreen';
@@ -22,6 +23,7 @@ import LearnedFlashcardsScreen from '../screens/LearnedFlashcardScreen';
 import NewFlashcardScreen from '../screens/NewFlashcardScreen';
 import ConstructorScreen from '../screens/ConstructorScreen';
 import SearchScreen from '../screens/SearchScreen';
+import SignUpScreen from '../screens/SignUpScreen';
 import { TouchableOpacity } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
@@ -59,6 +61,8 @@ const AppNavigator = () => (
       <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: true }} />
       <Stack.Screen name="Topics" component={TopicsScreen} options={{ title: 'TOPICS' }} />
       <Stack.Screen name="Topic" component={TopicScreen} options={{ title: 'TOPIC' }} />
+      <Stack.Screen name="Settings" component={SettingsScreen} options={{ title: 'SETTINGS' }} />
+      <Stack.Screen name="SignUp" component={SignUpScreen} options={{ title: 'Sign Up' }} />
       <Stack.Screen 
       name="Flashcard" 
       component={FlashcardScreen} 
@@ -97,7 +101,7 @@ const AppNavigator = () => (
           headerBackVisible: false, 
           headerLeft: () => (
             <TouchableOpacity onPress={() => navigation.goBack()} style={{ marginLeft: 10 }}>
-              <Ionicons name="arrow-back" size={28} color="#2c6f33" />
+              <Ionicons name="arrow-back" size={28} color="#246396" />
             </TouchableOpacity>
         ),
         })} 
