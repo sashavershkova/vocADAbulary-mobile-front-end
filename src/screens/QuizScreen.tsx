@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useLayoutEffect, useCallback } from 'react';
 import { useMockUser } from '../context/UserContext';
-import { View, Text, SafeAreaView, TouchableOpacity, Alert, ScrollView } from 'react-native';
+import { View, Text, SafeAreaView, TouchableOpacity, Alert, ScrollView, ActivityIndicator } from 'react-native';
 import styles from '../styles/quizStyles';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigation';
@@ -32,6 +32,7 @@ const QuizScreen = ({ navigation }: Props) => {
   const [currentQuizIndex, setCurrentQuizIndex] = useState(0);
   const [selectedAnswerId, setSelectedAnswerId] = useState<number | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -63,6 +64,7 @@ const QuizScreen = ({ navigation }: Props) => {
 
   // Helper to fetch and process quizzes
   const fetchAllQuizzes = useCallback(async () => {
+    setLoading(true);
     try {
       const response = await api.get('/api/quizzes');
       if (!response.data || response.data.length === 0) {
@@ -87,6 +89,8 @@ const QuizScreen = ({ navigation }: Props) => {
     } catch (err) {
       console.error('Failed to load quizzes:', err);
       Alert.alert('Error', 'Failed to load quizzes.');
+    } finally {
+      setLoading(false);
     }
   }, [navigation]);
 
@@ -140,11 +144,14 @@ const QuizScreen = ({ navigation }: Props) => {
     setIsSubmitted(false);
   };
 
-  if (!currentQuiz) {
+  // ------ SPINNER while loading ------
+  if (loading || !currentQuiz) {
     return (
-      <SafeAreaView style={styles.container}>
-        <Text style={styles.termText}>Loading...</Text>
-      </SafeAreaView>
+      <LinearGradient colors={['#f7b4c4d6', '#bf86fcc2']} style={{ flex: 1 }}>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator size="large" color="#4CAF50" />
+        </View>
+      </LinearGradient>
     );
   }
 
