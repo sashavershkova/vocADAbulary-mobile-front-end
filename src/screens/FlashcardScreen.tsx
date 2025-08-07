@@ -8,14 +8,12 @@ import {
   Animated,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { Audio } from 'expo-av';
 import { useMockUser } from '../context/UserContext';
 import api from '../api/axiosInstance';
 import { addToWallet, updateWalletFlashcardStatus } from '../api/wallet';
 import styles from '../styles/flashcardStyles';
 import { RootStackParamList } from '../types/navigation';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import * as FileSystem from 'expo-file-system';
 import { LinearGradient } from 'expo-linear-gradient';
 import {
   ensureCacheDirExists,
@@ -115,6 +113,8 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
     // If flashcards are passed from navigation, use them!
     if (passedFlashcards && Array.isArray(passedFlashcards) && passedFlashcards.length > 0) {
       setFlashcards(passedFlashcards);
+      console.log('Flashcards array:', passedFlashcards);
+      console.log('IDs:', passedFlashcards.map(f => f.id));
       const card = passedFlashcards.find(fc => fc.id === flashcardId) || passedFlashcards[0];
       setCurrentCard(card);
       setLoading(false);
@@ -224,6 +224,32 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
       style={{ flex: 1 }}
     >
       <View style={styles.container}>
+        {/* Topic label above card, top left */}
+        {topicName && (
+          <View style={{ 
+            width: 370, // Same as card width
+            alignItems: 'flex-start', 
+            alignSelf: 'center',    // Center the container on the screen
+            marginBottom: 4,
+          }}>
+            <Text style={{
+              fontFamily: 'ArchitectsDaughter-Regular',
+              fontSize: 20,
+              color: '#2c6f33',
+              opacity: 0.88,
+              fontWeight: 'bold',
+              marginLeft: 10,
+              marginBottom: 3,
+              textShadowColor: '#c0e3bf',
+              textShadowRadius: 2,
+              letterSpacing: 0.2,
+            }}>
+              {topicName}
+            </Text>
+          </View>
+        )}
+
+        {/* Card block below */}
         <View style={{ alignItems: 'center', justifyContent: 'center', height: 250 }}>
           <View style={{ width: '100%', maxWidth: 350, position: 'relative' }}>
             {/* Sound button + phonetics */}
