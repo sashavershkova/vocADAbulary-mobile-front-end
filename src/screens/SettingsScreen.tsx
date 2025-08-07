@@ -4,6 +4,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  Image,
   Alert,
   ActivityIndicator,
 } from 'react-native';
@@ -14,10 +15,15 @@ import { RootStackParamList } from '../types/navigation';
 import { useMockUser } from '../context/UserContext';
 import api from '../api/axiosInstance';
 import styles from '../styles/settingsStyles';
+import greenstick from '../assets/images/greenstick.png';
+import bluestick from '../assets/images/bluestick.png';
+import PopoverHint from '../screens/PopoverHint';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Settings'>;
 
 const SettingsScreen = ({ navigation }: Props) => {
+  const [hintVisible, setHintVisible] = useState(false);
+  const isGreen = false;
   const { user } = useMockUser();
   const userId = user.id;
   const username = user.username || '';
@@ -42,6 +48,14 @@ const SettingsScreen = ({ navigation }: Props) => {
         fontSize: 36,
         color: '#246396',
       },
+      headerLeft: () => (
+        <TouchableOpacity onPress={() => setHintVisible(true)} style={{ marginLeft: 10 }}>
+          <Image
+            source={isGreen ? greenstick : bluestick}
+            style={{ width: 30, height: 50 }}
+          />
+        </TouchableOpacity>
+      ),
       headerRight: () => (
         <View style={styles.userWrapper}>
           <View style={styles.initialsCircle}>
@@ -150,6 +164,24 @@ const SettingsScreen = ({ navigation }: Props) => {
 
   return (
     <LinearGradient colors={['#f7b4c4d6', '#bf86fcc2']} style={styles.container}>
+      <PopoverHint visible={hintVisible} onClose={() => setHintVisible(false)}>
+        <Text style={styles.text}>
+          Welcome to the SETTINGS Center of the Universe{"\n"}
+          (AKA: where your identity crisis gets a stylish reboot.){"\n\n"}
+
+          This is the place to change your name or update your email —{"\n"}
+          because maybe “emma_dev” no longer reflects your inner tech goddess.{"\n"}
+          No need to consult Sheldon… unless it's Tuesday (Laundry Night).{"\n\n"}
+
+          Just remember:{"\n"}
+          Changing your info won't collapse the space-time continuum...{"\n"}
+          but it *will* boost your coolness by approximately 3.7%.{"\n"}
+          Bazinga!{"\n\n"}
+
+          Caution: Leonard is definitely not responsible for any consequences that follow.
+        </Text>
+      </PopoverHint>
+
       <View style={{ flex: 1, justifyContent: 'space-between' }}>
         <View style={styles.content}>
           {/* USERNAME section */}

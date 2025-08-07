@@ -24,7 +24,7 @@ import {
 import styles from "../styles/walletStyles";
 import { LinearGradient } from "expo-linear-gradient";
 import * as FileSystem from 'expo-file-system';
-import { Buffer } from 'buffer'; 
+import { Buffer } from 'buffer';
 import {
   ensureCacheDirExists,
   getCachedAudioPath,
@@ -32,6 +32,9 @@ import {
   fetchAndCacheTTS,
   playTTS,
 } from "../utils/ttsUtils";
+import greenstick from '../assets/images/greenstick.png';
+import bluestick from '../assets/images/bluestick.png';
+import PopoverHint from '../screens/PopoverHint';
 
 type WalletNavProp = NativeStackNavigationProp<RootStackParamList, "Wallet">;
 
@@ -45,6 +48,8 @@ type WalletFlashcard = {
 };
 
 const WalletScreen = () => {
+  const [hintVisible, setHintVisible] = useState(false);
+  const isGreen = false;
   const navigation = useNavigation<WalletNavProp>();
   const { user } = useMockUser();
   const userId = user.id;
@@ -62,7 +67,7 @@ const WalletScreen = () => {
     if (!hasEnsuredDir.current) {
       await ensureCacheDirExists();
       hasEnsuredDir.current = true;
-  }
+    }
 
     try {
       setLoading(true);
@@ -96,6 +101,14 @@ const WalletScreen = () => {
         fontFamily: "ArchitectsDaughter-Regular",
         fontSize: 36,
       },
+      headerLeft: () => (
+        <TouchableOpacity onPress={() => setHintVisible(true)} style={{ marginLeft: 10 }}>
+          <Image
+            source={isGreen ? greenstick : bluestick}
+            style={{ width: 30, height: 50 }}
+          />
+        </TouchableOpacity>
+      ),
       headerRight: () => (
         <View style={styles.userWrapper}>
           <View style={styles.initialsCircle}>
@@ -112,22 +125,22 @@ const WalletScreen = () => {
   }, []);
 
   const playAudio = async (flashcardId: number) => {
-  const audioPath = getCachedAudioPath(flashcardId);
-  setTtsLoadingId(flashcardId);
+    const audioPath = getCachedAudioPath(flashcardId);
+    setTtsLoadingId(flashcardId);
 
-  try {
-    const cached = await isAudioCached(flashcardId);
-    if (!cached) {
-      await fetchAndCacheTTS(flashcardId);
+    try {
+      const cached = await isAudioCached(flashcardId);
+      if (!cached) {
+        await fetchAndCacheTTS(flashcardId);
+      }
+      await playTTS(audioPath);
+    } catch (err) {
+      console.error(`Playback error for flashcard ${flashcardId}:`, err);
+      Alert.alert('Error', 'Could not generate audio.');
+    } finally {
+      setTtsLoadingId(null);
     }
-    await playTTS(audioPath);
-  } catch (err) {
-    console.error(`Playback error for flashcard ${flashcardId}:`, err);
-    Alert.alert('Error', 'Could not generate audio.');
-  } finally {
-    setTtsLoadingId(null);
-  }
-};
+  };
 
   const handleDelete = async (id: number) => {
     try {
@@ -161,6 +174,22 @@ const WalletScreen = () => {
 
   return (
     <LinearGradient colors={["#b0f4c9ff", "#313bae8c"]} style={styles.container}>
+      <PopoverHint visible={hintVisible} onClose={() => setHintVisible(false)}>
+        <Text style={styles.text}>
+          Welcome to your **WALLET** — where your favorite flashcards live happily ever after (until you delete them, you monster).{"\n\n"}
+
+          These are your personal MVPs, handpicked from the Learn section.{"\n"}
+          You can replay them endlessly, because repetition is key — just ask Sheldon, who's watched Star Trek 193 times.{"\n\n"}
+
+          But wait, there's more:{"\n"}
+          - Want to create your own nerdy masterpiece? Go for it — unleash your inner Amy Farrah Fowler, ADD a new card.{"\n"}
+          - Need to track what you've mastered? Slide over to the PIGGY BANK — it's like your brain's trophy shelf.{"\n\n"}
+
+          TL;DR: This is your Word Fortress. Customize it, listen to it, and flaunt it like Howard flaunts his belt buckles.{"\n\n"}
+
+          Fun fact: Unlike Raj, you can totally speak here — just press play.
+        </Text>
+      </PopoverHint>
       <TextInput
         style={styles.searchBar}
         placeholder="Search in wallet..."

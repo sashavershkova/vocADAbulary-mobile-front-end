@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useLayoutEffect } from 'react';
 import {
+  Image,
   Text,
   TouchableOpacity,
   FlatList,
@@ -15,6 +16,9 @@ import { RootStackParamList } from '../types/navigation';
 import { getAllTopics } from '../api/topics';
 import { getFlashcardsByTopic } from '../api/flashcards';
 import { useMockUser } from '../context/UserContext';
+import greenstick from '../assets/images/greenstick.png';
+import bluestick from '../assets/images/bluestick.png';
+import PopoverHint from '../screens/PopoverHint';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Topics'>;
 
@@ -40,6 +44,8 @@ const topicGradientsActive: [string, string][] = [
 ];
 
 const TopicsScreen = ({ navigation }: Props) => {
+  const [hintVisible, setHintVisible] = useState(false);
+  const isGreen = true;
   const { user } = useMockUser();
   const userId = user.id;
   const username = user.username;
@@ -61,6 +67,14 @@ const TopicsScreen = ({ navigation }: Props) => {
         fontSize: 36,
         color: '#2c6f33',
       },
+      headerLeft: () => (
+        <TouchableOpacity onPress={() => setHintVisible(true)} style={{ marginLeft: 10 }}>
+          <Image
+            source={isGreen ? greenstick : bluestick}
+            style={{ width: 30, height: 50 }}
+          />
+        </TouchableOpacity>
+      ),
       headerRight: () => (
         <View style={styles.userWrapper}>
           <View style={styles.initialsCircle}>
@@ -110,7 +124,7 @@ const TopicsScreen = ({ navigation }: Props) => {
 
         const randomCard =
           flashcards[Math.floor(Math.random() * flashcards.length)];
-          console.log(`${new Date().toISOString()} 🎯 Random card selected: ${randomCard.id}`);
+        console.log(`${new Date().toISOString()} 🎯 Random card selected: ${randomCard.id}`);
 
         console.log(`${new Date().toISOString()} ⏩ Navigating to Flashcard screen...`);
         navigation.navigate('Flashcard', {
@@ -166,6 +180,24 @@ const TopicsScreen = ({ navigation }: Props) => {
 
   return (
     <LinearGradient colors={['#abf5ab64', '#347134bc']} style={{ flex: 1 }}>
+      <PopoverHint visible={hintVisible} onClose={() => setHintVisible(false)}>
+        <Text style={styles.text}>
+          Welcome to the word playground - FALSHCARDS, Professor Proton!{"\n\n"}
+          Pick a topic — any topic. Each one's a wormhole into tech vocabulary.{"\n"}
+          Cards appear in random order, just like Sheldon's emotions.{"\n\n"}
+
+          Not sure how to say the word? Hit play — it's like Raj reading bedtime stories.{"\n"}
+          Still confused? Tap the hint. Think of it as Leonard patiently explaining to Penny.{"\n"}
+          Still lost? Flip the card like you're flipping universes in string theory.{"\n\n"}
+
+          All words start “In Progress” — kind of like Howard's mustache.{"\n"}
+          Once you mark a word as “Learned,” it joins the Quiz and Phrase Lab for its final showdown.{"\n"}
+          Fell in love with a word? Save it to your Wallet and whisper sweet nothings to it later.{"\n\n"}
+
+          Ready to study like Sheldon, struggle like Leonard, and shine like Penny on trivia night?{"\n"}
+          Bazinga awaits.
+        </Text>
+      </PopoverHint>
       <View style={{ flex: 1, paddingBottom: 70 }}>
         {loading ? (
           <View style={styles.loadingContainer}>
