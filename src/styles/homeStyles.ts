@@ -25,17 +25,63 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 3, height: 6 },
   },
   learnText: {
-    fontSize: 32,
+    fontSize: 50,
     fontWeight: 'bold',
     color: '#006400',
     fontFamily: 'ArchitectsDaughter',
   },
-  icon: {
-  width: 100,
-  height: 100,
-  resizeMode: 'contain',
-  marginLeft: 80,
-},
+  learnIcon: {
+    width: 100,
+    height: 100,
+    resizeMode: 'contain',
+    marginLeft: 130,
+  },
+
+  progressIcon: {
+    width: 50,
+    height: 50,
+    resizeMode: 'contain',
+    shadowColor: '#313131ff',
+    shadowOpacity: 0.8,
+    shadowOffset: { width: 3, height: 6 },
+  },
+
+  settingsIcon: {
+    width: 50,
+    height: 50,
+    resizeMode: 'contain',
+    shadowColor: '#313131ff',
+    shadowOpacity: 0.8,
+    shadowOffset: { width: 3, height: 6 },
+  },
+
+  walletIcon: {
+    width: 70,
+    height: 70,
+    resizeMode: 'contain',
+    shadowColor: '#313131ff',
+    shadowOpacity: 0.8,
+    shadowOffset: { width: 3, height: 6 },
+  },
+
+  quizIcon: {
+    width: 70,
+    height: 70,
+    resizeMode: 'contain',
+    shadowColor: '#313131ff',
+    shadowOpacity: 0.8,
+    shadowOffset: { width: 3, height: 6 },
+  },
+
+  exitIcon: {
+    width: 50,
+    height: 50,
+    resizeMode: 'contain',
+    shadowColor: '#313131ff',
+    shadowOpacity: 0.8,
+    shadowOffset: { width: 3, height: 6 },
+  },
+
   progressButton: {
     position: 'absolute',
     top: height * 0.015,
@@ -85,16 +131,18 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 3, height: 6 },
   },
   buttonText: {
-    fontSize: 19,
+    fontSize: 20,
     fontFamily: 'ArchitectsDaughter',
     color: '#006400',
     textAlign: 'center',
+    marginBottom: -7
   },
   smallButtonText: {
-    fontSize: 16,
+    fontSize: 14,
     fontFamily: 'ArchitectsDaughter',
     color: '#006400',
     textAlign: 'center',
+    marginBottom: -7,
   },
   bottomButtonsContainer: {
     position: 'absolute',
@@ -122,8 +170,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 15,
     left: width * 0.05,
-    width: width * 0.22, 
-    height: 190, 
+    width: width * 0.22,
+    height: 190,
     backgroundColor: '#a1c1f5d6',
     justifyContent: 'center',
     alignItems: 'center',
@@ -207,6 +255,8 @@ const styles = StyleSheet.create({
     marginTop: -5,
     textAlign: 'center',
   },
+
+
 });
 
 export default styles;
