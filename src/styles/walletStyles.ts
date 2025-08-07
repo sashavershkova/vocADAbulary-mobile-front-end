@@ -118,15 +118,15 @@ const styles = StyleSheet.create({
   userWrapper: {
     alignItems: 'center',
     justifyContent: 'flex-start',
-    marginRight: 8,
-    paddingTop: 8,
+    marginRight: 5,
+    paddingTop: 5,
     minWidth: 60,
   },
   userLabel: {
-    fontSize: 16,
+    fontSize: 14,
     color: '#246396',
     fontFamily: 'ArchitectsDaughter-Regular',
-    marginTop: -2,
+    marginTop: -5,
     textAlign: 'center',
   },
   iconRow: {

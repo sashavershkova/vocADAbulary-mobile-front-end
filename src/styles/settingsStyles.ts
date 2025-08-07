@@ -73,8 +73,8 @@ const styles = StyleSheet.create({
   // },
   bottomBar: {
     position: "absolute",
-    bottom: 1,
-    left: 25,
+    bottom: 20,
+    left: 20,
     right: 20,
     flexDirection: "row",
     justifyContent: "space-around",
@@ -123,10 +123,10 @@ const styles = StyleSheet.create({
     minWidth: 60,
   },
   userLabel: {
-    fontSize: 16,
+    fontSize: 14,
     color: '#246396',
     fontFamily: 'ArchitectsDaughter-Regular',
-    marginTop: -2,
+    marginTop: -5,
     textAlign: 'center',
   },
 
@@ -156,7 +156,11 @@ const styles = StyleSheet.create({
     fontFamily: 'ArchitectsDaughter-Regular',
     textAlign: 'center',
   },
-
+navItem: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
+  },
 });
 
 export default styles;

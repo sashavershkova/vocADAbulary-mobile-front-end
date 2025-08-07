@@ -2,7 +2,6 @@ import React, { useLayoutEffect, useEffect, useState } from 'react';
 import {
   View,
   Text,
-  SafeAreaView,
   TextInput,
   TouchableOpacity,
   Alert,
@@ -151,66 +150,63 @@ const SettingsScreen = ({ navigation }: Props) => {
 
   return (
     <LinearGradient colors={['#f7b4c4d6', '#bf86fcc2']} style={styles.container}>
-      <SafeAreaView style={{ flex: 1 }}>
-        <View style={{ flex: 1, justifyContent: 'space-between' }}>
-          <View style={styles.content}>
-            {/* USERNAME section */}
-            <View style={{ marginBottom: 50 }}>
-              <Text style={styles.label}>CURRENT USERNAME: {currentUsername}</Text>
-              <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 8 }}>
-                <Text style={[styles.label, { marginRight: 10 }]}>Change name to:</Text>
-                <TextInput
-                  style={[styles.input, { flex: 1 }]}
-                  placeholder="Enter new username"
-                  value={usernameInput}
-                  onChangeText={setUsernameInput}
-                />
-              </View>
-            </View>
-
-            {/* EMAIL section */}
-            <View>
-              <Text style={styles.label}>CURRENT EMAIL: {currentEmail}</Text>
-              <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 8 }}>
-                <Text style={[styles.label, { marginRight: 10 }]}>Change email to:</Text>
-                <TextInput
-                  style={[styles.input, { flex: 1 }]}
-                  placeholder="Enter new email"
-                  value={email}
-                  onChangeText={setEmail}
-                />
-              </View>
+      <View style={{ flex: 1, justifyContent: 'space-between' }}>
+        <View style={styles.content}>
+          {/* USERNAME section */}
+          <View style={{ marginBottom: 50 }}>
+            <Text style={styles.label}>CURRENT USERNAME: {currentUsername}</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 8 }}>
+              <Text style={[styles.label, { marginRight: 10 }]}>Change name to:</Text>
+              <TextInput
+                style={[styles.input, { flex: 1 }]}
+                placeholder="Enter new username"
+                value={usernameInput}
+                onChangeText={setUsernameInput}
+              />
             </View>
           </View>
 
-          <View style={styles.container}>
-            <View style={styles.deleteWrapper}>
-              <TouchableOpacity style={styles.deleteAccountButton} onPress={handleDelete}>
-                <Text style={styles.deleteAccountText}>DELETE ACCOUNT</Text>
-              </TouchableOpacity>
+          {/* EMAIL section */}
+          <View>
+            <Text style={styles.label}>CURRENT EMAIL: {currentEmail}</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 8 }}>
+              <Text style={[styles.label, { marginRight: 10 }]}>Change email to:</Text>
+              <TextInput
+                style={[styles.input, { flex: 1 }]}
+                placeholder="Enter new email"
+                value={email}
+                onChangeText={setEmail}
+              />
             </View>
-          </View>
-
-          {/* BOTTOM BAR */}
-          <View style={styles.bottomBar}>
-            <TouchableOpacity onPress={() => navigation.navigate('Home')} style={styles.navItem}>
-              <Ionicons name="home" size={35} color="#97d0feff" />
-              <Text style={styles.navText}>HOME</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={handleSave} style={styles.navigationButton}>
-              <Ionicons name="checkmark-circle" size={35} color="#97d0feff" />
-              <Text style={styles.navText}>SUBMIT</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={handleReset} style={styles.navigationButton}>
-              <Ionicons name="refresh-circle" size={35} color="#97d0feff" />
-              <Text style={styles.navText}>RESET</Text>
-            </TouchableOpacity>
-
           </View>
         </View>
-      </SafeAreaView>
+
+        <View style={styles.container}>
+          <View style={styles.deleteWrapper}>
+            <TouchableOpacity style={styles.deleteAccountButton} onPress={handleDelete}>
+              <Text style={styles.deleteAccountText}>DELETE ACCOUNT</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* BOTTOM BAR */}
+        <View style={styles.bottomBar}>
+          <TouchableOpacity onPress={() => navigation.navigate('Home')} style={styles.navItem}>
+            <Ionicons name="home" size={35} color="#97d0feff" />
+            <Text style={styles.navText}>HOME</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => navigation.navigate('Submit')} style={styles.navItem}>
+            <Ionicons name="checkmark-circle" size={35} color="#97d0feff" />
+            <Text style={styles.navText}>SUBMIT</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => navigation.navigate('Reset')} style={styles.navItem}>
+            <Ionicons name="refresh-circle" size={35} color="#97d0feff" />
+            <Text style={styles.navText}>RESET</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
     </LinearGradient>
   );
 };

@@ -175,26 +175,39 @@ const QuizScreen = ({ navigation }: Props) => {
     </ScrollView>
 
     <View style={styles.bottomBar}>
-      <TouchableOpacity
-        style={styles.navItem}
-        onPress={() => navigation.navigate('Home')}
-      >
-        <Ionicons name="home" size={35} color="#97d0feff" />
-        <Text style={styles.navText}>HOME</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={handleReset} style={styles.navigationButton}>
-        <Ionicons name="refresh-circle" size={35} color="#97d0feff" />
-        <Text style={styles.navText}>RESET</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={handleSubmit} style={styles.navigationButton}>
-        <Ionicons name="checkmark-circle" size={35} color="#97d0feff" />
-        <Text style={styles.navText}>SUBMIT</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={handleNext} style={styles.navigationButton}>
-        <Ionicons name="arrow-forward-circle" size={35} color="#97d0feff" />
-        <Text style={styles.navText}>NEXT</Text>
-      </TouchableOpacity>
-    </View>
+  <TouchableOpacity
+    style={styles.navItem}
+    onPress={() => navigation.navigate('Home')}
+  >
+    <Ionicons name="home" size={35} color="#97d0feff" />
+    <Text style={styles.navText}>HOME</Text>
+  </TouchableOpacity>
+
+  <TouchableOpacity
+    style={styles.navItem}
+    onPress={() => navigation.navigate('Reset')}
+  >
+    <Ionicons name="refresh-circle" size={35} color="#97d0feff" />
+    <Text style={styles.navText}>RESET</Text>
+  </TouchableOpacity>
+
+  <TouchableOpacity
+    style={styles.navItem}
+    onPress={() => navigation.navigate('Submit')}
+  >
+    <Ionicons name="checkmark-circle" size={35} color="#97d0feff" />
+    <Text style={styles.navText}>SUBMIT</Text>
+  </TouchableOpacity>
+
+  <TouchableOpacity
+    style={styles.navItem}
+    onPress={() => navigation.navigate('Next')}
+  >
+    <Ionicons name="arrow-forward-circle" size={35} color="#97d0feff" />
+    <Text style={styles.navText}>NEXT</Text>
+  </TouchableOpacity>
+</View>
+
   </LinearGradient>
 );
 };

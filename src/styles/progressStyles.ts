@@ -24,7 +24,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
-    elevation: 2,
     borderWidth: 1,
     borderColor: '#4682B4',
     shadowColor: '#313131ff',
@@ -76,28 +75,30 @@ const styles = StyleSheet.create({
   userWrapper: {
     alignItems: 'center',
     justifyContent: 'flex-start',
-    marginRight: 8,
-    paddingTop: 8,
+    marginRight: 5,
+    paddingTop: 5,
     minWidth: 60,
   },
   userLabel: {
-    fontSize: 16,
+    fontSize: 14,
     color: '#077bb4ff',
     fontFamily: 'ArchitectsDaughter-Regular',
-    marginTop: -2,
+    marginTop: -5,
     textAlign: 'center',
   },
   navText: {
-    fontSize: 16,
-    fontFamily: 'ArchitectsDaughter',
-    color: '#82c0f3ff',
+    fontSize: 14,
+    color: '#97d0feff',
+    fontFamily: 'ArchitectsDaughter-Regular',
+    marginTop: 4,
     textAlign: 'center',
+    width: '100%', 
   },
   navItem: {
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'column',
-    marginHorizontal: 10
+    marginHorizontal: 10,
   },
 });
 

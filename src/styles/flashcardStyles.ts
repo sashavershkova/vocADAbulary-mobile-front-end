@@ -128,7 +128,6 @@ export default StyleSheet.create({
   navItem: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginHorizontal: 12,
   },
   navText: {
     fontSize: 16,
@@ -144,10 +143,10 @@ export default StyleSheet.create({
     minWidth: 60,
   },
   userLabel: {
-    fontSize: 16,
+    fontSize: 14,
     color: '#2c6f33',
     fontFamily: 'ArchitectsDaughter-Regular',
-    marginTop: -2,
+    marginTop: -5,
     textAlign: 'center',
   },
 });

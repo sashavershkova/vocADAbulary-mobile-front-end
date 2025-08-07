@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 20,
-    borderWidth: 2,
+    borderWidth: 1.5,
   },
   initialsText: {
     fontFamily: 'ArchitectsDaughter-Regular',
@@ -83,10 +83,10 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   userLabel: {
-    fontSize: 16,
+    fontSize: 14,
     color: '#246396',
     fontFamily: 'ArchitectsDaughter-Regular',
-    marginTop: -4,
+    marginTop: -5,
     textAlign: 'center',
   },
 

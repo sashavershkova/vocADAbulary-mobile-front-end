@@ -5,6 +5,8 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigation';
 import styles from '../styles/homeStyles';
 import { useMockUser } from '../context/UserContext';
+import LearnIcon from '../assets/images/stickman.png';
+import { Image } from 'react-native';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
@@ -73,6 +75,7 @@ const HomeScreen = ({ navigation }: Props) => {
         onPress={() => navigation.navigate('Topics')}
       >
         <Text style={styles.learnText}>LEARN</Text>
+        <Image source={LearnIcon} style={styles.icon} />
       </TouchableOpacity>
 
       <TouchableOpacity

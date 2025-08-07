@@ -101,7 +101,6 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOpacity: 0.15,
     shadowRadius: 2,
-    elevation: 2,
   },
   navText: {
     fontSize: 14,
@@ -119,11 +118,16 @@ const styles = StyleSheet.create({
     minWidth: 60,
   },
   userLabel: {
-    fontSize: 16,
+    fontSize: 14,
     color: '#246396',
     fontFamily: 'ArchitectsDaughter-Regular',
-    marginTop: -2,
+    marginTop: -5,
     textAlign: 'center',
+  },
+  navItem: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
   },
 });
 

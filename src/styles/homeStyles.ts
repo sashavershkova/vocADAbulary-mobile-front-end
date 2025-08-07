@@ -30,6 +30,12 @@ const styles = StyleSheet.create({
     color: '#006400',
     fontFamily: 'ArchitectsDaughter',
   },
+  icon: {
+  width: 100,
+  height: 100,
+  resizeMode: 'contain',
+  marginLeft: 80,
+},
   progressButton: {
     position: 'absolute',
     top: height * 0.015,
@@ -48,7 +54,7 @@ const styles = StyleSheet.create({
   },
   settingsButton: {
     position: 'absolute',
-    bottom: 115,
+    bottom: 120,
     right: 20,
     backgroundColor: '#e2a4f7e2',
     width: width * 0.22,
@@ -64,7 +70,7 @@ const styles = StyleSheet.create({
   },
   exitButton: {
     position: 'absolute',
-    bottom: 13,
+    bottom: 16,
     right: 20,
     backgroundColor: '#eeff00fd',
     width: 90,
@@ -195,10 +201,10 @@ const styles = StyleSheet.create({
     minWidth: 60,
   },
   userLabel: {
-    fontSize: 16,
+    fontSize: 14,
     color: '#2c6f33',
     fontFamily: 'ArchitectsDaughter-Regular',
-    marginTop: -2,
+    marginTop: -5,
     textAlign: 'center',
   },
 });
