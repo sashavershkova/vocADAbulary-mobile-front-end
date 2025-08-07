@@ -7,6 +7,9 @@ import {
   Alert,
   ActivityIndicator,
   View,
+  Modal,
+  TextInput,
+  Keyboard,
 } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -14,17 +17,24 @@ import { Ionicons } from '@expo/vector-icons';
 import styles from '../styles/topicsStyles';
 import { RootStackParamList } from '../types/navigation';
 import { getAllTopics } from '../api/topics';
-import { getFlashcardsByTopic } from '../api/flashcards';
+import { getFlashcardsByTopic, getAllFlashcards } from '../api/flashcards';
 import { useMockUser } from '../context/UserContext';
 import greenstick from '../assets/images/greenstick.png';
 import bluestick from '../assets/images/bluestick.png';
 import PopoverHint from '../screens/PopoverHint';
+import api from '../api/axiosInstance';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Topics'>;
 
-type Topic = {
+type Topic = { id: number; name: string };
+
+type FlashcardLite = {
   id: number;
-  name: string;
+  word: string;
+  definition?: string;
+  createdBy?: number | null;
+  topicId?: number | null;
+  topicName?: string | null;
 };
 
 const topicGradients: [string, string][] = [
@@ -46,22 +56,26 @@ const topicGradientsActive: [string, string][] = [
 const TopicsScreen = ({ navigation }: Props) => {
   const [hintVisible, setHintVisible] = useState(false);
   const isGreen = true;
+
   const { user } = useMockUser();
   const userId = user.id;
-  const username = user.username;
-  const initials = username?.charAt(0).toUpperCase() || '?';
+  const initials = user.username?.charAt(0).toUpperCase() || '?';
+
   const [topics, setTopics] = useState<Topic[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeId, setActiveId] = useState<number | null>(null);
 
+  // --- Search modal state ---
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [allMineOrPublic, setAllMineOrPublic] = useState<FlashcardLite[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchBusy, setSearchBusy] = useState(false);
 
   useLayoutEffect(() => {
     navigation.setOptions({
       title: 'TOPICS',
       headerBackVisible: false,
-      headerStyle: {
-        backgroundColor: '#abf5ab64',
-      },
+      headerStyle: { backgroundColor: '#abf5ab64' },
       headerTitleStyle: {
         fontFamily: 'ArchitectsDaughter-Regular',
         fontSize: 36,
@@ -69,10 +83,7 @@ const TopicsScreen = ({ navigation }: Props) => {
       },
       headerLeft: () => (
         <TouchableOpacity onPress={() => setHintVisible(true)} style={{ marginLeft: 10 }}>
-          <Image
-            source={isGreen ? greenstick : bluestick}
-            style={{ width: 30, height: 50 }}
-          />
+          <Image source={isGreen ? greenstick : bluestick} style={{ width: 30, height: 50 }} />
         </TouchableOpacity>
       ),
       headerRight: () => (
@@ -87,62 +98,111 @@ const TopicsScreen = ({ navigation }: Props) => {
   }, [navigation, initials]);
 
   useEffect(() => {
-    const fetchTopics = async () => {
+    (async () => {
       try {
         const data = await getAllTopics();
+        console.log('[topics count]', data.length, data.slice(0, 3));
         setTopics(data);
       } catch (err) {
         console.error('Error fetching topics:', err);
       } finally {
         setLoading(false);
       }
-    };
-    fetchTopics();
+    })();
   }, []);
 
-  const handleTopicPress = (topicId: number, topicName: string) => {
-    console.log(`${new Date().toISOString()} 👆 Topic pressed: ${topicId} (${topicName})`);
+  // Load all cards when the search opens; filter out other users’ cards
+  useEffect(() => {
+    if (!searchOpen) {
+      setSearchQuery('');
+      setAllMineOrPublic([]);
+      setSearchBusy(false);
+      return;
+    }
 
+    let cancelled = false;
+    (async () => {
+      setSearchBusy(true);
+      try {
+        const all = (await getAllFlashcards()) as FlashcardLite[];
+        const visible = all.filter((c) => c.createdBy == null || c.createdBy === userId);
+        if (!cancelled) setAllMineOrPublic(visible);
+      } catch (e) {
+        console.error('Search load failed:', e);
+        if (!cancelled) setAllMineOrPublic([]);
+      } finally {
+        if (!cancelled) setSearchBusy(false);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [searchOpen, userId]);
+
+  const handleTopicPress = (topicId: number, topicName: string) => {
     setActiveId(topicId);
 
     setTimeout(async () => {
-      console.log(`${new Date().toISOString()} ⏳ Starting flashcard fetch for topic ${topicId}`);
-
       try {
-        const fetchStart = Date.now();
         const flashcards = await getFlashcardsByTopic(topicId);
-        const fetchDuration = Date.now() - fetchStart;
-
-        console.log(`${new Date().toISOString()} 📥 Fetched ${flashcards.length} flashcards in ${fetchDuration} ms`);
-
         if (flashcards.length === 0) {
-          console.log(`${new Date().toISOString()} ⚠️ No flashcards found`);
           Alert.alert('Ooops! Could this be any more empty?');
           setActiveId(null);
           return;
         }
-
-        const randomCard =
-          flashcards[Math.floor(Math.random() * flashcards.length)];
-        console.log(`${new Date().toISOString()} 🎯 Random card selected: ${randomCard.id}`);
-
-        console.log(`${new Date().toISOString()} ⏩ Navigating to Flashcard screen...`);
+        const randomCard = flashcards[Math.floor(Math.random() * flashcards.length)];
         navigation.navigate('Flashcard', {
           flashcardId: randomCard.id,
           topicId,
           topicName,
-          flashcards, // Passing all flashcards for the topic
-        });
-
+          flashcards,
+        } as any);
       } catch (err) {
-        console.error(`${new Date().toISOString()} ❌ Error fetching flashcards:`, err);
         console.error('Error fetching flashcards:', err);
         Alert.alert('Failed to fetch flashcards');
       } finally {
-        console.log(`${new Date().toISOString()} ✅ Done handling topic press`);
         setActiveId(null);
       }
     }, 100);
+  };
+
+  const openSearchResult = async (card: FlashcardLite) => {
+    try {
+      let topicId = card.topicId ?? null;
+      let topicName = card.topicName ?? '';
+
+      // If topicId wasn't in the search result, fetch the card detail to get it
+      if (!topicId || topicId <= 0) {
+        try {
+          const { data } = await api.get(`/api/flashcards/${card.id}`);
+          topicId = data.topic?.id ?? data.topicId ?? null;
+          topicName = topicName || data.topic?.name || '';
+        } catch (err) {
+          console.error(`Failed to fetch topic for card ${card.id}:`, err);
+        }
+      }
+
+      if (topicId && topicId > 0) {
+        const deck = await getFlashcardsByTopic(topicId);
+        navigation.navigate('Flashcard', {
+          flashcardId: card.id,
+          topicId,
+          topicName,
+          flashcards: deck, // ✅ full deck so NEXT/BACK/SEARCH work
+        } as any);
+      } else {
+        // Fallback: no topic found, open single-card mode
+        navigation.navigate('Flashcard', {
+          flashcardId: card.id,
+          topicId: -1,
+          topicName: '',
+          singleCardMode: true,
+        } as any);
+      }
+    } finally {
+      setSearchOpen(false);
+    }
   };
 
   const renderTopic = ({ item, index }: { item: Topic; index: number }) => {
@@ -178,26 +238,28 @@ const TopicsScreen = ({ navigation }: Props) => {
     );
   };
 
+  const filtered =
+    searchQuery.trim().length < 2
+      ? []
+      : allMineOrPublic.filter((c) => {
+          const q = searchQuery.toLowerCase();
+          return (
+            (c.word && c.word.toLowerCase().includes(q)) ||
+            (c.definition && c.definition.toLowerCase().includes(q))
+          );
+        });
+
   return (
     <LinearGradient colors={['#abf5ab64', '#347134bc']} style={{ flex: 1 }}>
       <PopoverHint visible={hintVisible} onClose={() => setHintVisible(false)}>
         <Text style={styles.text}>
-          Welcome to the word playground - FALSHCARDS, Professor Proton!{"\n\n"}
-          Pick a topic — any topic. Each one's a wormhole into tech vocabulary.{"\n"}
-          Cards appear in random order, just like Sheldon's emotions.{"\n\n"}
-
-          Not sure how to say the word? Hit play — it's like Raj reading bedtime stories.{"\n"}
-          Still confused? Tap the hint. Think of it as Leonard patiently explaining to Penny.{"\n"}
-          Still lost? Flip the card like you're flipping universes in string theory.{"\n\n"}
-
-          All words start “In Progress” — kind of like Howard's mustache.{"\n"}
-          Once you mark a word as “Learned,” it joins the Quiz and Phrase Lab for its final showdown.{"\n"}
-          Fell in love with a word? Save it to your Wallet and whisper sweet nothings to it later.{"\n\n"}
-
-          Ready to study like Sheldon, struggle like Leonard, and shine like Penny on trivia night?{"\n"}
+          Welcome to the word playground - FLASHCARDS!{"\n\n"}
+          Pick a topic — any topic. Cards appear in random order.{"\n"}
+          Learned cards graduate to Quiz & Phrase Lab. Save your faves to Wallet.{"\n\n"}
           Bazinga awaits.
         </Text>
       </PopoverHint>
+
       <View style={{ flex: 1, paddingBottom: 70 }}>
         {loading ? (
           <View style={styles.loadingContainer}>
@@ -213,26 +275,76 @@ const TopicsScreen = ({ navigation }: Props) => {
         )}
       </View>
 
+      {/* Bottom bar — SAME icon & style as Flashcard screen */}
       <View style={styles.bottomBar}>
-        <TouchableOpacity
-          style={styles.navItem}
-          onPress={() => navigation.navigate('Home')}
-        >
+        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Home')}>
           <Ionicons name="home" size={35} color="#8feda0ff" />
           <Text style={styles.navText}>HOME</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.navItem}
-          onPress={() => {
-            console.log('Add button pressed (placeholder)');
-            navigation.navigate('Fallback');
-          }}
-        >
+        <TouchableOpacity style={styles.navItem} onPress={() => setSearchOpen(true)}>
+          <Ionicons name="search-outline" size={35} color="#8feda0ff" />
+          <Text style={styles.navText}>SEARCH</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Fallback')}>
           <Ionicons name="add-circle" size={35} color="#8feda0ff" />
           <Text style={styles.navText}>ADD</Text>
         </TouchableOpacity>
       </View>
+
+      {/* Search Modal */}
+      <Modal
+        visible={searchOpen}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setSearchOpen(false)}
+      >
+        <TouchableOpacity
+          style={styles.searchModalBackground}
+          activeOpacity={1}
+          onPress={Keyboard.dismiss}
+        >
+          <View style={styles.searchModalContainer}>
+            <Text style={styles.searchModalTitle}>Search Cards</Text>
+
+            <TextInput
+              placeholder="Type to search…"
+              value={searchQuery}
+              onChangeText={setSearchQuery}
+              style={styles.searchInput}
+              placeholderTextColor="#6ea089"
+              autoFocus
+            />
+
+            {searchBusy ? (
+              <ActivityIndicator size="large" color="#2c6f33" style={{ marginTop: 10 }} />
+            ) : filtered.length === 0 && searchQuery.trim().length >= 2 ? (
+              <Text style={styles.noResultsText}>No cards found.</Text>
+            ) : null}
+
+            {filtered.map((card) => (
+              <TouchableOpacity
+                key={card.id}
+                onPress={() => openSearchResult(card)}
+                style={styles.searchResultBox}
+                activeOpacity={0.8}
+              >
+                <Text style={styles.searchResultWord}>{card.word}</Text>
+                {!!card.definition && (
+                  <Text style={styles.searchResultDef} numberOfLines={2}>
+                    {card.definition}
+                  </Text>
+                )}
+              </TouchableOpacity>
+            ))}
+
+            <TouchableOpacity onPress={() => setSearchOpen(false)} style={styles.searchCloseBtn}>
+              <Text style={styles.searchCloseText}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
+      </Modal>
     </LinearGradient>
   );
 };
