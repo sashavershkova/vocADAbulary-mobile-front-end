@@ -1,12 +1,11 @@
 import React, { useLayoutEffect } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { Image, View, Text, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigation';
 import styles from '../styles/homeStyles';
 import { useMockUser } from '../context/UserContext';
 import LearnIcon from '../assets/images/stickman.png';
-import { Image } from 'react-native';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
@@ -21,13 +20,13 @@ const HomeScreen = ({ navigation }: Props) => {
       title: 'HOME',
       headerBackVisible: false,
       headerStyle: {
-      backgroundColor: '#abf5ab64', 
-    },
-    headerTitleStyle: {
-      fontFamily: 'ArchitectsDaughter-Regular',
-      fontSize: 36,
-      color: '#2c6f33', 
-    },
+        backgroundColor: '#abf5ab64',
+      },
+      headerTitleStyle: {
+        fontFamily: 'ArchitectsDaughter-Regular',
+        fontSize: 36,
+        color: '#2c6f33',
+      },
       headerRight: () => (
         <View style={styles.userWrapper}>
           <View style={styles.initialsCircle}>
@@ -45,10 +44,39 @@ const HomeScreen = ({ navigation }: Props) => {
       style={styles.container}
     >
       <TouchableOpacity
+        style={styles.learnButton}
+        onPress={() => navigation.navigate('Topics')}
+      >
+        <Text style={styles.learnText}>LEARN</Text>
+        <Image source={LearnIcon} style={styles.learnIcon} />
+      </TouchableOpacity>
+
+      <TouchableOpacity
         style={styles.progressButton}
         onPress={() => navigation.navigate('Progress', { userId, username })}
       >
         <Text style={styles.smallButtonText}>PROGRESS</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.quizButton}
+        onPress={() => navigation.navigate('Quiz')}
+      >
+        <Text style={styles.buttonText}>QUIZ</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.walletButton}
+        onPress={() => navigation.navigate('Wallet')}
+      >
+        <Text style={styles.buttonText}>WALLET</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.constructorButton}
+        onPress={() => navigation.navigate('Constructor')}
+      >
+        <Text style={styles.buttonText}>CONSTRUCTOR</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
@@ -70,34 +98,6 @@ const HomeScreen = ({ navigation }: Props) => {
         <Text style={styles.buttonText}>EXIT</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity
-        style={styles.learnButton}
-        onPress={() => navigation.navigate('Topics')}
-      >
-        <Text style={styles.learnText}>LEARN</Text>
-        <Image source={LearnIcon} style={styles.icon} />
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={styles.constructorButton}
-        onPress={() => navigation.navigate('Constructor')}
-      >
-        <Text style={styles.buttonText}>CONSTRUCTOR</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={styles.walletButton}
-        onPress={() => navigation.navigate('Wallet')}
-      >
-        <Text style={styles.buttonText}>WALLET</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={styles.quizButton}
-        onPress={() => navigation.navigate('Quiz')}
-      >
-        <Text style={styles.buttonText}>QUIZ</Text>
-      </TouchableOpacity>
     </LinearGradient>
   );
 };

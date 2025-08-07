@@ -30,11 +30,11 @@ const styles = StyleSheet.create({
     color: '#006400',
     fontFamily: 'ArchitectsDaughter',
   },
-  icon: {
+  learnIcon: {
   width: 100,
   height: 100,
   resizeMode: 'contain',
-  marginLeft: 80,
+  marginLeft: 20,
 },
   progressButton: {
     position: 'absolute',
