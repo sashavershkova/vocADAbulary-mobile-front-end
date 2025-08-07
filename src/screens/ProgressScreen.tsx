@@ -106,8 +106,8 @@ const ProgressScreen = () => {
           style={styles.navItem}
           onPress={() => navigation.navigate('Home')}
         >
-          <Ionicons name="home" size={30} color="#97d0feff" />
-          <Text style={styles.navText}>Home</Text>
+          <Ionicons name="home" size={35} color="#97d0feff" />
+          <Text style={styles.navText}>HOME</Text>
         </TouchableOpacity>
       </View>
     </LinearGradient>

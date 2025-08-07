@@ -27,7 +27,7 @@ const FallbackScreen: React.FC = () => {
         onPress={() => navigation.navigate('Home')}
       >
         <Ionicons name="home" size={20} color="#006400" />
-        <Text style={styles.homeButtonText}>Go Home</Text>
+        <Text style={styles.homeButtonText}>GO HOME</Text>
       </TouchableOpacity>
     </View>
   );

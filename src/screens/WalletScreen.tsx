@@ -208,7 +208,7 @@ const WalletScreen = () => {
           onPress={() => navigation.navigate("Home")}
         >
           <Ionicons name="home" size={35} color="#97d0feff" />
-          <Text style={styles.navText}>Home</Text>
+          <Text style={styles.navText}>HOME</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -216,7 +216,7 @@ const WalletScreen = () => {
           onPress={() => navigation.navigate("NewFlashcard" as never, { topicId: 0 } as never)}
         >
           <Ionicons name="add-circle" size={35} color="#97d0feff" />
-          <Text style={styles.navText}>Add</Text>
+          <Text style={styles.navText}>ADD</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -224,7 +224,7 @@ const WalletScreen = () => {
           onPress={() => navigation.navigate("LearnedCards" as never)}
         >
           <FontAwesome5 name="piggy-bank" size={35} color="#97d0feff" />
-          <Text style={styles.navText}>Piggy Bank</Text>
+          <Text style={styles.navText}>PIGGY BANK</Text>
         </TouchableOpacity>
       </View>
     </LinearGradient>

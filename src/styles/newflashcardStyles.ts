@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 20,
-    borderWidth: 2,
+    borderWidth: 1.5,
   },
   initialsText: {
     fontFamily: 'ArchitectsDaughter-Regular',
@@ -83,10 +83,10 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   userLabel: {
-    fontSize: 16,
+    fontSize: 14,
     color: '#246396',
     fontFamily: 'ArchitectsDaughter-Regular',
-    marginTop: -4,
+    marginTop: -5,
     textAlign: 'center',
   },
 
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
 
   dropdownHeader: {
     backgroundColor: '#ffffff',
-    borderRadius: 20,
+    borderRadius: 30,
     paddingVertical: 12,
     paddingHorizontal: 16,
     flexDirection: 'row',
@@ -124,23 +124,23 @@ const styles = StyleSheet.create({
     // fontFamily: 'ArchitectsDaughter-Regular',
   },
 
-  // dropdownOverlay: {
-  //   position: 'absolute',
-  //   top: 60,
-  //   left: 0,
-  //   right: 0,
-  //   backgroundColor: '#ffffffee',
-  //   borderRadius: 20,
-  //   maxHeight: 200,
-  //   zIndex: 100,
-  //   shadowColor: '#000',
-  //   shadowOpacity: 0.2,
-  //   shadowOffset: { width: 0, height: 4 },
-  // },
+  dropdownOverlay: {
+    position: 'absolute',
+    top: 60,
+    left: 0,
+    right: 0,
+    backgroundColor: '#ffffffee',
+    borderRadius: 20,
+    maxHeight: 200,
+    zIndex: 100,
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowOffset: { width: 0, height: 4 },
+  },
 
-  // dropdownList: {
-  //   paddingVertical: 6,
-  // },
+  dropdownList: {
+    paddingVertical: 6,
+  },
 
   dropdownItem: {
     paddingVertical: 10,

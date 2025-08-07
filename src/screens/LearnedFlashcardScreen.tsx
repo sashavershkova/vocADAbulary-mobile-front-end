@@ -114,7 +114,7 @@ const LearnedFlashcardsScreen = () => {
                   <View style={styles.returnCircle}>
                     <Ionicons name="return-up-back" size={24} color="#246396" />
                   </View>
-                  <Text style={styles.returnLabel}>Unwallet</Text>
+                  <Text style={styles.returnLabel}>UNWALLET</Text>
                 </View>
               </TouchableOpacity>
             </View>
@@ -127,8 +127,8 @@ const LearnedFlashcardsScreen = () => {
           style={styles.navItem}
           onPress={() => navigation.navigate('Home')}
         >
-          <Ionicons name="home" size={30} color="#97d0feff" />
-          <Text style={styles.navText}>Home</Text>
+          <Ionicons name="home" size={35} color="#97d0feff" />
+          <Text style={styles.navText}>HOME</Text>
         </TouchableOpacity>
       </View>
     </LinearGradient>

@@ -3,10 +3,11 @@ import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 40,
+    paddingTop: 20,
     paddingHorizontal: 10,
-    alignItems: 'center',
-    justifyContent: 'flex-start',
+    shadowColor: '#313131ff',
+    shadowOpacity: 0.8,
+    shadowOffset: { width: 3, height: 6 },
   },
   buttonGroup: {
     marginTop: 20,
@@ -23,7 +24,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
-    elevation: 2,
     borderWidth: 1,
     borderColor: '#4682B4',
     shadowColor: '#313131ff',
@@ -75,28 +75,30 @@ const styles = StyleSheet.create({
   userWrapper: {
     alignItems: 'center',
     justifyContent: 'flex-start',
-    marginRight: 8,
-    paddingTop: 8,
+    marginRight: 5,
+    paddingTop: 5,
     minWidth: 60,
   },
   userLabel: {
-    fontSize: 16,
+    fontSize: 14,
     color: '#077bb4ff',
     fontFamily: 'ArchitectsDaughter-Regular',
-    marginTop: -2,
+    marginTop: -5,
     textAlign: 'center',
   },
   navText: {
-    fontSize: 16,
-    fontFamily: 'ArchitectsDaughter',
-    color: '#82c0f3ff',
+    fontSize: 14,
+    color: '#97d0feff',
+    fontFamily: 'ArchitectsDaughter-Regular',
+    marginTop: 4,
     textAlign: 'center',
+    width: '100%', 
   },
   navItem: {
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'column',
-    marginHorizontal: 10
+    marginHorizontal: 10,
   },
 });
 

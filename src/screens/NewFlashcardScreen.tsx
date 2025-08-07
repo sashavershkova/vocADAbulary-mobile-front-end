@@ -179,12 +179,12 @@ const NewFlashcardScreen = () => {
     <View style={styles.bottomBar}>
       <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate("Home")}>
         <Ionicons name="home" size={35} color="#97d0feff" />
-        <Text style={styles.navText}>Home</Text>
+        <Text style={styles.navText}>HOME</Text>
       </TouchableOpacity>
 
       <TouchableOpacity onPress={handleSave} style={styles.navItem}>
         <Ionicons name="checkmark-circle" size={35} color="#97d0feff" />
-        <Text style={styles.navText}>Submit</Text>
+        <Text style={styles.navText}>SUBMIT</Text>
       </TouchableOpacity>
     </View>
   </LinearGradient>
