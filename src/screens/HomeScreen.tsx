@@ -1,20 +1,24 @@
-import React, { useLayoutEffect } from 'react';
+import React, { useLayoutEffect, useState } from 'react';
 import { Image, View, Text, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigation';
 import styles from '../styles/homeStyles';
 import { useMockUser } from '../context/UserContext';
-import LearnIcon from '../assets/images/stickman.png';
 import QuizIcon from '../assets/images/quiz.png';
 import WalletIcon from '../assets/images/wallet.png';
 import ProgressIcon from '../assets/images/progress.png';
 import SettingsIcon from '../assets/images/settings.png';
 import ExitIcon from '../assets/images/exit.png';
+import greenstick from '../assets/images/greenstick.png';
+import bluestick from '../assets/images/bluestick.png';
+import PopoverHint from '../screens/PopoverHint';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
 const HomeScreen = ({ navigation }: Props) => {
+  const [hintVisible, setHintVisible] = useState(false);
+  const isGreen = true; // пока вручную
   const { user } = useMockUser();
   const userId = user.id;
   const username = user.username;
@@ -32,6 +36,14 @@ const HomeScreen = ({ navigation }: Props) => {
         fontSize: 36,
         color: '#2c6f33',
       },
+      headerLeft: () => (
+        <TouchableOpacity onPress={() => setHintVisible(true)} style={{ marginLeft: 10 }}>
+          <Image
+            source={isGreen ? greenstick : bluestick}
+            style={{ width: 30, height: 50 }}
+          />
+        </TouchableOpacity>
+      ),
       headerRight: () => (
         <View style={styles.userWrapper}>
           <View style={styles.initialsCircle}>
@@ -48,12 +60,28 @@ const HomeScreen = ({ navigation }: Props) => {
       colors={['#abf5ab64', '#347134bc']}
       style={styles.container}
     >
+      <PopoverHint visible={hintVisible} onClose={() => setHintVisible(false)}>
+        <Text style={styles.text}>
+          Do you have your TECH VOICE ready?{"\n\n"}
+          This is where you dive into learning, tweak your settings, track your nerdy progress… and all that jazz!{"\n"}
+          (Penny would be proud. Sheldon? Skeptical, but intrigued.){"\n\n"}
+
+          Head to LEARN to boost your vocab like a true tech wizard.{"\n\n"}
+          Test your skills in QUIZ and CONSTRUCTOR — no whiteboards or equations required.{"\n\n"}
+          Stash your favorite words in the WALLET, because knowledge is the new collectible.{"\n\n"}
+          Spy on your progress in PROGRESS.
+          (like Sheldon checking bus schedules — obsessively and with scientific precision).{"\n\n"}
+          And if you're feeling bold, mess with your voice in SETTINGS — we won't tell Leonard.{"\n\n"}
+
+          Because hey — training might be tough, but when the tech battle begins, you'll be ready.{"\n"}
+          Bazinga, genius!
+        </Text>
+      </PopoverHint>
       <TouchableOpacity
         style={styles.learnButton}
         onPress={() => navigation.navigate('Topics')}
       >
         <Text style={styles.learnText}>LEARN</Text>
-        <Image source={LearnIcon} style={styles.learnIcon} />
       </TouchableOpacity>
 
       <TouchableOpacity

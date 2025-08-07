@@ -1,12 +1,15 @@
 import React, { useEffect, useState, useLayoutEffect, useCallback } from 'react';
 import { useMockUser } from '../context/UserContext';
-import { View, Text, SafeAreaView, TouchableOpacity, Alert, ScrollView, ActivityIndicator } from 'react-native';
+import { Image, View, Text, TouchableOpacity, Alert, ScrollView, ActivityIndicator } from 'react-native';
 import styles from '../styles/quizStyles';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigation';
 import api from '../api/axiosInstance';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
+import greenstick from '../assets/images/greenstick.png';
+import bluestick from '../assets/images/bluestick.png';
+import PopoverHint from '../screens/PopoverHint';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Quiz'>;
 
@@ -24,6 +27,8 @@ type Quiz = {
 };
 
 const QuizScreen = ({ navigation }: Props) => {
+  const [hintVisible, setHintVisible] = useState(false);
+  const isGreen = false;
   const { user } = useMockUser();
   const username = user.username;
   const initials = username?.charAt(0).toUpperCase() || '?';
@@ -46,6 +51,14 @@ const QuizScreen = ({ navigation }: Props) => {
         fontSize: 36,
         color: '#246396',
       },
+      headerLeft: () => (
+        <TouchableOpacity onPress={() => setHintVisible(true)} style={{ marginLeft: 10 }}>
+          <Image
+            source={isGreen ? greenstick : bluestick}
+            style={{ width: 30, height: 50 }}
+          />
+        </TouchableOpacity>
+      ),
       headerRight: () => (
         <View style={styles.userWrapper}>
           <View style={styles.initialsCircle}>
@@ -156,67 +169,87 @@ const QuizScreen = ({ navigation }: Props) => {
   }
 
   return (
-  <LinearGradient colors={['#f7b4c4d6', '#bf86fcc2']} style={styles.container}>
-    <View style={styles.questionButton}>
-      <Text style={styles.questionText}>{currentQuiz.questionText}</Text>
-    </View>
+    <LinearGradient colors={['#f7b4c4d6', '#bf86fcc2']} style={styles.container}>
+      <View style={styles.questionButton}>
+        <Text style={styles.questionText}>{currentQuiz.questionText}</Text>
+      </View>
 
-    <ScrollView contentContainerStyle={styles.answersContainer}>
-      {currentQuiz.answers?.map((answer, index) => {
-        const isSelected = selectedAnswerId === index;
-        return (
-          <TouchableOpacity
-            key={index}
-            onPress={() => handleSelect(index)}
-            style={[
-              styles.answerBox,
-              !isSubmitted && isSelected && styles.selectedAnswerBox,
-              isSubmitted && answer.correct && styles.correctAnswerBox,
-              isSubmitted && isSelected && !answer.correct && styles.wrongAnswerBox,
-            ]}
-          >
-            <Text style={styles.answerText}>{answer.text}</Text>
-          </TouchableOpacity>
-        );
-      })}
-    </ScrollView>
+      <PopoverHint visible={hintVisible} onClose={() => setHintVisible(false)}>
+        <Text style={styles.text}>
+          Bazinga! You've entered the QUIZ Zone!{"\n\n"}
+          Each card is a question to test your technical superpowers (or at least your memory).{"\n"}
+          Your job? Pick the correct answer and try not to pull a Sheldon.{"\n\n"}
 
-    <View style={styles.bottomBar}>
-  <TouchableOpacity
-    style={styles.navItem}
-    onPress={() => navigation.navigate('Home')}
-  >
-    <Ionicons name="home" size={35} color="#97d0feff" />
-    <Text style={styles.navText}>HOME</Text>
-  </TouchableOpacity>
+          Here's the twist:{"\n"}
+          - Every word will appear twice throughout the quiz.{"\n"}
+          - If you get it right both times — congrats, you're officially smarter than Raj before coffee.{"\n"}
+          - Get it wrong? No worries. Even Leonard needed a second chance.{"\n\n"}
 
-  <TouchableOpacity
-    style={styles.navItem}
-    onPress={() => navigation.navigate('Reset')}
-  >
-    <Ionicons name="refresh-circle" size={35} color="#97d0feff" />
-    <Text style={styles.navText}>RESET</Text>
-  </TouchableOpacity>
+          Treat this like your own personal CERN, smashing answers together until brilliance appears.{"\n\n"}
 
-  <TouchableOpacity
-    style={styles.navItem}
-    onPress={() => navigation.navigate('Submit')}
-  >
-    <Ionicons name="checkmark-circle" size={35} color="#97d0feff" />
-    <Text style={styles.navText}>SUBMIT</Text>
-  </TouchableOpacity>
+          Let's see if your brain is more Sheldon or Penny today.{"\n"}
+          Fun fact: Penny learned Java faster than Sheldon learned sarcasm.{"\n\n"}
 
-  <TouchableOpacity
-    style={styles.navItem}
-    onPress={() => navigation.navigate('Next')}
-  >
-    <Ionicons name="arrow-forward-circle" size={35} color="#97d0feff" />
-    <Text style={styles.navText}>NEXT</Text>
-  </TouchableOpacity>
-</View>
+          Good luck, genius! 
+        </Text>
+      </PopoverHint>
 
-  </LinearGradient>
-);
+      <ScrollView contentContainerStyle={styles.answersContainer}>
+        {currentQuiz.answers?.map((answer, index) => {
+          const isSelected = selectedAnswerId === index;
+          return (
+            <TouchableOpacity
+              key={index}
+              onPress={() => handleSelect(index)}
+              style={[
+                styles.answerBox,
+                !isSubmitted && isSelected && styles.selectedAnswerBox,
+                isSubmitted && answer.correct && styles.correctAnswerBox,
+                isSubmitted && isSelected && !answer.correct && styles.wrongAnswerBox,
+              ]}
+            >
+              <Text style={styles.answerText}>{answer.text}</Text>
+            </TouchableOpacity>
+          );
+        })}
+      </ScrollView>
+
+      <View style={styles.bottomBar}>
+        <TouchableOpacity
+          style={styles.navItem}
+          onPress={() => navigation.navigate('Home')}
+        >
+          <Ionicons name="home" size={35} color="#97d0feff" />
+          <Text style={styles.navText}>HOME</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.navItem}
+          onPress={() => navigation.navigate('Reset')}
+        >
+          <Ionicons name="refresh-circle" size={35} color="#97d0feff" />
+          <Text style={styles.navText}>RESET</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.navItem}
+          onPress={() => navigation.navigate('Submit')}
+        >
+          <Ionicons name="checkmark-circle" size={35} color="#97d0feff" />
+          <Text style={styles.navText}>SUBMIT</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.navItem}
+          onPress={() => navigation.navigate('Next')}
+        >
+          <Ionicons name="arrow-forward-circle" size={35} color="#97d0feff" />
+          <Text style={styles.navText}>NEXT</Text>
+        </TouchableOpacity>
+      </View>
+
+    </LinearGradient>
+  );
 };
 
 export default QuizScreen;

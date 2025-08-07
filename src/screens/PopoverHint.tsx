@@ -5,10 +5,10 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 type Props = {
   visible: boolean;
   onClose: () => void;
-  text: string;
+  children: React.ReactNode;
 };
 
-const PopoverHint = ({ visible, onClose, text }: Props) => {
+const PopoverHint = ({ visible, onClose, children }: Props) => {
   return (
     <Modal
       visible={visible}
@@ -18,9 +18,9 @@ const PopoverHint = ({ visible, onClose, text }: Props) => {
     >
       <TouchableOpacity style={styles.overlay} activeOpacity={1} onPress={onClose}>
         <View style={styles.popover}>
-          <Text style={styles.text}>{text}</Text>
+          <Text style={styles.text}>{children}</Text>
           <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-            <Ionicons name="close-circle" size={24} color="#2c6f33" />
+            <Ionicons name="close-circle" size={26} color="#767776ff" />
           </TouchableOpacity>
         </View>
       </TouchableOpacity>
@@ -34,10 +34,10 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'center',
     paddingTop: 70,
-    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+    backgroundColor: 'rgba(9, 9, 9, 0.1)',
   },
   popover: {
-    backgroundColor: '#fffbe6',
+    backgroundColor: '#fae6ffff', 
     padding: 16,
     borderRadius: 12,
     width: '85%',
@@ -45,18 +45,20 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
-    elevation: 6,
     position: 'relative',
-  },
-  text: {
-    fontSize: 16,
-    fontFamily: 'ArchitectsDaughter-Regular',
-    color: '#2c6f33',
   },
   closeButton: {
     position: 'absolute',
     top: 6,
     right: 6,
+  },
+  text: {
+    fontSize: 16,
+    fontFamily: 'ArchitectsDaughter-Regular',
+    color: '#767776ff',
+    textAlign: 'left',
+    paddingHorizontal: 8,
+    marginBottom: 12,
   },
 });
 

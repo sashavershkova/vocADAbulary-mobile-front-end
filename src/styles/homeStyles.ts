@@ -41,30 +41,45 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     resizeMode: 'contain',
+    shadowColor: '#313131ff',
+    shadowOpacity: 0.8,
+    shadowOffset: { width: 3, height: 6 },
   },
 
   settingsIcon: {
     width: 50,
     height: 50,
     resizeMode: 'contain',
+    shadowColor: '#313131ff',
+    shadowOpacity: 0.8,
+    shadowOffset: { width: 3, height: 6 },
   },
 
   walletIcon: {
     width: 70,
     height: 70,
     resizeMode: 'contain',
+    shadowColor: '#313131ff',
+    shadowOpacity: 0.8,
+    shadowOffset: { width: 3, height: 6 },
   },
 
   quizIcon: {
     width: 70,
     height: 70,
     resizeMode: 'contain',
+    shadowColor: '#313131ff',
+    shadowOpacity: 0.8,
+    shadowOffset: { width: 3, height: 6 },
   },
 
   exitIcon: {
     width: 50,
     height: 50,
     resizeMode: 'contain',
+    shadowColor: '#313131ff',
+    shadowOpacity: 0.8,
+    shadowOffset: { width: 3, height: 6 },
   },
 
   progressButton: {
@@ -116,7 +131,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 3, height: 6 },
   },
   buttonText: {
-    fontSize: 19,
+    fontSize: 20,
     fontFamily: 'ArchitectsDaughter',
     color: '#006400',
     textAlign: 'center',
@@ -240,6 +255,8 @@ const styles = StyleSheet.create({
     marginTop: -5,
     textAlign: 'center',
   },
+
+
 });
 
 export default styles;
