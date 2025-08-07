@@ -6,6 +6,11 @@ import { RootStackParamList } from '../types/navigation';
 import styles from '../styles/homeStyles';
 import { useMockUser } from '../context/UserContext';
 import LearnIcon from '../assets/images/stickman.png';
+import QuizIcon from '../assets/images/quiz.png';
+import WalletIcon from '../assets/images/wallet.png';
+import ProgressIcon from '../assets/images/progress.png';
+import SettingsIcon from '../assets/images/settings.png';
+import ExitIcon from '../assets/images/exit.png';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
@@ -56,6 +61,7 @@ const HomeScreen = ({ navigation }: Props) => {
         onPress={() => navigation.navigate('Progress', { userId, username })}
       >
         <Text style={styles.smallButtonText}>PROGRESS</Text>
+        <Image source={ProgressIcon} style={styles.progressIcon} />
       </TouchableOpacity>
 
       <TouchableOpacity
@@ -63,6 +69,7 @@ const HomeScreen = ({ navigation }: Props) => {
         onPress={() => navigation.navigate('Quiz')}
       >
         <Text style={styles.buttonText}>QUIZ</Text>
+        <Image source={QuizIcon} style={styles.quizIcon} />
       </TouchableOpacity>
 
       <TouchableOpacity
@@ -70,6 +77,7 @@ const HomeScreen = ({ navigation }: Props) => {
         onPress={() => navigation.navigate('Wallet')}
       >
         <Text style={styles.buttonText}>WALLET</Text>
+        <Image source={WalletIcon} style={styles.walletIcon} />
       </TouchableOpacity>
 
       <TouchableOpacity
@@ -77,6 +85,7 @@ const HomeScreen = ({ navigation }: Props) => {
         onPress={() => navigation.navigate('Constructor')}
       >
         <Text style={styles.buttonText}>CONSTRUCTOR</Text>
+        <Image source={QuizIcon} style={styles.quizIcon} />
       </TouchableOpacity>
 
       <TouchableOpacity
@@ -84,6 +93,7 @@ const HomeScreen = ({ navigation }: Props) => {
         onPress={() => navigation.navigate('Settings')}
       >
         <Text style={styles.smallButtonText}>SETTINGS</Text>
+        <Image source={SettingsIcon} style={styles.settingsIcon} />
       </TouchableOpacity>
 
       <TouchableOpacity
@@ -96,6 +106,7 @@ const HomeScreen = ({ navigation }: Props) => {
         }
       >
         <Text style={styles.buttonText}>EXIT</Text>
+        <Image source={ExitIcon} style={styles.exitIcon} />
       </TouchableOpacity>
 
     </LinearGradient>

@@ -25,17 +25,48 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 3, height: 6 },
   },
   learnText: {
-    fontSize: 32,
+    fontSize: 50,
     fontWeight: 'bold',
     color: '#006400',
     fontFamily: 'ArchitectsDaughter',
   },
   learnIcon: {
-  width: 100,
-  height: 100,
-  resizeMode: 'contain',
-  marginLeft: 20,
-},
+    width: 100,
+    height: 100,
+    resizeMode: 'contain',
+    marginLeft: 130,
+  },
+
+  progressIcon: {
+    width: 50,
+    height: 50,
+    resizeMode: 'contain',
+  },
+
+  settingsIcon: {
+    width: 50,
+    height: 50,
+    resizeMode: 'contain',
+  },
+
+  walletIcon: {
+    width: 70,
+    height: 70,
+    resizeMode: 'contain',
+  },
+
+  quizIcon: {
+    width: 70,
+    height: 70,
+    resizeMode: 'contain',
+  },
+
+  exitIcon: {
+    width: 50,
+    height: 50,
+    resizeMode: 'contain',
+  },
+
   progressButton: {
     position: 'absolute',
     top: height * 0.015,
@@ -89,12 +120,14 @@ const styles = StyleSheet.create({
     fontFamily: 'ArchitectsDaughter',
     color: '#006400',
     textAlign: 'center',
+    marginBottom: -7
   },
   smallButtonText: {
-    fontSize: 16,
+    fontSize: 14,
     fontFamily: 'ArchitectsDaughter',
     color: '#006400',
     textAlign: 'center',
+    marginBottom: -7,
   },
   bottomButtonsContainer: {
     position: 'absolute',
@@ -122,8 +155,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 15,
     left: width * 0.05,
-    width: width * 0.22, 
-    height: 190, 
+    width: width * 0.22,
+    height: 190,
     backgroundColor: '#a1c1f5d6',
     justifyContent: 'center',
     alignItems: 'center',
