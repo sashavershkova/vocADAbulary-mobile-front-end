@@ -6,6 +6,8 @@ import {
   Alert,
   ActivityIndicator,
   Animated,
+  Modal,
+  TextInput,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useMockUser } from '../context/UserContext';
@@ -55,6 +57,11 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
   const [ttsLoading, setTtsLoading] = useState(false);
   const [showExample, setShowExample] = useState(false);
   const [flipped, setFlipped] = useState(false);
+
+  // --- Search modal states ---
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<Flashcard[]>([]);
 
   const flipAnim = useRef(new Animated.Value(0)).current;
   const hasEnsuredDir = useRef(false);
@@ -113,8 +120,6 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
     // If flashcards are passed from navigation, use them!
     if (passedFlashcards && Array.isArray(passedFlashcards) && passedFlashcards.length > 0) {
       setFlashcards(passedFlashcards);
-      console.log('Flashcards array:', passedFlashcards);
-      console.log('IDs:', passedFlashcards.map(f => f.id));
       const card = passedFlashcards.find(fc => fc.id === flashcardId) || passedFlashcards[0];
       setCurrentCard(card);
       setLoading(false);
@@ -214,6 +219,21 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
     }
   };
 
+  // --- SEARCH LOGIC ---
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+    if (query.trim().length === 0) {
+      setSearchResults([]);
+      return;
+    }
+    const q = query.toLowerCase();
+    const results = flashcards.filter(fc =>
+      fc.word.toLowerCase().includes(q) ||
+      (fc.definition && fc.definition.toLowerCase().includes(q))
+    );
+    setSearchResults(results);
+  };
+
   if (loading || !currentCard) {
     return <ActivityIndicator style={styles.loader} size="large" />;
   }
@@ -223,27 +243,61 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
       colors={['#abf5ab64', '#347134bc']}
       style={{ flex: 1 }}
     >
+      {/* Search Modal */}
+      <Modal
+        visible={searchOpen}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setSearchOpen(false)}
+      >
+        <View style={styles.searchModalBackground}>
+          <View style={styles.searchModalContainer}>
+            <Text style={styles.searchModalTitle}>Search Cards</Text>
+            <TextInput
+              placeholder="Type to search…"
+              value={searchQuery}
+              onChangeText={handleSearch}
+              style={styles.searchInput}
+              autoFocus
+            />
+            {searchResults.length === 0 && !!searchQuery && (
+              <Text style={styles.noResultsText}>No cards found.</Text>
+            )}
+            {searchResults.map(card => (
+              <TouchableOpacity
+                key={card.id}
+                onPress={() => {
+                  setCurrentCard(card);
+                  setShowExample(false);
+                  setFlipped(false);
+                  flipAnim.setValue(0);
+                  setSearchOpen(false);
+                  setSearchQuery('');
+                  setSearchResults([]);
+                }}
+                style={styles.searchResultBox}
+              >
+                <Text style={styles.searchResultWord}>
+                  {card.word}
+                </Text>
+                <Text style={styles.searchResultDef}>
+                  {card.definition?.slice(0, 40)}…
+                </Text>
+              </TouchableOpacity>
+            ))}
+            <TouchableOpacity onPress={() => setSearchOpen(false)} style={styles.searchCloseBtn}>
+              <Text style={styles.searchCloseText}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+      {/* End Search Modal */}
+
       <View style={styles.container}>
         {/* Topic label above card, top left */}
         {topicName && (
-          <View style={{ 
-            width: 370, // Same as card width
-            alignItems: 'flex-start', 
-            alignSelf: 'center',    // Center the container on the screen
-            marginBottom: 4,
-          }}>
-            <Text style={{
-              fontFamily: 'ArchitectsDaughter-Regular',
-              fontSize: 20,
-              color: '#2c6f33',
-              opacity: 0.88,
-              fontWeight: 'bold',
-              marginLeft: 10,
-              marginBottom: 3,
-              textShadowColor: '#c0e3bf',
-              textShadowRadius: 2,
-              letterSpacing: 0.2,
-            }}>
+          <View style={styles.topicLabelContainer}>
+            <Text style={styles.topicLabelText}>
               {topicName}
             </Text>
           </View>
@@ -371,11 +425,14 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
             <Ionicons name="home" size={35} color="#8feda0ff" />
             <Text style={styles.navText}>HOME</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Search')}>
+          <TouchableOpacity
+            style={styles.navItem}
+            onPress={() => setSearchOpen(true)}
+          >
             <Ionicons name="search-outline" size={35} color="#8feda0ff" />
             <Text style={styles.navText}>SEARCH</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={handleNext}>
+          <TouchableOpacity onPress={handlePrev}>
             <Ionicons name="arrow-back-circle" size={35} color="#8feda0ff" />
             <Text style={styles.navText}>BACK</Text>
           </TouchableOpacity>

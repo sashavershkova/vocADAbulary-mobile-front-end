@@ -55,14 +55,6 @@ export default StyleSheet.create({
     color: '#2c6f33',
     fontStyle: 'italic',
   },
-  // uncomment for rolling back to previous
-  // soundButton: {
-  //   position: 'absolute',
-  //   top: 10,
-  //   right: 10,
-  //   // zIndex: 2,
-  // },
-
   soundWrapper: {
     position: 'absolute',
     top: 10,
@@ -148,5 +140,94 @@ export default StyleSheet.create({
     fontFamily: 'ArchitectsDaughter-Regular',
     marginTop: -5,
     textAlign: 'center',
+  },
+
+  // TOPIC LABEL (above card)
+  topicLabelContainer: {
+    width: 370, // Same as card width
+    alignItems: 'flex-start',
+    alignSelf: 'center',
+    marginBottom: 4,
+  },
+  topicLabelText: {
+    fontFamily: 'ArchitectsDaughter-Regular',
+    fontSize: 20,
+    color: '#2c6f33',
+    opacity: 0.88,
+    fontWeight: 'bold',
+    marginLeft: 10,
+    marginBottom: 3,
+    textShadowColor: '#c0e3bf',
+    textShadowRadius: 2,
+    letterSpacing: 0.2,
+  },
+
+  // SEARCH MODAL STYLES
+  searchModalBackground: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.20)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  searchModalContainer: {
+    backgroundColor: '#d1f3d9',
+    padding: 24,
+    borderRadius: 18,
+    width: 340,
+    shadowColor: '#333',
+    shadowOpacity: 0.18,
+    shadowOffset: { width: 2, height: 6 },
+  },
+  searchModalTitle: {
+    fontFamily: 'ArchitectsDaughter-Regular',
+    fontSize: 24,
+    marginBottom: 8,
+    color: '#246396',
+    textAlign: 'center',
+  },
+  searchInput: {
+    borderColor: '#8feda0ff',
+    borderWidth: 1.5,
+    borderRadius: 10,
+    backgroundColor: '#fff',
+    padding: 8,
+    fontSize: 18,
+    fontFamily: 'ArchitectsDaughter-Regular',
+    marginBottom: 12,
+  },
+  noResultsText: {
+    color: '#777',
+    fontFamily: 'ArchitectsDaughter-Regular',
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  searchResultBox: {
+    padding: 8,
+    backgroundColor: '#eaffea',
+    borderRadius: 7,
+    marginVertical: 4,
+    borderWidth: 1,
+    borderColor: '#b8efb7',
+  },
+  searchResultWord: {
+    fontFamily: 'ArchitectsDaughter-Regular',
+    fontSize: 18,
+    color: '#246396',
+  },
+  searchResultDef: {
+    fontSize: 14,
+    color: '#555',
+    fontFamily: 'ArchitectsDaughter-Regular',
+  },
+  searchCloseBtn: {
+    marginTop: 16,
+    alignSelf: 'center',
+  },
+  searchCloseText: {
+    color: '#37745b',
+    fontFamily: 'ArchitectsDaughter-Regular',
+    fontSize: 18,
+    fontWeight: 'bold',
+    opacity: 0.8,
   },
 });
