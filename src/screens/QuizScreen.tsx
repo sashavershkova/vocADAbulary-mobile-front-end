@@ -182,38 +182,23 @@ const QuizScreen = ({ navigation }: Props) => {
     </ScrollView>
 
     <View style={styles.bottomBar}>
-  <TouchableOpacity
-    style={styles.navItem}
-    onPress={() => navigation.navigate('Home')}
-  >
-    <Ionicons name="home" size={35} color="#97d0feff" />
-    <Text style={styles.navText}>HOME</Text>
-  </TouchableOpacity>
-
-  <TouchableOpacity
-    style={styles.navItem}
-    onPress={() => navigation.navigate('Reset')}
-  >
-    <Ionicons name="refresh-circle" size={35} color="#97d0feff" />
-    <Text style={styles.navText}>RESET</Text>
-  </TouchableOpacity>
-
-  <TouchableOpacity
-    style={styles.navItem}
-    onPress={() => navigation.navigate('Submit')}
-  >
-    <Ionicons name="checkmark-circle" size={35} color="#97d0feff" />
-    <Text style={styles.navText}>SUBMIT</Text>
-  </TouchableOpacity>
-
-  <TouchableOpacity
-    style={styles.navItem}
-    onPress={() => navigation.navigate('Next')}
-  >
-    <Ionicons name="arrow-forward-circle" size={35} color="#97d0feff" />
-    <Text style={styles.navText}>NEXT</Text>
-  </TouchableOpacity>
-</View>
+      <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Home')}>
+        <Ionicons name="home" size={30} color="#97d0feff" />
+        <Text style={styles.navText}>Home</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.navItem} onPress={handleReset}>
+        <Ionicons name="refresh-circle" size={35} color="#97d0feff" />
+        <Text style={styles.navText}>Reset</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.navItem} onPress={handleSubmit}>
+        <Ionicons name="checkmark-circle" size={35} color="#97d0feff" />
+        <Text style={styles.navText}>Submit</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.navItem} onPress={handleNext}>
+        <Ionicons name="arrow-forward-circle" size={35} color="#97d0feff" />
+        <Text style={styles.navText}>Forward</Text>
+      </TouchableOpacity>
+    </View>
 
   </LinearGradient>
 );
