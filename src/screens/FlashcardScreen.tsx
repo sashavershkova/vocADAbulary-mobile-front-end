@@ -33,10 +33,13 @@ type Flashcard = {
   definition: string;
   example: string;
   audioUrl: string;
-  createdBy: number;
+  createdBy: number | null;     // ⬅️ allow null (public card)
   phonetic?: string;
   synonyms?: string;
 };
+
+const filterVisible = (cards: Flashcard[], userId: number) =>
+  cards.filter(c => c.createdBy == null || c.createdBy === userId);
 
 const logTime = (label: string) => {
   const now = new Date();
@@ -91,9 +94,7 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
     navigation.setOptions({
       title: 'FLASHCARDS',
       headerBackVisible: false,
-      headerStyle: {
-        backgroundColor: '#abf5ab64',
-      },
+      headerStyle: { backgroundColor: '#abf5ab64' },
       headerTitleStyle: {
         fontFamily: 'ArchitectsDaughter-Regular',
         fontSize: 36,
@@ -117,29 +118,48 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
       hasEnsuredDir.current = true;
     }
 
-    // If flashcards are passed from navigation, use them!
-    if (passedFlashcards && Array.isArray(passedFlashcards) && passedFlashcards.length > 0) {
-      setFlashcards(passedFlashcards);
-      const card = passedFlashcards.find(fc => fc.id === flashcardId) || passedFlashcards[0];
-      setCurrentCard(card);
-      setLoading(false);
-    } else {
-      // Fallback: fetch only the current card
-      const fetchSingle = async () => {
-        setLoading(true);
-        try {
-          const detailResponse = await api.get(`/api/flashcards/${flashcardId}`);
-          setCurrentCard(detailResponse.data);
-          setFlashcards([detailResponse.data]);
-        } catch (error) {
-          console.error('Error loading flashcard:', error);
-        } finally {
-          setLoading(false);
+    const init = async () => {
+      setLoading(true);
+      try {
+        if (passedFlashcards && Array.isArray(passedFlashcards) && passedFlashcards.length > 0) {
+          // Filter the incoming deck so it's only public + mine
+          const visible = filterVisible(passedFlashcards as Flashcard[], userId);
+
+          if (visible.length === 0) {
+            Alert.alert('Nothing to study', 'No visible cards for this topic.');
+            navigation.goBack();
+            return;
+          }
+
+          setFlashcards(visible);
+
+          // Prefer the requested card if still visible; otherwise pick the first
+          const candidate = visible.find(fc => fc.id === flashcardId) || visible[0];
+          setCurrentCard(candidate);
+        } else {
+          // Fallback: fetch only the current card; block others' private cards
+          const { data } = await api.get(`/api/flashcards/${flashcardId}`);
+          const allowed = data.createdBy == null || data.createdBy === userId;
+
+          if (!allowed) {
+            Alert.alert('Not available', 'This card belongs to another user.');
+            navigation.goBack();
+            return;
+          }
+
+          setCurrentCard(data);
+          setFlashcards([data]);
         }
-      };
-      fetchSingle();
-    }
-  }, [route.params]);
+      } catch (error) {
+        console.error('Error loading flashcard(s):', error);
+        Alert.alert('Error', 'Could not load flashcards.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    init();
+  }, [route.params, userId, navigation]);
 
   // Index helpers for navigation
   const getCurrentIndex = () =>
@@ -219,7 +239,7 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
     }
   };
 
-  // --- SEARCH LOGIC ---
+  // --- SEARCH (within current deck) ---
   const handleSearch = (query: string) => {
     setSearchQuery(query);
     if (query.trim().length === 0) {
@@ -239,10 +259,7 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
   }
 
   return (
-    <LinearGradient
-      colors={['#abf5ab64', '#347134bc']}
-      style={{ flex: 1 }}
-    >
+    <LinearGradient colors={['#abf5ab64', '#347134bc']} style={{ flex: 1 }}>
       {/* Search Modal */}
       <Modal
         visible={searchOpen}
@@ -277,9 +294,7 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
                 }}
                 style={styles.searchResultBox}
               >
-                <Text style={styles.searchResultWord}>
-                  {card.word}
-                </Text>
+                <Text style={styles.searchResultWord}>{card.word}</Text>
                 <Text style={styles.searchResultDef}>
                   {card.definition?.slice(0, 40)}…
                 </Text>
@@ -297,9 +312,7 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
         {/* Topic label above card, top left */}
         {topicName && (
           <View style={styles.topicLabelContainer}>
-            <Text style={styles.topicLabelText}>
-              {topicName}
-            </Text>
+            <Text style={styles.topicLabelText}>{topicName}</Text>
           </View>
         )}
 
@@ -321,9 +334,7 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
               </TouchableOpacity>
               {currentCard?.phonetic && (
                 <View style={styles.phoneticsBlob}>
-                  <Text style={styles.phoneticsText}>
-                    /{currentCard.phonetic}
-                  </Text>
+                  <Text style={styles.phoneticsText}>/{currentCard.phonetic}</Text>
                 </View>
               )}
             </View>
@@ -333,10 +344,7 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
               <Animated.View
                 style={[
                   styles.card,
-                  {
-                    backfaceVisibility: 'hidden',
-                    transform: [{ rotateY: frontInterpolate }],
-                  },
+                  { backfaceVisibility: 'hidden', transform: [{ rotateY: frontInterpolate }] },
                 ]}
                 pointerEvents={flipped ? 'none' : 'auto'}
               >
@@ -350,25 +358,13 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
 
                 <View style={styles.cardButtons}>
                   <TouchableOpacity onPress={handleDelete} activeOpacity={0.7}>
-                    <Ionicons
-                      name="trash"
-                      size={30}
-                      color="rgba(216, 129, 245, 1)"
-                    />
+                    <Ionicons name="trash" size={30} color="rgba(216, 129, 245, 1)" />
                   </TouchableOpacity>
                   <TouchableOpacity onPress={handleAddToWallet} activeOpacity={0.7}>
-                    <Ionicons
-                      name="wallet"
-                      size={30}
-                      color="rgba(216, 129, 245, 1)"
-                    />
+                    <Ionicons name="wallet" size={30} color="rgba(216, 129, 245, 1)" />
                   </TouchableOpacity>
                   <TouchableOpacity onPress={() => updateStatus('LEARNED')} activeOpacity={0.7}>
-                    <Ionicons
-                      name="checkmark-circle"
-                      size={30}
-                      color="rgba(216, 129, 245, 1)"
-                    />
+                    <Ionicons name="checkmark-circle" size={30} color="rgba(216, 129, 245, 1)" />
                   </TouchableOpacity>
                 </View>
               </Animated.View>
@@ -407,28 +403,20 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
             <View style={styles.exampleBubble}>
               <Text style={styles.exampleText}>
                 Example:
-                {"\n"}
+                {'\n'}
                 {currentCard.example}
-                {currentCard.synonyms
-                  ? `\n\nSynonyms:\n${currentCard.synonyms}`
-                  : ""}
+                {currentCard.synonyms ? `\n\nSynonyms:\n${currentCard.synonyms}` : ''}
               </Text>
             </View>
           )}
         </View>
 
         <View style={styles.bottomBar}>
-          <TouchableOpacity
-            style={styles.navItem}
-            onPress={() => navigation.navigate('Home')}
-          >
+          <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Home')}>
             <Ionicons name="home" size={35} color="#8feda0ff" />
             <Text style={styles.navText}>HOME</Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.navItem}
-            onPress={() => setSearchOpen(true)}
-          >
+          <TouchableOpacity style={styles.navItem} onPress={() => setSearchOpen(true)}>
             <Ionicons name="search-outline" size={35} color="#8feda0ff" />
             <Text style={styles.navText}>SEARCH</Text>
           </TouchableOpacity>
