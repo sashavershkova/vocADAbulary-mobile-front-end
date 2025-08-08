@@ -171,11 +171,12 @@ const styles = StyleSheet.create({
   searchModalBackground: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.20)',
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     alignItems: 'center',
+    paddingBottom: 105,
   },
   searchModalContainer: {
-    backgroundColor: '#d1f3d9',
+    backgroundColor: '#fae6ffff',
     padding: 24,
     borderRadius: 18,
     width: 340,
@@ -188,17 +189,17 @@ const styles = StyleSheet.create({
     fontFamily: 'ArchitectsDaughter-Regular',
     fontSize: 24,
     marginBottom: 8,
-    color: '#246396',
+    color: '#2c6f33',
     textAlign: 'center',
   },
   searchInput: {
-    borderColor: '#8feda0ff',
+    borderColor: '#2c6f33',
     borderWidth: 1.5,
     borderRadius: 10,
     backgroundColor: '#fff',
     padding: 8,
     fontSize: 18,
-    fontFamily: 'ArchitectsDaughter-Regular',
+    fontFamily: 'Helvetica Neue',
     marginBottom: 12,
   },
   noResultsText: {
@@ -226,15 +227,15 @@ const styles = StyleSheet.create({
     fontFamily: 'ArchitectsDaughter-Regular',
   },
   searchCloseBtn: {
-    marginTop: 16,
-    alignSelf: 'center',
+    position: 'absolute',
+    top: 6,
+    right: 6,
   },
   searchCloseText: {
-    color: '#37745b',
+    color: '#767776ff',
     fontFamily: 'ArchitectsDaughter-Regular',
     fontSize: 18,
     fontWeight: 'bold',
-    opacity: 0.8,
   },
 });
 

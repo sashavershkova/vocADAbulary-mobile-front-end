@@ -171,7 +171,7 @@ export default StyleSheet.create({
     paddingBottom: 105,
   },
   searchModalContainer: {
-    backgroundColor: '#d1f3d9',
+    backgroundColor: '#fae6ffff',
     padding: 24,
     borderRadius: 18,
     width: 340,
@@ -187,7 +187,7 @@ export default StyleSheet.create({
     textAlign: 'center',
   },
   searchInput: {
-    borderColor: '#8feda0ff',
+    borderColor: '#2c6f33',
     borderWidth: 1.5,
     borderRadius: 10,
     backgroundColor: '#fff',

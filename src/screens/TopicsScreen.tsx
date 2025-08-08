@@ -242,12 +242,12 @@ const TopicsScreen = ({ navigation }: Props) => {
     searchQuery.trim().length < 2
       ? []
       : allMineOrPublic.filter((c) => {
-          const q = searchQuery.toLowerCase();
-          return (
-            (c.word && c.word.toLowerCase().includes(q)) ||
-            (c.definition && c.definition.toLowerCase().includes(q))
-          );
-        });
+        const q = searchQuery.toLowerCase();
+        return (
+          (c.word && c.word.toLowerCase().includes(q)) ||
+          (c.definition && c.definition.toLowerCase().includes(q))
+        );
+      });
 
   return (
     <LinearGradient colors={['#abf5ab64', '#347134bc']} style={{ flex: 1 }}>
@@ -339,8 +339,11 @@ const TopicsScreen = ({ navigation }: Props) => {
               </TouchableOpacity>
             ))}
 
-            <TouchableOpacity onPress={() => setSearchOpen(false)} style={styles.searchCloseBtn}>
-              <Text style={styles.searchCloseText}>Close</Text>
+            <TouchableOpacity
+              onPress={() => setSearchOpen(false)}
+              style={styles.searchCloseBtn}
+            >
+              <Ionicons name="close-circle" size={22} color="#767776ff" />
             </TouchableOpacity>
           </View>
         </TouchableOpacity>
