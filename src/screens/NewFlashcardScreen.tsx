@@ -46,7 +46,7 @@ const NewFlashcardScreen = () => {
         backgroundColor: "#b0f4c9ff",
       },
       headerTitleStyle: {
-        fontFamily: "ArchitectsDaughter-Regular",
+        fontFamily: "ArchitectsDaughter",
         fontSize: 32,
         color: "#246396",
       },

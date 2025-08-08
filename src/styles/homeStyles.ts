@@ -209,7 +209,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 24,
-    fontFamily: 'ArchitectsDaughter-Bold',
+    fontFamily: 'ArchitectsDaughter',
     color: '#2c6f33ff',
   },
   userCircle: {
@@ -236,7 +236,7 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
   },
   initialsText: {
-    fontFamily: 'ArchitectsDaughter-Regular',
+    fontFamily: 'ArchitectsDaughter',
     color: '#2c6f33',
     fontWeight: 'bold',
     fontSize: 18,
@@ -251,7 +251,7 @@ const styles = StyleSheet.create({
   userLabel: {
     fontSize: 14,
     color: '#2c6f33',
-    fontFamily: 'ArchitectsDaughter-Regular',
+    fontFamily: 'ArchitectsDaughter',
     marginTop: -5,
     textAlign: 'center',
   },

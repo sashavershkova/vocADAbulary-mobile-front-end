@@ -76,18 +76,18 @@ const ProgressScreen = () => {
       headerBackVisible: false,
       headerStyle: { backgroundColor: '#f9bcdeff' },
       headerTitleStyle: {
-        fontFamily: 'ArchitectsDaughter-Regular',
+        fontFamily: 'ArchitectsDaughter',
         fontSize: 24,
         color: '#246396ff'
       },
       headerLeft: () => (
         <TouchableOpacity
           onPress={() => setHintVisible(true)}
-          style={{ marginLeft: 10 }}
+          style={{ marginLeft: 15 }}
         >
           <Image
             source={isGreen ? greenstick : bluestick}
-            style={{ width: 30, height: 50 }}
+            style={{ width: 30, height: 50, marginLeft: 15 }}
           />
         </TouchableOpacity>
       ),

@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
   },
   initialsText: {
-    fontFamily: 'ArchitectsDaughter-Regular',
+    fontFamily: 'ArchitectsDaughter',
     color: '#246396',
     fontWeight: 'bold',
     fontSize: 18,
@@ -83,14 +83,14 @@ const styles = StyleSheet.create({
   userLabel: {
     fontSize: 14,
     color: '#077bb4ff',
-    fontFamily: 'ArchitectsDaughter-Regular',
+    fontFamily: 'ArchitectsDaughter',
     marginTop: -5,
     textAlign: 'center',
   },
   navText: {
     fontSize: 14,
     color: '#97d0feff',
-    fontFamily: 'ArchitectsDaughter-Regular',
+    fontFamily: 'ArchitectsDaughter',
     marginTop: 4,
     textAlign: 'center',
     width: '100%', 

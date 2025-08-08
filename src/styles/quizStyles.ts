@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
   navText: {
     fontSize: 14,
     color: '#97d0feff',
-    fontFamily: 'ArchitectsDaughter-Regular',
+    fontFamily: 'ArchitectsDaughter',
     marginTop: 4,
     textAlign: 'center',
     width: '100%', 
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
   userLabel: {
     fontSize: 14,
     color: '#246396',
-    fontFamily: 'ArchitectsDaughter-Regular',
+    fontFamily: 'ArchitectsDaughter',
     marginTop: -5,
     textAlign: 'center',
   },

@@ -94,7 +94,7 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
       headerBackVisible: false,
       headerStyle: { backgroundColor: '#abf5ab64' },
       headerTitleStyle: {
-        fontFamily: 'ArchitectsDaughter-Regular',
+        fontFamily: 'ArchitectsDaughter',
         fontSize: 36,
         color: '#2c6f33',
       },
@@ -310,90 +310,82 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
       {/* End Search Modal */}
 
       <View style={styles.container}>
-        {/* Topic label above card, top left */}
-        {topicName && (
-          <View style={styles.topicLabelContainer}>
-            <Text style={styles.topicLabelText}>{topicName}</Text>
+  {/* УБИРАЕМ внешний topicLabelContainer */}
+
+  {/* Card block */}
+  <View style={{ alignItems: 'center', justifyContent: 'center', height: 250 }}>
+    <View style={{ width: 370, position: 'relative' }}>
+      <View style={{ height: 250 }}>
+        {/* Front */}
+        <Animated.View
+          style={[
+            styles.card,
+            { backfaceVisibility: 'hidden', transform: [{ rotateY: frontInterpolate }] },
+          ]}
+          pointerEvents={flipped ? 'none' : 'auto'}
+        >
+          
+          {topicName && <Text style={styles.topicLabelInside}>{topicName}</Text>}
+
+          <TouchableOpacity
+            style={styles.soundButtonTopRight}
+            onPress={handlePlayAudio}
+            activeOpacity={0.7}
+          >
+            {ttsLoading ? (
+              <ActivityIndicator size="small" color="rgba(216, 129, 245, 1)" />
+            ) : (
+              <Ionicons name="volume-high" size={30} color="rgba(216, 129, 245, 1)" />
+            )}
+          </TouchableOpacity>
+
+          {/* Контент */}
+          <TouchableOpacity
+            style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+            activeOpacity={1}
+            onPress={flipCard}
+          >
+            <Text style={styles.word}>{currentCard.word}</Text>
+            {currentCard?.phonetic && (
+              <Text style={styles.phoneticsUnder}>/{currentCard.phonetic}/</Text>
+            )}
+          </TouchableOpacity>
+
+          <View style={styles.cardButtons}>
+            <TouchableOpacity onPress={handleDelete} activeOpacity={0.7}>
+              <Ionicons name="trash" size={30} color="rgba(216, 129, 245, 1)" />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleAddToWallet} activeOpacity={0.7}>
+              <Ionicons name="wallet" size={30} color="rgba(216, 129, 245, 1)" />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => updateStatus('LEARNED')} activeOpacity={0.7}>
+              <Ionicons name="checkmark-circle" size={30} color="rgba(216, 129, 245, 1)" />
+            </TouchableOpacity>
           </View>
-        )}
+        </Animated.View>
 
-        {/* Card block below */}
-        <View style={{ alignItems: 'center', justifyContent: 'center', height: 250 }}>
-          <View style={{ width: '100%', maxWidth: 350, position: 'relative' }}>
-            {/* Sound button + phonetics */}
-            <View style={styles.soundWrapper}>
-              <TouchableOpacity
-                style={styles.soundButton}
-                onPress={handlePlayAudio}
-                activeOpacity={0.7}
-              >
-                {ttsLoading ? (
-                  <ActivityIndicator size="small" color="rgba(216, 129, 245, 1)" />
-                ) : (
-                  <Ionicons name="volume-high" size={30} color="rgba(216, 129, 245, 1)" />
-                )}
-              </TouchableOpacity>
-              {currentCard?.phonetic && (
-                <View style={styles.phoneticsBlob}>
-                  <Text style={styles.phoneticsText}>/{currentCard.phonetic}</Text>
-                </View>
-              )}
-            </View>
+        {/* Back */}
+        <Animated.View
+          style={[
+            styles.card,
+            { position: 'absolute', top: 0, backfaceVisibility: 'hidden', transform: [{ rotateY: backInterpolate }] },
+          ]}
+          pointerEvents={flipped ? 'auto' : 'none'}
+        >
+          {/* тоже показываем topic на обороте */}
+          {topicName && <Text style={styles.topicLabelInside}>{topicName}</Text>}
 
-            <View style={{ height: 250 }}>
-              {/* Front */}
-              <Animated.View
-                style={[
-                  styles.card,
-                  { backfaceVisibility: 'hidden', transform: [{ rotateY: frontInterpolate }] },
-                ]}
-                pointerEvents={flipped ? 'none' : 'auto'}
-              >
-                <TouchableOpacity
-                  style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
-                  activeOpacity={1}
-                  onPress={flipCard}
-                >
-                  <Text style={styles.word}>{currentCard.word}</Text>
-                </TouchableOpacity>
-
-                <View style={styles.cardButtons}>
-                  <TouchableOpacity onPress={handleDelete} activeOpacity={0.7}>
-                    <Ionicons name="trash" size={30} color="rgba(216, 129, 245, 1)" />
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={handleAddToWallet} activeOpacity={0.7}>
-                    <Ionicons name="wallet" size={30} color="rgba(216, 129, 245, 1)" />
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={() => updateStatus('LEARNED')} activeOpacity={0.7}>
-                    <Ionicons name="checkmark-circle" size={30} color="rgba(216, 129, 245, 1)" />
-                  </TouchableOpacity>
-                </View>
-              </Animated.View>
-
-              {/* Back */}
-              <Animated.View
-                style={[
-                  styles.card,
-                  {
-                    position: 'absolute',
-                    top: 0,
-                    backfaceVisibility: 'hidden',
-                    transform: [{ rotateY: backInterpolate }],
-                  },
-                ]}
-                pointerEvents={flipped ? 'auto' : 'none'}
-              >
-                <TouchableOpacity
-                  style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
-                  activeOpacity={1}
-                  onPress={flipCard}
-                >
-                  <Text style={styles.definition}>{currentCard.definition}</Text>
-                </TouchableOpacity>
-              </Animated.View>
-            </View>
-          </View>
-        </View>
+          <TouchableOpacity
+            style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+            activeOpacity={1}
+            onPress={flipCard}
+          >
+            <Text style={styles.definition}>{currentCard.definition}</Text>
+          </TouchableOpacity>
+        </Animated.View>
+      </View>
+    </View>
+  </View>
 
         <View style={styles.exampleSection}>
           <TouchableOpacity onPress={() => setShowExample(!showExample)}>

@@ -77,13 +77,13 @@ const TopicsScreen = ({ navigation }: Props) => {
       headerBackVisible: false,
       headerStyle: { backgroundColor: '#abf5ab64' },
       headerTitleStyle: {
-        fontFamily: 'ArchitectsDaughter-Regular',
+        fontFamily: 'ArchitectsDaughter',
         fontSize: 36,
         color: '#2c6f33',
       },
       headerLeft: () => (
         <TouchableOpacity onPress={() => setHintVisible(true)} style={{ marginLeft: 10 }}>
-          <Image source={isGreen ? greenstick : bluestick} style={{ width: 30, height: 50 }} />
+          <Image source={isGreen ? greenstick : bluestick} style={{ width: 30, height: 50, marginLeft: 15 }} />
         </TouchableOpacity>
       ),
       headerRight: () => (
