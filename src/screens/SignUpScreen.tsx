@@ -2,14 +2,18 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
 import styles from '../styles/signUpStyles';
 import { useNavigation } from '@react-navigation/native';
-import { signUpUser } from '../api/auth'; // import from the file above
+import { signUpUser } from '../api/auth';
+import type { RootStackParamList } from '../types/navigation';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 const SignUpScreen = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState(''); // Mock only
   const [loading, setLoading] = useState(false);
-  const navigation = useNavigation();
+
+  // ✅ Type the navigator so navigate('Login', { prefillUsername }) is valid
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const handleSignUp = async () => {
     if (!username || !email) {
@@ -20,10 +24,14 @@ const SignUpScreen = () => {
     try {
       await signUpUser(username, email);
       Alert.alert('Success', `Registered with username: ${username}`);
+
+      // 🚀 Go to Login with prefilled username
+      navigation.navigate('Login', { prefillUsername: username });
+
+      // Clear local state (optional, since we navigated away)
       setUsername('');
       setEmail('');
       setPassword('');
-      navigation.navigate('Login');
     } catch (error: any) {
       if (error.response && error.response.data) {
         Alert.alert('Error', error.response.data || 'Signup failed.');
@@ -62,19 +70,12 @@ const SignUpScreen = () => {
         secureTextEntry
       />
 
-      <TouchableOpacity
-        onPress={handleSignUp}
-        style={styles.simpleButton}
-        disabled={loading}
-      >
-        {loading ? (
-          <ActivityIndicator color="#fff" />
-        ) : (
-          <Text style={styles.simpleButtonText}>Create Account</Text>
-        )}
+      <TouchableOpacity onPress={handleSignUp} style={styles.simpleButton} disabled={loading}>
+        {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.simpleButtonText}>Create Account</Text>}
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+      {/* Optional: if user taps back, also pass prefill so it stays filled */}
+      <TouchableOpacity onPress={() => navigation.navigate('Login', { prefillUsername: username })}>
         <Text style={styles.backToLoginText}>Back to Login</Text>
       </TouchableOpacity>
     </View>

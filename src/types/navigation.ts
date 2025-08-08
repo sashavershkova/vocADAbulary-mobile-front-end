@@ -2,7 +2,7 @@ import { Flashcard } from '../types/models';
 
 export type RootStackParamList = {
   Splash: undefined;
-  Login: undefined;
+  Login: { prefillUsername?: string } | undefined;
   Home: { userId: number; username: string };
   Topics: undefined;
   Topic: { topicId: number; topicName: string };

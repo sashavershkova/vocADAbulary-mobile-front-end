@@ -23,10 +23,10 @@ declare global {
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
-const LoginScreen = ({ navigation }: Props) => {
-
+const LoginScreen = ({ navigation, route }: Props) => {
+  // 👇 keep the prefill from route if present
+  const [username, setUsername] = useState(route.params?.prefillUsername || '');
   const { setUser } = useMockUser();
-  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
 
@@ -55,19 +55,22 @@ const LoginScreen = ({ navigation }: Props) => {
   }, []);
 
   useEffect(() => {
+    // If we did NOT get a prefill, fall back to saved username
     const loadSavedUsername = async () => {
       try {
-        const savedUsername = await AsyncStorage.getItem('savedUsername');
-        if (savedUsername) {
-          setUsername(savedUsername);
-          setRememberMe(true);
+        if (!route.params?.prefillUsername) {
+          const savedUsername = await AsyncStorage.getItem('savedUsername');
+          if (savedUsername) {
+            setUsername(savedUsername);
+            setRememberMe(true);
+          }
         }
       } catch (err) {
         console.log('Error loading saved username:', err);
       }
     };
     loadSavedUsername();
-  }, []);
+  }, [route.params?.prefillUsername]);
 
   const handleLogin = async () => {
     try {
@@ -75,7 +78,7 @@ const LoginScreen = ({ navigation }: Props) => {
       const response = await api.post('/api/users/login', { username });
 
       const { id, role } = response.data;
-      
+
       // Save in context
       setUser({ id, username });
       console.log('✅ User set in context:', { id, username });
@@ -94,7 +97,6 @@ const LoginScreen = ({ navigation }: Props) => {
       } else {
         await AsyncStorage.removeItem('savedUsername');
       }
-
     } catch (error) {
       console.error('❌ Login failed:', error);
       Alert.alert('Login failed', 'Invalid username. Please try again.');
@@ -107,10 +109,7 @@ const LoginScreen = ({ navigation }: Props) => {
         {title.split('').map((char, i) => (
           <Animated.Text
             key={i}
-            style={[
-              styles.title,
-              { transform: [{ scale: animatedValues[i] }] },
-            ]}
+            style={[styles.title, { transform: [{ scale: animatedValues[i] }] }]}
           >
             {char}
           </Animated.Text>
@@ -137,10 +136,7 @@ const LoginScreen = ({ navigation }: Props) => {
         secureTextEntry
       />
 
-      <TouchableOpacity
-        style={styles.checkboxRow}
-        onPress={() => setRememberMe(!rememberMe)}
-      >
+      <TouchableOpacity style={styles.checkboxRow} onPress={() => setRememberMe(!rememberMe)}>
         <View
           style={{
             width: 24,
@@ -169,7 +165,6 @@ const LoginScreen = ({ navigation }: Props) => {
       <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
         <Text style={styles.forgotText}>Don't you have an account yet? Sign up!</Text>
       </TouchableOpacity>
-      
     </LinearGradient>
   );
 };
