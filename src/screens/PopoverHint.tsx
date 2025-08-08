@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, View, StyleSheet, TouchableOpacity } from 'react-native';
+import { Modal, View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 type Props = {
@@ -22,8 +22,10 @@ const PopoverHint = ({ visible, onClose, children }: Props) => {
         onPress={onClose}
       >
         <View style={styles.popover}>
-          {/* Render children directly, so parent can use <Text> or other elements */}
-          {children}
+          <View style={styles.textWrapper}>
+            {/* Единый текст-контейнер: шрифт применится ко всему содержимому */}
+            <Text style={styles.text}>{children}</Text>
+          </View>
 
           <TouchableOpacity onPress={onClose} style={styles.closeButton}>
             <Ionicons name="close-circle" size={26} color="#767776ff" />
@@ -57,6 +59,19 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 6,
     right: 6,
+  },
+  textWrapper: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+  },
+  text: {
+    fontFamily: 'ArchitectsDaughter', // ключ ровно как в useFonts
+    fontSize: 16,
+    color: '#767776ff',
+    textAlign: 'left',
+    lineHeight: 22,
+    paddingHorizontal: 8,
+    marginBottom: 12,
   },
 });
 

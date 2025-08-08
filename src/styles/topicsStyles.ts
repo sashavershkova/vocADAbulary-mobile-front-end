@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: 'bold',
     textAlign: 'center',
-    fontFamily: 'ArchitectsDaughter-Regular',
+    fontFamily: 'ArchitectsDaughter',
     color: '#006400',
   },
   topicTextActive: {
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   initialsText: {
-    fontFamily: 'ArchitectsDaughter-Regular',
+    fontFamily: 'ArchitectsDaughter',
     color: '#2c6f33',
     fontWeight: 'bold',
     fontSize: 18,
@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
   userLabel: {
     fontSize: 14,
     color: '#2c6f33',
-    fontFamily: 'ArchitectsDaughter-Regular',
+    fontFamily: 'ArchitectsDaughter',
     marginTop: -5,
     textAlign: 'center',
   },
@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
   navTextCenter: {
     fontSize: 16,
     color: '#2c6f33',
-    fontFamily: 'ArchitectsDaughter-Regular',
+    fontFamily: 'ArchitectsDaughter',
     marginTop: 4,
     letterSpacing: 1,
   },
@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 2, height: 6 },
   },
   searchModalTitle: {
-    fontFamily: 'ArchitectsDaughter-Regular',
+    fontFamily: 'ArchitectsDaughter',
     fontSize: 24,
     marginBottom: 8,
     color: '#2c6f33',
@@ -199,12 +199,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     padding: 8,
     fontSize: 18,
-    fontFamily: 'Helvetica Neue',
+    fontFamily: 'ArchitectsDaughter',
     marginBottom: 12,
   },
   noResultsText: {
     color: '#777',
-    fontFamily: 'ArchitectsDaughter-Regular',
+    fontFamily: 'ArchitectsDaughter',
     marginBottom: 8,
     textAlign: 'center',
   },
@@ -217,14 +217,14 @@ const styles = StyleSheet.create({
     borderColor: '#b8efb7',
   },
   searchResultWord: {
-    fontFamily: 'ArchitectsDaughter-Regular',
+    fontFamily: 'ArchitectsDaughter',
     fontSize: 18,
     color: '#2c6f33',
   },
   searchResultDef: {
     fontSize: 14,
     color: '#555',
-    fontFamily: 'ArchitectsDaughter-Regular',
+    fontFamily: 'ArchitectsDaughter',
   },
   searchCloseBtn: {
     position: 'absolute',
@@ -233,7 +233,7 @@ const styles = StyleSheet.create({
   },
   searchCloseText: {
     color: '#767776ff',
-    fontFamily: 'ArchitectsDaughter-Regular',
+    fontFamily: 'ArchitectsDaughter',
     fontSize: 18,
     fontWeight: 'bold',
   },

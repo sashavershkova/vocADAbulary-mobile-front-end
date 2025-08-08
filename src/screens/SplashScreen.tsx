@@ -21,9 +21,9 @@ const SplashScreen = ({ navigation }: Props) => {
   const fadeAnim = new Animated.Value(0);
 
   const texts = [
-    'mADAms team presents...',
-    'NEW TECH VOICE',
-    'our stickman will help you to find your own.',
+    "mADAms team presents...",
+    "Don't You Have Your TECH VOICE?",
+    "Follow our Stickman",
   ];
 
   useEffect(() => {

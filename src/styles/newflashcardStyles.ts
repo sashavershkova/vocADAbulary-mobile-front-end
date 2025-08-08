@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: "#acb5fbf3",
     marginBottom: 18,
-    fontFamily: 'Helvetica Neue',
+    fontFamily: 'ArchitectsDaughter-Regular',
     shadowColor: '#313131ff',
     shadowOpacity: 0.8,
     shadowOffset: { width: 3, height: 6 },
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     borderColor: "#acb5fbf3",
     height: 150, // ≈3см
     textAlignVertical: 'top',
-    fontFamily: 'Helvetica Neue',
+    fontFamily: 'ArchitectsDaughter',
     marginBottom: 18,
     shadowColor: '#313131ff',
     shadowOpacity: 0.8,
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
   navText: {
     fontSize: 14,
     color: '#93cbf9ff',
-    fontFamily: 'ArchitectsDaughter-Regular',
+    fontFamily: 'ArchitectsDaughter',
     marginTop: 4,
     textAlign: 'center',
     width: '100%',
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
   },
   initialsText: {
-    fontFamily: 'ArchitectsDaughter-Regular',
+    fontFamily: 'ArchitectsDaughter',
     color: "#246396",
     fontWeight: 'bold',
     fontSize: 18,
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
   userLabel: {
     fontSize: 14,
     color: '#246396',
-    fontFamily: 'ArchitectsDaughter-Regular',
+    fontFamily: 'ArchitectsDaughter',
     marginTop: -5,
     textAlign: 'center',
   },
@@ -117,13 +117,13 @@ const styles = StyleSheet.create({
   dropdownArrow: {
     fontSize: 18,
     color: '#246396',
-    fontFamily: 'ArchitectsDaughter-Regular',
+    fontFamily: 'ArchitectsDaughter',
   },
 
   dropdownHeaderText: {
     fontSize: 16,
     color: '#848687ff',
-    // fontFamily: 'ArchitectsDaughter-Regular',
+    // fontFamily: 'ArchitectsDaughter',
   },
 
   dropdownOverlay: {
@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
 
   dropdownItemText: {
     fontSize: 16,
-    fontFamily: 'ArchitectsDaughter-Regular',
+    fontFamily: 'ArchitectsDaughter',
     color: '#246396',
   }
 
