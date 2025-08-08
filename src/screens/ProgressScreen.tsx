@@ -29,10 +29,10 @@ type ProgressSummary = {
   totalCards: number;
   inProgressCards: number;
   learnedCards: number;
-  termComprehension: number;
-  spokenWritten: number;
   quizzesPassed: number;
+  sentenceProficiency: number;
   createdCount?: number;
+
 };
 
 const ProgressScreen = () => {
@@ -55,11 +55,15 @@ const ProgressScreen = () => {
         getCreatedCount()
       ]);
 
-      const adjusted: ProgressSummary = {
-        ...data,
-        inProgressCards: data.totalCards - data.learnedCards,
-        createdCount: created
-      };
+  const adjusted: ProgressSummary = {
+    totalCards: data.totalCards,
+    learnedCards: data.learnedCards,
+    // keep “in progress = total - learned” UX rule
+    inProgressCards: data.totalCards - data.learnedCards,
+    quizzesPassed: data.quizzesPassed,
+    sentenceProficiency: data.sentenceProficiency,
+    createdCount: created
+  };
 
       setSummary(adjusted);
     } catch (err) {
@@ -133,9 +137,9 @@ const ProgressScreen = () => {
         {renderButton('trending-up', 'In Progress', summary.inProgressCards)}
         {renderButton('flash', 'Quizzes Passed', summary.quizzesPassed)}
         {renderButton(
-          'chatbubble-ellipses',
-          'Spoken/Written',
-          summary.spokenWritten
+          'school', // <-- changed icon to fit context accuracy.  used to be "chatbubble-ellipses"
+          'Context Usage Accuracy',
+          `${summary.sentenceProficiency.toFixed(0)}%`
         )}
         {renderButton(
           'create',
