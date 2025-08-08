@@ -213,7 +213,7 @@ export default StyleSheet.create({
   searchResultWord: {
     fontFamily: 'ArchitectsDaughter-Regular',
     fontSize: 18,
-    color: '#246396',
+    color: '#2c6f33',
   },
   searchResultDef: {
     fontSize: 14,

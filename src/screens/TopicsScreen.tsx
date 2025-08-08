@@ -306,14 +306,14 @@ const TopicsScreen = ({ navigation }: Props) => {
           onPress={Keyboard.dismiss}
         >
           <View style={styles.searchModalContainer}>
-            <Text style={styles.searchModalTitle}>Search Cards</Text>
+            <Text style={styles.searchModalTitle}>I'm looking for ...</Text>
 
             <TextInput
               placeholder="Type to search…"
               value={searchQuery}
               onChangeText={setSearchQuery}
               style={styles.searchInput}
-              placeholderTextColor="#6ea089"
+              placeholderTextColor="#767776ff"
               autoFocus
             />
 
