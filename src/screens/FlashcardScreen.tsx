@@ -41,8 +41,6 @@ const logTime = (label: string) => {
   console.log(`${now.toISOString()} ⏱️ ${label}`);
 };
 
-console.log(`${new Date().toISOString()} 🧭 FlashcardScreen mounted`);
-
 const FlashcardScreen = ({ route, navigation }: Props) => {
   const { topicId, topicName, flashcardId, flashcards: passedFlashcards } = route.params;
   const { user } = useMockUser();
