@@ -90,7 +90,7 @@ const NewFlashcardScreen = () => {
         example,
       });
       Alert.alert('Success', 'Flashcard saved!');
-      navigation.navigate("Home", { userId, username });
+      navigation.navigate("Wallet");
     } catch (error) {
       console.error('Error saving flashcard:', error);
       Alert.alert('Error', 'Could not save flashcard.');
@@ -177,7 +177,7 @@ const NewFlashcardScreen = () => {
 
     {/* BOTTOM BAR */}
     <View style={styles.bottomBar}>
-      <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate("Home")}>
+      <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate("Wallet")}>
         <Ionicons name="home" size={35} color="#97d0feff" />
         <Text style={styles.navText}>HOME</Text>
       </TouchableOpacity>
