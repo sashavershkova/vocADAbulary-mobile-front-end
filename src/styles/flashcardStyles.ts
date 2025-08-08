@@ -19,7 +19,7 @@ export default StyleSheet.create({
     borderWidth: 1.5,
   },
   initialsText: {
-    fontFamily: 'ArchitectsDaughter-Regular',
+    fontFamily: 'ArchitectsDaughter',
     color: '#2c6f33',
     fontWeight: 'bold',
     fontSize: 18,
@@ -43,13 +43,13 @@ export default StyleSheet.create({
   },
   word: {
     fontSize: 50,
-    fontFamily: 'ArchitectsDaughter-Regular',
+    fontFamily: 'ArchitectsDaughter',
     fontWeight: 'bold',
     color: '#2c6f33',
   },
   definition: {
     fontSize: 30,
-    fontFamily: 'ArchitectsDaughter-Regular',
+    fontFamily: 'ArchitectsDaughter',
     marginVertical: 10,
     textAlign: 'center',
     color: '#2c6f33',
@@ -63,20 +63,35 @@ export default StyleSheet.create({
     alignItems: 'center',
     zIndex: 5,
   },
-  phoneticsBlob: {
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 12,
-    marginLeft: 6,
-  },
-  phoneticsText: {
-    fontSize: 25,
+  // phoneticsBlob: {
+  //   paddingHorizontal: 8,
+  //   paddingVertical: 4,
+  //   borderRadius: 12,
+  //   marginLeft: 6,
+  // },
+  // phoneticsText: {
+  //   fontSize: 25,
+  //   color: '#2c6f33',
+  // },
+  phoneticsUnder: {
+    marginTop: 8,
+    fontSize: 24,
     color: '#2c6f33',
+    fontFamily: 'ArchitectsDaughter',
+    textAlign: 'center',
   },
-  soundButton: {
+  // soundButton: {
+  //   borderRadius: 20,
+  //   padding: 6,
+  //   elevation: 3,
+  // },
+  soundButtonTopRight: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
     borderRadius: 20,
     padding: 6,
-    elevation: 3,
+    zIndex: 5,
   },
   cardButtons: {
     position: 'absolute',
@@ -100,7 +115,7 @@ export default StyleSheet.create({
     maxWidth: '95%',
   },
   exampleText: {
-    fontFamily: 'ArchitectsDaughter-Regular',
+    fontFamily: 'ArchitectsDaughter',
     fontStyle: 'italic',
     fontSize: 18,
     color: '#2c6f33',
@@ -124,7 +139,7 @@ export default StyleSheet.create({
   navText: {
     fontSize: 16,
     color: '#8feda0ff',
-    fontFamily: 'ArchitectsDaughter-Regular',
+    fontFamily: 'ArchitectsDaughter',
     marginTop: 4,
   },
   userWrapper: {
@@ -137,26 +152,39 @@ export default StyleSheet.create({
   userLabel: {
     fontSize: 14,
     color: '#2c6f33',
-    fontFamily: 'ArchitectsDaughter-Regular',
+    fontFamily: 'ArchitectsDaughter',
     marginTop: -5,
     textAlign: 'center',
   },
 
   // TOPIC LABEL (above card)
-  topicLabelContainer: {
-    width: 370, // Same as card width
-    alignItems: 'flex-start',
-    alignSelf: 'center',
-    marginBottom: 4,
-  },
-  topicLabelText: {
-    fontFamily: 'ArchitectsDaughter-Regular',
+  // topicLabelContainer: {
+  //   width: 370, // Same as card width
+  //   alignItems: 'flex-start',
+  //   alignSelf: 'center',
+  //   marginBottom: 4,
+  // },
+  // topicLabelText: {
+  //   fontFamily: 'ArchitectsDaughter',
+  //   fontSize: 20,
+  //   color: '#2c6f33',
+  //   opacity: 0.88,
+  //   fontWeight: 'bold',
+  //   marginLeft: 10,
+  //   marginBottom: 3,
+  //   textShadowColor: '#c0e3bf',
+  //   textShadowRadius: 2,
+  //   letterSpacing: 0.2,
+  // },
+  topicLabelInside: {
+    position: 'absolute',
+    top: 10,
+    left: 10,
+    fontFamily: 'ArchitectsDaughter',
     fontSize: 20,
     color: '#2c6f33',
     opacity: 0.88,
     fontWeight: 'bold',
-    marginLeft: 10,
-    marginBottom: 3,
     textShadowColor: '#c0e3bf',
     textShadowRadius: 2,
     letterSpacing: 0.2,
@@ -180,7 +208,7 @@ export default StyleSheet.create({
     shadowOffset: { width: 2, height: 6 },
   },
   searchModalTitle: {
-    fontFamily: 'ArchitectsDaughter-Regular',
+    fontFamily: 'ArchitectsDaughter',
     fontSize: 24,
     marginBottom: 8,
     color: '#2c6f33',
@@ -193,12 +221,12 @@ export default StyleSheet.create({
     backgroundColor: '#fff',
     padding: 8,
     fontSize: 18,
-    fontFamily: 'Helvetica Neue',
+    fontFamily: 'ArchitectsDaughter',
     marginBottom: 12,
   },
   noResultsText: {
     color: '#777',
-    fontFamily: 'ArchitectsDaughter-Regular',
+    fontFamily: 'ArchitectsDaughter',
     marginBottom: 8,
     textAlign: 'center',
   },
@@ -211,14 +239,14 @@ export default StyleSheet.create({
     borderColor: '#b8efb7',
   },
   searchResultWord: {
-    fontFamily: 'ArchitectsDaughter-Regular',
+    fontFamily: 'ArchitectsDaughter',
     fontSize: 18,
     color: '#2c6f33',
   },
   searchResultDef: {
     fontSize: 14,
     color: '#555',
-    fontFamily: 'ArchitectsDaughter-Regular',
+    fontFamily: 'ArchitectsDaughter',
   },
   searchCloseBtn: {
     position: 'absolute',
@@ -227,14 +255,14 @@ export default StyleSheet.create({
   },
   searchCloseText: {
     color: '#767776ff',
-    fontFamily: 'ArchitectsDaughter-Regular',
+    fontFamily: 'ArchitectsDaughter',
     fontSize: 18,
     fontWeight: 'bold',
   },
   // hintButton: { alignItems: 'center' },
   hintText: {
     marginTop: 3,
-    fontFamily: 'ArchitectsDaughter-Regular',
+    fontFamily: 'ArchitectsDaughter',
     fontSize: 18,
     color: '#2c6f33',
     marginLeft: 9,

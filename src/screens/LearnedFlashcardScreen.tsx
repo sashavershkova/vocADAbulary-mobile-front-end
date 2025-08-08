@@ -51,7 +51,7 @@ const LearnedFlashcardsScreen = () => {
       },
       headerTitleStyle: {
         color: "#246396",
-        fontFamily: "ArchitectsDaughter-Regular",
+        fontFamily: "ArchitectsDaughter",
         fontSize: 36,
       },
       headerRight: () => (

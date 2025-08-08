@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 3, height: 6 },
   },
   label: {
-    fontFamily: 'ArchitectsDaughter-Regular',
+    fontFamily: 'ArchitectsDaughter',
     fontSize: 20,
     color: '#246396',
     marginBottom: 1,
@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     backgroundColor: '#fbf6fbfd',
     color: '#738275ff',
-    fontFamily: 'Helvetica Neue',
+    fontFamily: 'ArchitectsDaughter',
     shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowRadius: 2,
@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
   saveButtonText: {
     fontSize: 16,
     color: '#97d0feff',
-    fontFamily: 'ArchitectsDaughter-Regular',
+    fontFamily: 'ArchitectsDaughter',
     marginTop: 4,
     textAlign: 'center',
   },
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
   // },
   // deleteButtonText: {
   //   color: '#ee3d3d',
-  //   fontFamily: 'ArchitectsDaughter-Regular',
+  //   fontFamily: 'ArchitectsDaughter',
   //   fontSize: 18,
   //   fontWeight: 'bold',
   // },
@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
   navText: {
     fontSize: 14,
     color: '#97d0feff',
-    fontFamily: 'ArchitectsDaughter-Regular',
+    fontFamily: 'ArchitectsDaughter',
     marginTop: 4,
     textAlign: 'center',
     width: '100%',
@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
   userLabel: {
     fontSize: 14,
     color: '#246396',
-    fontFamily: 'ArchitectsDaughter-Regular',
+    fontFamily: 'ArchitectsDaughter',
     marginTop: -5,
     textAlign: 'center',
   },
@@ -137,12 +137,12 @@ const styles = StyleSheet.create({
   },
 
   deleteAccountButton: {
-    backgroundColor: '#97d0feff',        // сиреневый фон
+    backgroundColor: '#97d0feff',        
     paddingVertical: 12,
     paddingHorizontal: 36,
     borderRadius: 30,
     borderWidth: 2,
-    borderColor: '#246396',              // тёмно-зелёная рамка
+    borderColor: '#246396',              
     shadowColor: '#000',
     shadowOffset: { width: 4, height: 6 },
     shadowOpacity: 0.5,
@@ -152,8 +152,8 @@ const styles = StyleSheet.create({
   deleteAccountText: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#246396',                    // тёмно-зелёный текст
-    fontFamily: 'ArchitectsDaughter-Regular',
+    color: '#246396',                    
+    fontFamily: 'ArchitectsDaughter',
     textAlign: 'center',
   },
 navItem: {

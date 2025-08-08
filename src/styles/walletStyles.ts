@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
   },
   initialsText: {
-    fontFamily: 'ArchitectsDaughter-Regular',
+    fontFamily: 'ArchitectsDaughter',
     color: "#246396",
     fontWeight: 'bold',
     fontSize: 18,
@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
     lineHeight: 24,
   },
   termText: {
-    fontFamily: 'ArchitectsDaughter-Regular',
+    fontFamily: 'ArchitectsDaughter',
     fontSize: 18,
     color: '#246396',
     fontWeight: 'normal',
@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
   navText: {
     fontSize: 14,
     color: '#93cbf9ff',
-    fontFamily: 'ArchitectsDaughter-Regular',
+    fontFamily: 'ArchitectsDaughter',
     marginTop: 4,
     textAlign: 'center',
     width: '100%',
@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
   userLabel: {
     fontSize: 14,
     color: '#246396',
-    fontFamily: 'ArchitectsDaughter-Regular',
+    fontFamily: 'ArchitectsDaughter',
     marginTop: -5,
     textAlign: 'center',
   },
@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
   returnLabel: {
     fontSize: 12,
     color: '#246396',
-    fontFamily: 'ArchitectsDaughter-Regular',
+    fontFamily: 'ArchitectsDaughter',
     marginTop: 2,
     textAlign: 'center',
   },

@@ -47,7 +47,7 @@ const QuizScreen = ({ navigation }: Props) => {
         backgroundColor: '#f9bcdeff',
       },
       headerTitleStyle: {
-        fontFamily: 'ArchitectsDaughter-Regular',
+        fontFamily: 'ArchitectsDaughter',
         fontSize: 36,
         color: '#246396',
       },
@@ -55,7 +55,7 @@ const QuizScreen = ({ navigation }: Props) => {
         <TouchableOpacity onPress={() => setHintVisible(true)} style={{ marginLeft: 10 }}>
           <Image
             source={isGreen ? greenstick : bluestick}
-            style={{ width: 30, height: 50 }}
+            style={{ width: 30, height: 50, marginLeft: 15 }}
           />
         </TouchableOpacity>
       ),
