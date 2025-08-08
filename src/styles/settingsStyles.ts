@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     backgroundColor: '#fbf6fbfd',
     color: '#738275ff',
-    fontFamily: 'ArchitectsDaughter-Regular',
+    fontFamily: 'Helvetica Neue',
     shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowRadius: 2,

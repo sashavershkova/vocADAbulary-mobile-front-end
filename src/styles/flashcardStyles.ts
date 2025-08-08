@@ -102,7 +102,7 @@ export default StyleSheet.create({
   exampleText: {
     fontFamily: 'ArchitectsDaughter-Regular',
     fontStyle: 'italic',
-    fontSize: 25,
+    fontSize: 18,
     color: '#2c6f33',
   },
   bottomBar: {
@@ -166,8 +166,9 @@ export default StyleSheet.create({
   searchModalBackground: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.20)',
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     alignItems: 'center',
+    paddingBottom: 105,
   },
   searchModalContainer: {
     backgroundColor: '#d1f3d9',
@@ -182,7 +183,7 @@ export default StyleSheet.create({
     fontFamily: 'ArchitectsDaughter-Regular',
     fontSize: 24,
     marginBottom: 8,
-    color: '#246396',
+    color: '#2c6f33',
     textAlign: 'center',
   },
   searchInput: {
@@ -192,7 +193,7 @@ export default StyleSheet.create({
     backgroundColor: '#fff',
     padding: 8,
     fontSize: 18,
-    fontFamily: 'ArchitectsDaughter-Regular',
+    fontFamily: 'Helvetica Neue',
     marginBottom: 12,
   },
   noResultsText: {
@@ -220,14 +221,22 @@ export default StyleSheet.create({
     fontFamily: 'ArchitectsDaughter-Regular',
   },
   searchCloseBtn: {
-    marginTop: 16,
-    alignSelf: 'center',
+    position: 'absolute',
+    top: 6,
+    right: 6,
   },
   searchCloseText: {
-    color: '#37745b',
+    color: '#767776ff',
     fontFamily: 'ArchitectsDaughter-Regular',
     fontSize: 18,
     fontWeight: 'bold',
-    opacity: 0.8,
+  },
+  // hintButton: { alignItems: 'center' },
+  hintText: {
+    marginTop: 3,
+    fontFamily: 'ArchitectsDaughter-Regular',
+    fontSize: 18,
+    color: '#2c6f33',
+    marginLeft: 9,
   },
 });

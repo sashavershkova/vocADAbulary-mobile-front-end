@@ -23,6 +23,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: "#acb5fbf3",
     marginBottom: 18,
+    fontFamily: 'Helvetica Neue',
     shadowColor: '#313131ff',
     shadowOpacity: 0.8,
     shadowOffset: { width: 3, height: 6 },
@@ -36,6 +37,7 @@ const styles = StyleSheet.create({
     borderColor: "#acb5fbf3",
     height: 150, // ≈3см
     textAlignVertical: 'top',
+    fontFamily: 'Helvetica Neue',
     marginBottom: 18,
     shadowColor: '#313131ff',
     shadowOpacity: 0.8,

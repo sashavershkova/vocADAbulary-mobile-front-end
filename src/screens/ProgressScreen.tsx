@@ -104,7 +104,7 @@ const ProgressScreen = () => {
   );
 
   return (
-  <LinearGradient colors={['#f9bcdeff', '#b96bf1fe']} style={styles.container}>
+  <LinearGradient colors={['#f9bcdeff', '#bf86fcfe']} style={styles.container}>
     <View style={styles.buttonGroup}>
       {renderButton('stats-chart', 'Total Words', summary.totalCards)}
       {renderButton('bulb', 'Learned', summary.learnedCards)}
