@@ -9,6 +9,22 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.8,
     shadowOffset: { width: 3, height: 6 },
   },
+  initialsCircle: {
+    backgroundColor: '#87CEFA',
+    borderColor: '#246396',
+    width: 25,
+    height: 25,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 20,
+    borderWidth: 1.5,
+  },
+  initialsText: {
+    fontFamily: 'ArchitectsDaughter-Regular',
+    color: '#246396',
+    fontWeight: 'bold',
+    fontSize: 18,
+  },
   buttonGroup: {
     marginTop: 20,
     width: '100%',
@@ -56,22 +72,7 @@ const styles = StyleSheet.create({
     color: '#246396ff',
     marginTop: 4,
   },
-  initialsCircle: {
-    backgroundColor: '#87CEFA',
-    borderColor: '#246396',
-    width: 25,
-    height: 25,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 20,
-    borderWidth: 1.5,
-  },
-  initialsText: {
-    fontFamily: 'ArchitectsDaughter-Regular',
-    color: '#246396',
-    fontWeight: 'bold',
-    fontSize: 18,
-  },
+  
   userWrapper: {
     alignItems: 'center',
     justifyContent: 'flex-start',

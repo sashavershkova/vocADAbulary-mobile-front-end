@@ -41,7 +41,7 @@ const SettingsScreen = ({ navigation }: Props) => {
       title: 'SETTINGS',
       headerBackVisible: false,
       headerStyle: {
-        backgroundColor: '#f7b4c4d6',
+        backgroundColor: '#f9bcdeff',
       },
       headerTitleStyle: {
         fontFamily: 'ArchitectsDaughter-Regular',
@@ -163,7 +163,7 @@ const SettingsScreen = ({ navigation }: Props) => {
   }
 
   return (
-    <LinearGradient colors={['#f7b4c4d6', '#bf86fcc2']} style={styles.container}>
+    <LinearGradient colors={['#f9bcdeff', '#bf86fcfe']} style={styles.container}>
       <PopoverHint visible={hintVisible} onClose={() => setHintVisible(false)}>
         <Text style={styles.text}>
           Welcome to the SETTINGS Center of the Universe{"\n"}

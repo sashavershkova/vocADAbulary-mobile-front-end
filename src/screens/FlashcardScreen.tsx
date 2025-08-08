@@ -269,7 +269,7 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
       >
         <View style={styles.searchModalBackground}>
           <View style={styles.searchModalContainer}>
-            <Text style={styles.searchModalTitle}>Search Cards</Text>
+            <Text style={styles.searchModalTitle}>I'm looking for ...</Text>
             <TextInput
               placeholder="Type to search…"
               value={searchQuery}
@@ -300,8 +300,11 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
                 </Text>
               </TouchableOpacity>
             ))}
-            <TouchableOpacity onPress={() => setSearchOpen(false)} style={styles.searchCloseBtn}>
-              <Text style={styles.searchCloseText}>Close</Text>
+            <TouchableOpacity
+              onPress={() => setSearchOpen(false)}
+              style={styles.searchCloseBtn}
+            >
+              <Ionicons name="close-circle" size={22} color="#767776ff" />
             </TouchableOpacity>
           </View>
         </View>
@@ -397,7 +400,7 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
         <View style={styles.exampleSection}>
           <TouchableOpacity onPress={() => setShowExample(!showExample)}>
             <Ionicons name="bulb" size={50} color="rgba(216, 129, 245, 1)" />
-            <Text style={styles.navText}>HINT</Text>
+            <Text style={styles.navText, styles.hintText}>HINT</Text>
           </TouchableOpacity>
           {showExample && (
             <View style={styles.exampleBubble}>
@@ -405,7 +408,9 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
                 Example:
                 {'\n'}
                 {currentCard.example}
-                {currentCard.synonyms ? `\n\nSynonyms:\n${currentCard.synonyms}` : ''}
+                {currentCard.synonyms
+                  ? `\n\nSynonyms: ${currentCard.synonyms}`
+                  : ""}
               </Text>
             </View>
           )}

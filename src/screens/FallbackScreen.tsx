@@ -7,7 +7,6 @@ import { RootStackParamList } from '../types/navigation';
 import { Ionicons } from '@expo/vector-icons';
 
 const FallbackScreen: React.FC = () => {
-  // получаем объект навигации
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
