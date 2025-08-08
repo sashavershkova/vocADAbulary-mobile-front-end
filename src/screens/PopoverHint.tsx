@@ -1,5 +1,6 @@
+
 import React from 'react';
-import { Modal, View, StyleSheet, TouchableOpacity } from 'react-native';
+import { Modal, View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 type Props = {
@@ -16,15 +17,9 @@ const PopoverHint = ({ visible, onClose, children }: Props) => {
       transparent
       onRequestClose={onClose}
     >
-      <TouchableOpacity
-        style={styles.overlay}
-        activeOpacity={1}
-        onPress={onClose}
-      >
+      <TouchableOpacity style={styles.overlay} activeOpacity={1} onPress={onClose}>
         <View style={styles.popover}>
-          {/* Render children directly, so parent can use <Text> or other elements */}
-          {children}
-
+          <Text style={styles.text}>{children}</Text>
           <TouchableOpacity onPress={onClose} style={styles.closeButton}>
             <Ionicons name="close-circle" size={26} color="#767776ff" />
           </TouchableOpacity>
@@ -43,7 +38,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(9, 9, 9, 0.1)',
   },
   popover: {
-    backgroundColor: '#fae6ffff',
+    backgroundColor: '#fae6ffff', 
     padding: 16,
     borderRadius: 12,
     width: '85%',
@@ -57,6 +52,14 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 6,
     right: 6,
+  },
+  text: {
+    fontSize: 16,
+    fontFamily: 'ArchitectsDaughter-Regular',
+    color: '#767776ff',
+    textAlign: 'left',
+    paddingHorizontal: 8,
+    marginBottom: 12,
   },
 });
 
