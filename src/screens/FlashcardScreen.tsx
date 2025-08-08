@@ -33,13 +33,10 @@ type Flashcard = {
   definition: string;
   example: string;
   audioUrl: string;
-  createdBy: number | null;     // ⬅️ allow null (public card)
+  createdBy: number | null; // public cards are null
   phonetic?: string;
   synonyms?: string;
 };
-
-const filterVisible = (cards: Flashcard[], userId: number) =>
-  cards.filter(c => c.createdBy == null || c.createdBy === userId);
 
 const logTime = (label: string) => {
   const now = new Date();
@@ -119,23 +116,23 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
     const init = async () => {
       setLoading(true);
       try {
-        if (passedFlashcards && Array.isArray(passedFlashcards) && passedFlashcards.length > 0) {
-          // Filter the incoming deck so it's only public + mine
-          const visible = filterVisible(passedFlashcards as Flashcard[], userId);
+        if (topicId) {
+          // ✅ Server-side filtered deck for this topic
+          const { data } = await api.get(`/api/flashcards/visible`, { params: { topicId } });
 
-          if (visible.length === 0) {
+          if (!data || data.length === 0) {
             Alert.alert('Nothing to study', 'No visible cards for this topic.');
             navigation.goBack();
             return;
           }
 
-          setFlashcards(visible);
+          setFlashcards(data);
 
-          // Prefer the requested card if still visible; otherwise pick the first
-          const candidate = visible.find(fc => fc.id === flashcardId) || visible[0];
+          // Prefer the requested card if still present; otherwise pick the first
+          const candidate = data.find((fc: Flashcard) => fc.id === flashcardId) || data[0];
           setCurrentCard(candidate);
-        } else {
-          // Fallback: fetch only the current card; block others' private cards
+        } else if (flashcardId) {
+          // Fallback: fetch just the single card (controller unchanged, so guard on client)
           const { data } = await api.get(`/api/flashcards/${flashcardId}`);
           const allowed = data.createdBy == null || data.createdBy === userId;
 
@@ -147,6 +144,23 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
 
           setCurrentCard(data);
           setFlashcards([data]);
+        } else if (passedFlashcards && passedFlashcards.length > 0 && topicId) {
+          // If a deck was passed, refresh from backend to ensure filtered deck
+          const { data } = await api.get(`/api/flashcards/visible`, { params: { topicId } });
+          setFlashcards(data);
+          const candidate =
+            data.find((fc: Flashcard) => fc.id === flashcardId) || data[0];
+          setCurrentCard(candidate);
+        } else if (passedFlashcards && passedFlashcards.length > 0) {
+          // No topicId? Fall back to passed deck (already on-screen)
+          setFlashcards(passedFlashcards as Flashcard[]);
+          const candidate =
+            (passedFlashcards as Flashcard[]).find(fc => fc.id === flashcardId) ||
+            (passedFlashcards as Flashcard[])[0];
+          setCurrentCard(candidate);
+        } else {
+          Alert.alert('No card', 'Nothing to load.');
+          navigation.goBack();
         }
       } catch (error) {
         console.error('Error loading flashcard(s):', error);
@@ -157,7 +171,7 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
     };
 
     init();
-  }, [route.params, userId, navigation]);
+  }, [route.params, userId, navigation, topicId, flashcardId]);
 
   // Index helpers for navigation
   const getCurrentIndex = () =>
@@ -206,7 +220,8 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
       return;
     }
     try {
-      await api.delete(`/flashcards/${currentCard.id}`);
+      // 🔧 fixed URL to include /api prefix
+      await api.delete(`/api/flashcards/${currentCard.id}`);
       Alert.alert('Deleted', 'Flashcard was successfully deleted.');
       handleNext();
     } catch (error) {
@@ -310,87 +325,88 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
       {/* End Search Modal */}
 
       <View style={styles.container}>
-  {/* УБИРАЕМ внешний topicLabelContainer */}
+        {/* Card block */}
+        <View style={{ alignItems: 'center', justifyContent: 'center', height: 250 }}>
+          <View style={{ width: 370, position: 'relative' }}>
+            <View style={{ height: 250 }}>
+              {/* Front */}
+              <Animated.View
+                style={[
+                  styles.card,
+                  { backfaceVisibility: 'hidden', transform: [{ rotateY: frontInterpolate }] },
+                ]}
+                pointerEvents={flipped ? 'none' : 'auto'}
+              >
+                {topicName && <Text style={styles.topicLabelInside}>{topicName}</Text>}
 
-  {/* Card block */}
-  <View style={{ alignItems: 'center', justifyContent: 'center', height: 250 }}>
-    <View style={{ width: 370, position: 'relative' }}>
-      <View style={{ height: 250 }}>
-        {/* Front */}
-        <Animated.View
-          style={[
-            styles.card,
-            { backfaceVisibility: 'hidden', transform: [{ rotateY: frontInterpolate }] },
-          ]}
-          pointerEvents={flipped ? 'none' : 'auto'}
-        >
-          
-          {topicName && <Text style={styles.topicLabelInside}>{topicName}</Text>}
+                <TouchableOpacity
+                  style={styles.soundButtonTopRight}
+                  onPress={handlePlayAudio}
+                  activeOpacity={0.7}
+                >
+                  {ttsLoading ? (
+                    <ActivityIndicator size="small" color="rgba(216, 129, 245, 1)" />
+                  ) : (
+                    <Ionicons name="volume-high" size={30} color="rgba(216, 129, 245, 1)" />
+                  )}
+                </TouchableOpacity>
 
-          <TouchableOpacity
-            style={styles.soundButtonTopRight}
-            onPress={handlePlayAudio}
-            activeOpacity={0.7}
-          >
-            {ttsLoading ? (
-              <ActivityIndicator size="small" color="rgba(216, 129, 245, 1)" />
-            ) : (
-              <Ionicons name="volume-high" size={30} color="rgba(216, 129, 245, 1)" />
-            )}
-          </TouchableOpacity>
+                {/* Content */}
+                <TouchableOpacity
+                  style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+                  activeOpacity={1}
+                  onPress={flipCard}
+                >
+                  <Text style={styles.word}>{currentCard.word}</Text>
+                  {currentCard?.phonetic && (
+                    <Text style={styles.phoneticsUnder}>/{currentCard.phonetic}/</Text>
+                  )}
+                </TouchableOpacity>
 
-          {/* Контент */}
-          <TouchableOpacity
-            style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
-            activeOpacity={1}
-            onPress={flipCard}
-          >
-            <Text style={styles.word}>{currentCard.word}</Text>
-            {currentCard?.phonetic && (
-              <Text style={styles.phoneticsUnder}>/{currentCard.phonetic}/</Text>
-            )}
-          </TouchableOpacity>
+                <View style={styles.cardButtons}>
+                  <TouchableOpacity onPress={handleDelete} activeOpacity={0.7}>
+                    <Ionicons name="trash" size={30} color="rgba(216, 129, 245, 1)" />
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={handleAddToWallet} activeOpacity={0.7}>
+                    <Ionicons name="wallet" size={30} color="rgba(216, 129, 245, 1)" />
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => updateStatus('LEARNED')} activeOpacity={0.7}>
+                    <Ionicons name="checkmark-circle" size={30} color="rgba(216, 129, 245, 1)" />
+                  </TouchableOpacity>
+                </View>
+              </Animated.View>
 
-          <View style={styles.cardButtons}>
-            <TouchableOpacity onPress={handleDelete} activeOpacity={0.7}>
-              <Ionicons name="trash" size={30} color="rgba(216, 129, 245, 1)" />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={handleAddToWallet} activeOpacity={0.7}>
-              <Ionicons name="wallet" size={30} color="rgba(216, 129, 245, 1)" />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => updateStatus('LEARNED')} activeOpacity={0.7}>
-              <Ionicons name="checkmark-circle" size={30} color="rgba(216, 129, 245, 1)" />
-            </TouchableOpacity>
+              {/* Back */}
+              <Animated.View
+                style={[
+                  styles.card,
+                  {
+                    position: 'absolute',
+                    top: 0,
+                    backfaceVisibility: 'hidden',
+                    transform: [{ rotateY: backInterpolate }],
+                  },
+                ]}
+                pointerEvents={flipped ? 'auto' : 'none'}
+              >
+                {topicName && <Text style={styles.topicLabelInside}>{topicName}</Text>}
+
+                <TouchableOpacity
+                  style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+                  activeOpacity={1}
+                  onPress={flipCard}
+                >
+                  <Text style={styles.definition}>{currentCard.definition}</Text>
+                </TouchableOpacity>
+              </Animated.View>
+            </View>
           </View>
-        </Animated.View>
-
-        {/* Back */}
-        <Animated.View
-          style={[
-            styles.card,
-            { position: 'absolute', top: 0, backfaceVisibility: 'hidden', transform: [{ rotateY: backInterpolate }] },
-          ]}
-          pointerEvents={flipped ? 'auto' : 'none'}
-        >
-          {/* тоже показываем topic на обороте */}
-          {topicName && <Text style={styles.topicLabelInside}>{topicName}</Text>}
-
-          <TouchableOpacity
-            style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
-            activeOpacity={1}
-            onPress={flipCard}
-          >
-            <Text style={styles.definition}>{currentCard.definition}</Text>
-          </TouchableOpacity>
-        </Animated.View>
-      </View>
-    </View>
-  </View>
+        </View>
 
         <View style={styles.exampleSection}>
           <TouchableOpacity onPress={() => setShowExample(!showExample)}>
             <Ionicons name="bulb" size={50} color="rgba(216, 129, 245, 1)" />
-            <Text style={styles.navText, styles.hintText}>HINT</Text>
+            <Text style={(styles.navText, styles.hintText)}>HINT</Text>
           </TouchableOpacity>
           {showExample && (
             <View style={styles.exampleBubble}>
@@ -398,9 +414,7 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
                 Example:
                 {'\n'}
                 {currentCard.example}
-                {currentCard.synonyms
-                  ? `\n\nSynonyms: ${currentCard.synonyms}`
-                  : ""}
+                {currentCard.synonyms ? `\n\nSynonyms: ${currentCard.synonyms}` : ''}
               </Text>
             </View>
           )}
