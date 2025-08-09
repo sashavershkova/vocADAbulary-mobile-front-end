@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
   },
   initialsCircle: {
     backgroundColor: '#87CEFA',
-    borderColor: '#246396',
+    borderColor: '#669dcaff',
     width: 25,
     height: 25,
     alignItems: 'center',
@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
   metricButton: {
     width: '85%',
     backgroundColor: '#87CEFA',
-    borderRadius: 40,
+    borderRadius: 10,
     paddingVertical: 14,
     paddingHorizontal: 20,
     marginVertical: 10,
@@ -41,28 +41,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 12,
     borderWidth: 1,
-    borderColor: '#4682B4',
+    borderColor: '#669dcaff',
     shadowColor: '#313131ff',
     shadowOpacity: 0.8,
-    shadowOffset: { width: 3, height: 6 },
+    shadowOffset: { width: 2, height: 2 },
   },
   metricText: {
     fontSize: 20,
     fontFamily: 'ArchitectsDaughter',
     color: '#246396ff',
   },
-  buttonBar: {
-    position: "absolute",
-    bottom: 20,
-    left: 20,
-    right: 20,
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
-    shadowColor: '#313131ff',
-    shadowOpacity: 0.8,
-    shadowOffset: { width: 3, height: 6 },
-  },
+  
   homeButton: {
     alignItems: 'center',
   },
@@ -72,7 +61,7 @@ const styles = StyleSheet.create({
     color: '#246396ff',
     marginTop: 4,
   },
-  
+
   userWrapper: {
     alignItems: 'center',
     justifyContent: 'flex-start',
@@ -93,7 +82,7 @@ const styles = StyleSheet.create({
     fontFamily: 'ArchitectsDaughter',
     marginTop: 4,
     textAlign: 'center',
-    width: '100%', 
+    width: '100%',
   },
   navItem: {
     alignItems: 'center',
@@ -101,6 +90,42 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     marginHorizontal: 10,
   },
+
+  buttonBar: {
+    position: "absolute",
+    bottom: 20,
+    left: 20,
+    right: 20,
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
+    shadowColor: '#313131ff',
+    shadowOpacity: 0.8,
+    shadowOffset: { width: 3, height: 6 },
+  },
+
+  navIcon: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    borderWidth: 2,
+    borderColor: '#246396ff',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#313131ff', // обычная серая тень
+    shadowOpacity: 0.8,
+    shadowOffset: { width: 2, height: 2 },
+    shadowRadius: 3,
+    backgroundColor: '#87CEFA', // фон под иконкой
+  },
+
+  navIconActive: {
+    shadowColor: '#ffffffff', // белая тень
+    shadowOpacity: 1,
+    shadowOffset: { width: 0, height: 0 },
+    shadowRadius: 4,
+  },
+
 });
 
 export default styles;

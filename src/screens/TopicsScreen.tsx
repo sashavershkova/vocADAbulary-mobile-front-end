@@ -1,16 +1,5 @@
 import React, { useEffect, useState, useLayoutEffect } from 'react';
-import {
-  Image,
-  Text,
-  TouchableOpacity,
-  FlatList,
-  Alert,
-  ActivityIndicator,
-  View,
-  Modal,
-  TextInput,
-  Keyboard,
-} from 'react-native';
+import { Animated, Image, Text, TouchableOpacity, FlatList, Alert, ActivityIndicator, View, Modal, Pressable, TextInput, Keyboard } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
@@ -20,7 +9,6 @@ import { getAllTopics } from '../api/topics';
 import { getFlashcardsByTopic, getAllFlashcards } from '../api/flashcards';
 import { useMockUser } from '../context/UserContext';
 import greenstick from '../assets/images/greenstick.png';
-import bluestick from '../assets/images/bluestick.png';
 import PopoverHint from '../screens/PopoverHint';
 import api from '../api/axiosInstance';
 
@@ -55,7 +43,7 @@ const topicGradientsActive: [string, string][] = [
 
 const TopicsScreen = ({ navigation }: Props) => {
   const [hintVisible, setHintVisible] = useState(false);
-  const isGreen = true;
+  const stickScale = React.useRef(new Animated.Value(1)).current;
 
   const { user } = useMockUser();
   const userId = user.id;
@@ -82,9 +70,20 @@ const TopicsScreen = ({ navigation }: Props) => {
         color: '#2c6f33',
       },
       headerLeft: () => (
-        <TouchableOpacity onPress={() => setHintVisible(true)} style={{ marginLeft: 10 }}>
-          <Image source={isGreen ? greenstick : bluestick} style={{ width: 30, height: 50, marginLeft: 15 }} />
-        </TouchableOpacity>
+        <Pressable
+          onPress={() => {
+            Animated.sequence([
+              Animated.timing(stickScale, { toValue: 0.5, duration: 100, useNativeDriver: true }), // сжать вдвое
+              Animated.timing(stickScale, { toValue: 1.0, duration: 100, useNativeDriver: true }), // вернуть норму
+            ]).start(() => setHintVisible(true));
+          }}
+          style={{ marginLeft: 16, padding: 2 }}
+        >
+          <Animated.Image
+            source={greenstick} 
+            style={{ width: 30, height: 50, transform: [{ scale: stickScale }] }}
+          />
+        </Pressable>
       ),
       headerRight: () => (
         <View style={styles.userWrapper}>
@@ -111,7 +110,8 @@ const TopicsScreen = ({ navigation }: Props) => {
     })();
   }, []);
 
-  // Load all cards when the search opens; filter out other users’ cards
+  // Load all cards when the search opens; 
+  // filter out other users’ cards
   useEffect(() => {
     if (!searchOpen) {
       setSearchQuery('');
@@ -189,7 +189,7 @@ const TopicsScreen = ({ navigation }: Props) => {
           flashcardId: card.id,
           topicId,
           topicName,
-          flashcards: deck, // ✅ full deck so NEXT/BACK/SEARCH work
+          flashcards: deck, // full deck so NEXT/BACK/SEARCH work
         } as any);
       } else {
         // Fallback: no topic found, open single-card mode

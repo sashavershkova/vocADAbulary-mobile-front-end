@@ -17,31 +17,31 @@ const styles = StyleSheet.create({
   },
   input: {
     backgroundColor: "#ffffffdd",
-    borderRadius: 30,
+    borderRadius: 20,
     padding: 14,
-    fontSize: 16,
+    fontSize: 20,
     borderWidth: 2,
-    borderColor: "#acb5fbf3",
+    borderColor: "#313bae5f",
     marginBottom: 18,
     fontFamily: 'ArchitectsDaughter-Regular',
     shadowColor: '#313131ff',
-    shadowOpacity: 0.8,
-    shadowOffset: { width: 3, height: 6 },
+    shadowOpacity: 0.5,
+    shadowOffset: { width: 0, height: 0 },
   },
   longInput: {
     backgroundColor: "#ffffffdd",
-    borderRadius: 30,
+    borderRadius: 20,
     padding: 14,
-    fontSize: 16,
+    fontSize: 20,
     borderWidth: 2,
-    borderColor: "#acb5fbf3",
+    borderColor: "#313bae5f",
     height: 150, // ≈3см
     textAlignVertical: 'top',
     fontFamily: 'ArchitectsDaughter',
     marginBottom: 18,
     shadowColor: '#313131ff',
-    shadowOpacity: 0.8,
-    shadowOffset: { width: 3, height: 6 },
+    shadowOpacity: 0.5,
+    shadowOffset: { width: 0, height: 0 },
   },
   bottomBar: {
     position: "absolute",
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
   },
   initialsCircle: {
     backgroundColor: '#97d0feff',
-    borderColor: '#246396',
+    borderColor: '#313bae8c',
     width: 25,
     height: 25,
     alignItems: 'center',
@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
   },
   userLabel: {
     fontSize: 14,
-    color: '#246396',
+    color: '#313bae8c',
     fontFamily: 'ArchitectsDaughter',
     marginTop: -5,
     textAlign: 'center',
@@ -95,11 +95,11 @@ const styles = StyleSheet.create({
   dropdownWrapper: {
     position: 'relative',
     zIndex: 10,
-    marginBottom: 40, // чтобы список не перекрывал следующее поле
+    marginBottom: 25, // чтобы список не перекрывал следующее поле
   },
 
   dropdownHeader: {
-    backgroundColor: '#ffffff',
+    backgroundColor: '#313bae28',
     borderRadius: 30,
     paddingVertical: 12,
     paddingHorizontal: 16,
@@ -110,47 +110,40 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     shadowOffset: { width: 3, height: 6 },
     zIndex: 11,
-    borderColor: "#acb5fbf3",
+    borderColor: "#313bae5f",
     borderWidth: 2, 
   },
 
   dropdownArrow: {
-    fontSize: 18,
+    fontSize: 25,
     color: '#246396',
-    fontFamily: 'ArchitectsDaughter',
   },
 
   dropdownHeaderText: {
-    fontSize: 16,
-    color: '#848687ff',
-    // fontFamily: 'ArchitectsDaughter',
+    fontSize: 20,
+    color: '#b0f4c9ff',
+    fontFamily: 'ArchitectsDaughter',
   },
-
   dropdownOverlay: {
     position: 'absolute',
     top: 60,
-    left: 0,
-    right: 0,
-    backgroundColor: '#ffffffee',
-    borderRadius: 20,
-    maxHeight: 200,
+    left: 15,
+    right: 15,
+    backgroundColor: '#b0f4c9ff',
+    borderRadius: 10,
+    maxHeight: 500,
     zIndex: 100,
-    shadowColor: '#000',
-    shadowOpacity: 0.2,
-    shadowOffset: { width: 0, height: 4 },
   },
-
   dropdownList: {
     paddingVertical: 6,
   },
-
   dropdownItem: {
     paddingVertical: 10,
     paddingHorizontal: 16,
   },
 
   dropdownItemSelected: {
-    backgroundColor: '#acb5fbf3',
+    backgroundColor: '#313bae5f',
     borderRadius: 10,
   },
 

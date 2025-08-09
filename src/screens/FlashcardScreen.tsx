@@ -8,6 +8,7 @@ import {
   Animated,
   Modal,
   TextInput,
+  Pressable,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useMockUser } from '../context/UserContext';

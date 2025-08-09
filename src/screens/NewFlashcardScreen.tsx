@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Alert,
+  Pressable,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
@@ -145,7 +146,7 @@ const NewFlashcardScreen = () => {
       <TextInput
         style={styles.input}
         placeholder="Enter word"
-        placeholderTextColor="#aaa"
+        placeholderTextColor="#313131ff'"
         value={word}
         onChangeText={setWord}
       />
@@ -155,7 +156,7 @@ const NewFlashcardScreen = () => {
       <TextInput
         style={styles.longInput}
         placeholder="Enter definition"
-        placeholderTextColor="#aaa"
+        placeholderTextColor="#313131ff'"
         multiline
         numberOfLines={4}
         value={definition}
@@ -167,7 +168,7 @@ const NewFlashcardScreen = () => {
       <TextInput
         style={styles.longInput}
         placeholder="Enter example"
-        placeholderTextColor="#aaa"
+        placeholderTextColor="#313131ff'"
         multiline
         numberOfLines={4}
         value={example}

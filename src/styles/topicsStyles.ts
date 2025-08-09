@@ -18,6 +18,9 @@ const styles = StyleSheet.create({
   topicTouchable: {
     borderRadius: 40,
     overflow: 'visible',
+    // shadowColor: '#313131ff',
+    // shadowOpacity: 0.8,
+    // shadowOffset: { width: 3, height: 6 },
   },
   topicBox: {
     width: 300,
@@ -28,7 +31,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1.5,
-    elevation: 0,
   },
   topicText: {
     fontSize: 25,
@@ -101,9 +103,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.8,
     shadowOffset: { width: 4, height: 6 },
   },
-  homeButton: {
-    alignItems: 'center',
-  },
+  // homeButton: {
+  //   alignItems: 'center',
+    
+  // },
   addButton: {
     width: 56,
     height: 56,
@@ -111,7 +114,6 @@ const styles = StyleSheet.create({
     borderRadius: 28,
     alignItems: 'center',
     justifyContent: 'center',
-    elevation: 5,
   },
   buttonText: {
     color: '#006400',
@@ -159,7 +161,6 @@ const styles = StyleSheet.create({
     shadowColor: '#2c6f33',
     shadowOpacity: 0.15,
     shadowRadius: 10,
-    elevation: 6,
   },
   navTextCenter: {
     fontSize: 16,
@@ -237,6 +238,54 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
+// КНОПКА (пилюля) — статическое состояние
+pillButton: {
+  minWidth: 80,
+  height: 56,
+  paddingHorizontal: 22,
+  borderRadius: 40,                 // максимально скруглённая
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: 8,
+
+  backgroundColor: '#e2a4f7ee',
+  borderWidth: 1.5,
+  borderColor: '#2c6f33',
+
+  // статичная тень
+  shadowColor: '#313131ff',
+  shadowOpacity: 0.8,
+  shadowOffset: { width: 3, height: 6 },
+  shadowRadius: 6,
+  elevation: 6,
+},
+
+// КНОПКА — активное (динамическое) состояние
+pillButtonActive: {
+  // белая «светящаяся» тень
+  shadowColor: '#ffffffff',
+  shadowOpacity: 0.95,
+  shadowOffset: { width: 0, height: 8 },
+  shadowRadius: 10,
+  elevation: 12,
+},
+
+// ИНФО-ПОВЕРХНОСТЬ (не кнопка)
+infoSurface: {
+  borderRadius: 16,                // односкругление для всех не-кнопок
+  backgroundColor: '#cef4caf0',
+  borderWidth: 1,
+  borderColor: '#246396',
+  paddingVertical: 10,
+  paddingHorizontal: 20,
+
+  shadowColor: '#313131ff',
+  shadowOpacity: 0.8,
+  shadowOffset: { width: 3, height: 6 },
+},
+
+
 });
 
 export default styles;

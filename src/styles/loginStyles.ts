@@ -3,11 +3,12 @@ import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: 'transparent',
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 20,
   },
+  // Title
   titleRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -20,27 +21,55 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: 'ArchitectsDaughter',
     color: '#b869d3ff',
-    shadowColor: '#313131ff',
-    shadowOpacity: 0.8,
-    shadowOffset: { width: 4, height: 6 },
+    textShadowColor: '#4f4e4eff',
+    textShadowOffset: { width: 3, height: 6 },
+    textShadowRadius: 6,
+    shadowOpacity: 0.1,
   },
+  // Avatar
   avatar: {
     width: 100,
     height: 100,
     resizeMode: 'contain',
+  },
+  avatarWrapper: {
+    borderRadius: 20,
+    padding: 4,
     shadowColor: '#313131ff',
     shadowOpacity: 0.8,
-    shadowOffset: { width: 4, height: 6 },
+    shadowOffset: { width: 3, height: 6 },
+    shadowRadius: 1,
   },
-  input: {
+  // Input
+  inputBase: {
     width: '100%',
-    borderWidth: 2,
-    borderColor: '#006400',
-    padding: 12,
+    borderWidth: 1,
+    borderColor: '#00640064',
+    borderRadius: 20,
+    backgroundColor: '#ebf8e4ff',
     marginBottom: 15,
-    borderRadius: 6,
-    fontSize: 16,
+    shadowColor: '#313131ff',
+    shadowOpacity: 0.5,
+    shadowOffset: { width: 3, height: 6 },
+    shadowRadius: 2,
   },
+  inputFocused: {
+    borderColor: '#ffffff',
+    borderWidth: 2,
+    borderRadius: 18,
+    shadowColor: '#ffffffff', 
+    shadowOpacity: 1,
+    shadowOffset: { width: 0, height: 0 },
+    shadowRadius: 10,
+  },
+  inputField: {
+    padding: 12,
+    fontSize: 20,
+    fontFamily: 'ArchitectsDaughter',
+    backgroundColor: 'transparent',
+  },
+
+  // Other buttons
   checkboxRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -51,7 +80,6 @@ const styles = StyleSheet.create({
     marginLeft: 8,
     color: '#006400',
     fontSize: 16,
-    fontWeight: 'bold',
     fontFamily: 'ArchitectsDaughter',
   },
   forgotText: {
@@ -61,28 +89,33 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'ArchitectsDaughter',
   },
-  simpleButton: {
-    backgroundColor: '#e19bf8de',
+  pillButton: {
+    backgroundColor: '#d97cf885',
     paddingVertical: 12,
     paddingHorizontal: 40,
-    borderRadius: 25,
-    marginTop: 30,
+    borderRadius: 30,
     alignSelf: 'center',
-    borderWidth: 2,
-    borderColor: '#006400',
+    borderWidth: 1,
+    borderColor: '#00640064',
+    marginTop: 30,
     shadowColor: '#313131ff',
     shadowOpacity: 0.8,
-    shadowOffset: { width: 4, height: 6 },
+    shadowOffset: { width: 3, height: 6 },
+    shadowRadius: 6,
   },
-  simpleButtonText: {
+  pillButtonActive: {
+    borderColor: '#ffffffff',
+    shadowColor: '#ffffffff',
+    borderWidth: 2,
+    shadowOpacity: 0.8,
+    shadowOffset: { width: 0, height: 0 },
+    shadowRadius: 10,
+  },
+  pillButtonText: {
     color: '#006400',
     fontSize: 20,
-    fontWeight: 'bold',
     textAlign: 'center',
     fontFamily: 'ArchitectsDaughter',
-    textShadowColor: '#006400',
-    shadowOffset: { width: 3, height: 6 },
-    textShadowRadius: 2,
   },
 });
 

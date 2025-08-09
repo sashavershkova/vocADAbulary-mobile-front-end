@@ -83,7 +83,6 @@ export default StyleSheet.create({
   // soundButton: {
   //   borderRadius: 20,
   //   padding: 6,
-  //   elevation: 3,
   // },
   soundButtonTopRight: {
     position: 'absolute',

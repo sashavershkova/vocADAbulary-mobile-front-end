@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Alert, Pressable, ActivityIndicator } from 'react-native';
 import styles from '../styles/signUpStyles';
 import { useNavigation } from '@react-navigation/native';
 import { signUpUser } from '../api/auth'; // import from the file above

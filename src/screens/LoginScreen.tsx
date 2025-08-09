@@ -7,6 +7,7 @@ import {
   Alert,
   Image,
   Animated,
+  Pressable,
 } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigation';
@@ -29,6 +30,7 @@ const LoginScreen = ({ navigation }: Props) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
+  const [focused, setFocused] = useState<null | 'username' | 'password'>(null);
 
   const title = 'TECH VOICE';
   const animatedValues = useRef(title.split('').map(() => new Animated.Value(1))).current;
@@ -75,7 +77,7 @@ const LoginScreen = ({ navigation }: Props) => {
       const response = await api.post('/api/users/login', { username });
 
       const { id, role } = response.data;
-      
+
       // Save in context
       setUser({ id, username });
       console.log('✅ User set in context:', { id, username });
@@ -102,76 +104,95 @@ const LoginScreen = ({ navigation }: Props) => {
   };
 
   return (
-    <LinearGradient colors={['#abf5ab64', '#347134bc']} style={styles.container}>
-      <View style={styles.titleRow}>
-        {title.split('').map((char, i) => (
-          <Animated.Text
-            key={i}
-            style={[
-              styles.title,
-              { transform: [{ scale: animatedValues[i] }] },
-            ]}
-          >
-            {char}
-          </Animated.Text>
-        ))}
+  <LinearGradient colors={['#abf5ab64', '#347134bc']} style={styles.container}>
+    <View style={styles.titleRow}>
+      {title.split('').map((char, i) => (
+        <Animated.Text
+          key={i}
+          style={[styles.title, { transform: [{ scale: animatedValues[i] }] }]}
+        >
+          {char}
+        </Animated.Text>
+      ))}
+
+      <View style={styles.avatarWrapper}>
         <Image
           source={require('../assets/images/stickman.png')}
-          style={[styles.avatar, { tintColor: undefined }]}
+          style={styles.avatar}
         />
       </View>
+    </View>
 
+    {/* Username */}
+    <View style={[styles.inputBase, focused === 'username' && styles.inputFocused]}>
       <TextInput
         placeholder="Username"
-        style={styles.input}
+        style={styles.inputField}
         value={username}
         onChangeText={setUsername}
         autoCapitalize="none"
+        onFocus={() => setFocused('username')}
+        onBlur={() => setFocused(null)}
       />
+    </View>
 
+    {/* Password */}
+    <View style={[styles.inputBase, focused === 'password' && styles.inputFocused]}>
       <TextInput
         placeholder="Password"
-        style={styles.input}
+        style={styles.inputField}
         value={password}
         onChangeText={setPassword}
         secureTextEntry
+        onFocus={() => setFocused('password')}
+        onBlur={() => setFocused(null)}
       />
+    </View>
 
-      <TouchableOpacity
-        style={styles.checkboxRow}
-        onPress={() => setRememberMe(!rememberMe)}
+    {/* Remember Me */}
+    <TouchableOpacity
+      style={styles.checkboxRow}
+      onPress={() => setRememberMe(!rememberMe)}
+    >
+      <View
+        style={{
+          width: 24,
+          height: 24,
+          borderRadius: 6,
+          borderWidth: 2,
+          borderColor: '#006400',
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: rememberMe ? '#abf5ab64' : 'transparent',
+        }}
       >
-        <View
-          style={{
-            width: 24,
-            height: 24,
-            borderRadius: 6,
-            borderWidth: 2,
-            borderColor: '#006400',
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: rememberMe ? '#006400' : 'transparent',
-          }}
-        >
-          {rememberMe && <MaterialIcons name="check" size={18} color="#fff" />}
-        </View>
-        <Text style={styles.checkboxText}>Remember Me</Text>
-      </TouchableOpacity>
+        {rememberMe && <MaterialIcons name="check" size={18} color="#006400" />}
+      </View>
+      <Text style={styles.checkboxText}>Remember Me</Text>
+    </TouchableOpacity>
 
-      <TouchableOpacity>
-        <Text style={styles.forgotText}>Forgot Username / Password?</Text>
-      </TouchableOpacity>
+    {/* Forgot */}
+    <TouchableOpacity>
+      <Text style={styles.forgotText}>Forgot Username / Password?</Text>
+    </TouchableOpacity>
 
-      <TouchableOpacity onPress={handleLogin} style={styles.simpleButton}>
-        <Text style={styles.simpleButtonText}>SIGN IN</Text>
-      </TouchableOpacity>
+    {/* SIGN IN pill */}
+    <Pressable
+      onPress={handleLogin}
+      style={({ pressed }) => [styles.pillButton, pressed && styles.pillButtonActive]}
+    >
+      <Text style={styles.pillButtonText}>SIGN IN</Text>
+    </Pressable>
 
-      <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
-        <Text style={styles.forgotText}>Don't you have an account yet? Sign up!</Text>
-      </TouchableOpacity>
-      
-    </LinearGradient>
-  );
+    {/* Sign Up link */}
+    <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
+      <Text style={styles.forgotText}>
+        Don't you have an account yet? Sign up!
+      </Text>
+    </TouchableOpacity>
+  </LinearGradient>
+);
+
 };
 
 export default LoginScreen;

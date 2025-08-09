@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useLayoutEffect } from 'react';
-import { View, Text, ActivityIndicator } from 'react-native';
+import { View, Text, Pressable, ActivityIndicator } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigation';
 import styles from '../styles/topicStyles';

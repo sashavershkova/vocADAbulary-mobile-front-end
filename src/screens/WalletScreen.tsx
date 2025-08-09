@@ -2,14 +2,7 @@ import React, { useEffect, useState, useLayoutEffect, useRef } from "react";
 import api from "../api/axiosInstance";
 import { useMockUser } from "../context/UserContext";
 import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  FlatList,
-  Alert,
-  ActivityIndicator,
-  Image,
+  Animated, View, Text, TextInput, TouchableOpacity, FlatList, Alert, Pressable, ActivityIndicator, Image,
 } from "react-native";
 import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
 import { Audio } from "expo-av";
@@ -32,7 +25,7 @@ import {
   fetchAndCacheTTS,
   playTTS,
 } from "../utils/ttsUtils";
-import greenstick from '../assets/images/greenstick.png';
+// import greenstick from '../assets/images/greenstick.png';
 import bluestick from '../assets/images/bluestick.png';
 import PopoverHint from '../screens/PopoverHint';
 
@@ -49,6 +42,8 @@ type WalletFlashcard = {
 
 const WalletScreen = () => {
   const [hintVisible, setHintVisible] = useState(false);
+  const stickScale = React.useRef(new Animated.Value(1)).current;
+
   const isGreen = false;
   const navigation = useNavigation<WalletNavProp>();
   const { user } = useMockUser();
@@ -92,7 +87,7 @@ const WalletScreen = () => {
   useLayoutEffect(() => {
     navigation.setOptions({
       title: "WALLET",
-      headerBackVisible: false,
+      // headerBackVisible: false,
       headerStyle: {
         backgroundColor: "#b0f4c9ff",
       },
@@ -102,12 +97,20 @@ const WalletScreen = () => {
         fontSize: 36,
       },
       headerLeft: () => (
-        <TouchableOpacity onPress={() => setHintVisible(true)} style={{ marginLeft: 10 }}>
-          <Image
-            source={isGreen ? greenstick : bluestick}
-            style={{ width: 30, height: 50, marginLeft: 15 }}
+        <Pressable
+          onPress={() => {
+            Animated.sequence([
+              Animated.timing(stickScale, { toValue: 0.5, duration: 100, useNativeDriver: true }), // сжать вдвое
+              Animated.timing(stickScale, { toValue: 1.0, duration: 100, useNativeDriver: true }), // вернуть норму
+            ]).start(() => setHintVisible(true));
+          }}
+          style={{ marginLeft: 16, padding: 2 }}
+        >
+          <Animated.Image
+            source={bluestick} // всегда синий
+            style={{ width: 30, height: 50, transform: [{ scale: stickScale }] }}
           />
-        </TouchableOpacity>
+        </Pressable>
       ),
       headerRight: () => (
         <View style={styles.userWrapper}>
@@ -209,7 +212,7 @@ const WalletScreen = () => {
                 {ttsLoadingId === item.id ? (
                   <ActivityIndicator size="small" color="#97d0feff" />
                 ) : (
-                  <Ionicons name="play-circle" size={32} color="#97d0feff" />
+                  <Ionicons name="play-circle" size={32} color="#313bae8c" />
                 )}
               </TouchableOpacity>
 
@@ -218,11 +221,11 @@ const WalletScreen = () => {
 
             <View style={styles.iconRow}>
               <TouchableOpacity onPress={() => handleDelete(item.id)}>
-                <Ionicons name="remove-circle" size={32} color="#f94949ac" />
+                <Ionicons name="remove-circle" size={32} color="#fb3030db" />
               </TouchableOpacity>
 
               <TouchableOpacity onPress={() => markAsLearned(item.id)}>
-                <Ionicons name="checkmark-circle" size={32} color="#006400" />
+                <Ionicons name="checkmark-circle" size={32} color="#67f59bff" />
               </TouchableOpacity>
             </View>
           </View>
