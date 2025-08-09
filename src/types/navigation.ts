@@ -6,7 +6,7 @@ export type RootStackParamList = {
   Home: { userId: number; username: string };
   Topics: undefined;
   Topic: { topicId: number; topicName: string };
-  Flashcard: { flashcardId: number; topicId: number; topicName: string; flashcards?: Flashcard[]; };
+  Flashcard: { flashcardId: number; topicId: number; onAfterUpdate?: () => void;topicName: string; flashcards?: Flashcard[]; };
   Progress: { userId: number; username: string };
   Quiz: undefined;  // ✅ { topicId?: number };
   Settings: undefined;

@@ -17,6 +17,7 @@ import styles from '../styles/flashcardStyles';
 import { RootStackParamList } from '../types/navigation';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Flashcard as ApiFlashcard } from '../types/models';
 import {
   ensureCacheDirExists,
   isAudioCached,
@@ -27,15 +28,13 @@ import {
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Flashcard'>;
 
-type Flashcard = {
-  id: number;
-  word: string;
-  definition: string;
-  example: string;
-  audioUrl: string;
-  createdBy: number | null; // public cards are null
+type Flashcard = ApiFlashcard & {
   phonetic?: string;
   synonyms?: string;
+  createdBy: number | null; // public cards are null
+  audioUrl: string;
+  definition: string;
+  example: string;  
 };
 
 const logTime = (label: string) => {
@@ -43,8 +42,10 @@ const logTime = (label: string) => {
   console.log(`${now.toISOString()} ⏱️ ${label}`);
 };
 
-const FlashcardScreen = ({ route, navigation }: Props) => {
-  const { topicId, topicName, flashcardId, flashcards: passedFlashcards } = route.params;
+const FlashcardScreen = async ({ route, navigation }: Props) => {
+  // Destructure route params at the top so topicId is declared before use
+  const { topicId, topicName, flashcardId, flashcards: passedFlashcards } = 
+    route.params as RootStackParamList['Flashcard'];
   const { user } = useMockUser();
   const userId = user.id;
   const initials = user.username?.charAt(0).toUpperCase() || '?';
@@ -63,6 +64,7 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
 
   const flipAnim = useRef(new Animated.Value(0)).current;
   const hasEnsuredDir = useRef(false);
+  const lastFetchKeyRef = useRef<string | null>(null);
 
   const frontInterpolate = flipAnim.interpolate({
     inputRange: [0, 180],
@@ -84,6 +86,11 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
     }).start();
     setFlipped(!flipped);
   };
+
+  // // When fetching a list:
+  // const { data: listData } = await api.get<Flashcard[]>(`/api/flashcards/visible`, { params: { topicId } });
+  // // When fetching a single:
+  // const { data: singleData } = await api.get<Flashcard>(`/api/flashcards/${flashcardId}`);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -107,71 +114,89 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
   }, [navigation, initials]);
 
   useEffect(() => {
-    // Ensure the cache directory exists before anything else
-    if (!hasEnsuredDir.current) {
-      ensureCacheDirExists();
-      hasEnsuredDir.current = true;
-    }
+  // Ensure the cache directory exists before anything else
+  if (!hasEnsuredDir.current) {
+    ensureCacheDirExists();
+    hasEnsuredDir.current = true;
+  }
 
-    const init = async () => {
-      setLoading(true);
-      try {
-        if (topicId) {
-          // ✅ Server-side filtered deck for this topic
-          const { data } = await api.get(`/api/flashcards/visible`, { params: { topicId } });
+  // Use only scalars in the key to avoid re-renders on object identity changes
+  const passedDeckLen =
+    Array.isArray(passedFlashcards) ? passedFlashcards.length : 0;
+  const fetchKey = `${topicId ?? 'nt'}|${flashcardId ?? 'nf'}|${passedDeckLen}`;
 
-          if (!data || data.length === 0) {
-            Alert.alert('Nothing to study', 'No visible cards for this topic.');
-            navigation.goBack();
-            return;
-          }
+  // If nothing changed since last fetch, skip
+  if (lastFetchKeyRef.current === fetchKey) return;
+  lastFetchKeyRef.current = fetchKey;
 
-          setFlashcards(data);
+  let cancelled = false;
 
-          // Prefer the requested card if still present; otherwise pick the first
-          const candidate = data.find((fc: Flashcard) => fc.id === flashcardId) || data[0];
-          setCurrentCard(candidate);
-        } else if (flashcardId) {
-          // Fallback: fetch just the single card (controller unchanged, so guard on client)
-          const { data } = await api.get(`/api/flashcards/${flashcardId}`);
-          const allowed = data.createdBy == null || data.createdBy === userId;
+  const init = async () => {
+    setLoading(true);
+    try {
+      if (topicId != null) {
+        // ✅ Server-side filtered deck for this topic
+        const { data: listData } = await api.get<Flashcard[]>(
+          `/api/flashcards/visible`,
+          { params: { topicId } }
+        );
+        if (cancelled) return;
 
-          if (!allowed) {
-            Alert.alert('Not available', 'This card belongs to another user.');
-            navigation.goBack();
-            return;
-          }
-
-          setCurrentCard(data);
-          setFlashcards([data]);
-        } else if (passedFlashcards && passedFlashcards.length > 0 && topicId) {
-          // If a deck was passed, refresh from backend to ensure filtered deck
-          const { data } = await api.get(`/api/flashcards/visible`, { params: { topicId } });
-          setFlashcards(data);
-          const candidate =
-            data.find((fc: Flashcard) => fc.id === flashcardId) || data[0];
-          setCurrentCard(candidate);
-        } else if (passedFlashcards && passedFlashcards.length > 0) {
-          // No topicId? Fall back to passed deck (already on-screen)
-          setFlashcards(passedFlashcards as Flashcard[]);
-          const candidate =
-            (passedFlashcards as Flashcard[]).find(fc => fc.id === flashcardId) ||
-            (passedFlashcards as Flashcard[])[0];
-          setCurrentCard(candidate);
-        } else {
-          Alert.alert('No card', 'Nothing to load.');
+        if (!listData || listData.length === 0) {
+          Alert.alert('Nothing to study', 'No visible cards for this topic.');
           navigation.goBack();
+          return;
         }
-      } catch (error) {
-        console.error('Error loading flashcard(s):', error);
-        Alert.alert('Error', 'Could not load flashcards.');
-      } finally {
-        setLoading(false);
-      }
-    };
 
-    init();
-  }, [route.params, userId, navigation, topicId, flashcardId]);
+        setFlashcards(listData);
+
+        // Prefer the requested card if still present; otherwise pick the first
+        const candidate =
+          listData.find((fc) => fc.id === flashcardId) || listData[0];
+        setCurrentCard(candidate);
+      } else if (flashcardId != null) {
+        // Fallback: fetch just the single card
+        const { data: singleData } = await api.get<Flashcard>(
+          `/api/flashcards/${flashcardId}`
+        );
+        if (cancelled) return;
+
+        const allowed =
+          singleData.createdBy == null || singleData.createdBy === userId;
+        if (!allowed) {
+          Alert.alert('Not available', 'This card belongs to another user.');
+          navigation.goBack();
+          return;
+        }
+
+        setCurrentCard(singleData);
+        setFlashcards([singleData]);
+      } else if (Array.isArray(passedFlashcards) && passedFlashcards.length > 0) {
+        // No topicId? Fall back to passed deck (already on-screen)
+        setFlashcards(passedFlashcards as Flashcard[]);
+        const candidate =
+          (passedFlashcards as Flashcard[]).find((fc) => fc.id === flashcardId) ||
+          (passedFlashcards as Flashcard[])[0];
+        setCurrentCard(candidate);
+      } else {
+        Alert.alert('No card', 'Nothing to load.');
+        navigation.goBack();
+      }
+    } catch (error) {
+      console.error('Error loading flashcard(s):', error);
+      Alert.alert('Error', 'Could not load flashcards.');
+    } finally {
+      if (!cancelled) setLoading(false);
+    }
+  };
+
+  init();
+
+  return () => {
+    cancelled = true; // Prevent state updates if unmounted
+  };
+  // Keep only stable scalars/arrays here; avoid putting whole objects
+}, [topicId, flashcardId, userId, navigation, passedFlashcards]);
 
   // Index helpers for navigation
   const getCurrentIndex = () =>
@@ -233,8 +258,22 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
   const updateStatus = async (status: string) => {
     if (!currentCard) return;
     try {
-      await updateWalletFlashcardStatus(userId, currentCard.id, status);
-      Alert.alert('Updated', `Flashcard marked as ${status}.`);
+      const resp = await updateWalletFlashcardStatus(userId, currentCard.id, status);
+      // Handle the response
+      const maybeGen = 
+        resp && typeof resp === "object" && 'sentenceGenerated' in resp
+          ? (resp as any).sentenceGenerated
+          : undefined;
+      
+      if (status.toUpperCase() === 'LEARNED') {
+        if (maybeGen === true ) {
+          Alert.alert('Updated', 'Marked as LEARNED. New sentence generated 🎉');
+        } else {
+          Alert.alert('Updated', 'Marked as LEARNED.');
+        }
+      } else {
+        Alert.alert('Updated', `Marked as ${status}.`);
+      }
     } catch (error) {
       console.error('Update error:', error);
       Alert.alert('Error', `Could not set status: ${status}`);
@@ -260,7 +299,7 @@ const FlashcardScreen = ({ route, navigation }: Props) => {
       return;
     }
     const q = query.toLowerCase();
-    const results = flashcards.filter(fc =>
+    const results = flashcards.filter( (fc) =>
       fc.word.toLowerCase().includes(q) ||
       (fc.definition && fc.definition.toLowerCase().includes(q))
     );

@@ -8,6 +8,7 @@ export type Flashcard = {
   question: string;
   answer: string;
   topicId: number;
+  word: string;
 };
 export type User = {
   id: number;
