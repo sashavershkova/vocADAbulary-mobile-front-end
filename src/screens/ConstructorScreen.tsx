@@ -4,8 +4,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-import quizStyles from '../styles/quizStyles'; // reuse shared look & feel
-import cStyles from '../styles/constructorStyles'; // constructor-only styles
+import quizStyles from '../styles/quizStyles';
+import cStyles from '../styles/constructorStyles';
 import api from '../api/axiosInstance';
 import { useMockUser } from '../context/UserContext';
 import { RootStackParamList } from '../types/navigation';
@@ -29,6 +29,8 @@ const ConstructorScreen = ({ navigation }: Props) => {
   const [chunks, setChunks] = useState<Chunk[]>([]);
   const [answers, setAnswers] = useState<Record<number, string>>({});
   const [revealed, setRevealed] = useState<Record<number, boolean>>({});
+  const [revealedWords, setRevealedWords] = useState<Record<number, string>>({});
+  const [attempts, setAttempts] = useState<Record<number, number>>({});
   const [perBlankResult, setPerBlankResult] = useState<Record<number, boolean | null>>({});
   const [feedback, setFeedback] = useState<'success' | 'error' | null>(null);
   const [submitting, setSubmitting] = useState<boolean>(false);
@@ -60,30 +62,49 @@ const ConstructorScreen = ({ navigation }: Props) => {
     setPerBlankResult({});
     setAnswers({});
     setRevealed({});
+    setRevealedWords({});
+    setAttempts({});
+
     try {
-      // 1) random template from backend
       const tRes = await api.get<TemplateResponseWithBlank>('/api/sentences/templates/random');
       const t = tRes.data;
       setTemplate(t);
 
-      // 2) prepare chunks (server might set reveal flags)
       const pRes = await api.get<PrepareSentenceResponse>(`/api/sentences/templates/${t.id}/prepare`);
       const p = pRes.data;
+
+      console.log('loadNewTemplate: prepare response', p);
 
       const gotChunks = p?.chunks ?? [];
       setChunks(gotChunks);
 
-      // init answers & reveal map
       const initAnswers: Record<number, string> = {};
       const initRevealed: Record<number, boolean> = {};
+      const initRevealedWords: Record<number, string> = {};
+      const initAttempts: Record<number, number> = {};
       gotChunks.forEach((c) => {
         if (c.type === 'blank' && typeof c.blankIndex === 'number') {
           initRevealed[c.blankIndex] = !!c.reveal;
-          initAnswers[c.blankIndex] = c.reveal && c.revealedWord ? c.revealedWord : '';
+          initAttempts[c.blankIndex] = 0;
+          if (c.reveal && c.revealedWord) {
+            initRevealedWords[c.blankIndex] = c.revealedWord;
+            initAnswers[c.blankIndex] = c.revealedWord;
+          } else {
+            initAnswers[c.blankIndex] = '';
+            if (c.revealedWord) {
+              initRevealedWords[c.blankIndex] = c.revealedWord;
+            }
+          }
         }
       });
       setAnswers(initAnswers);
       setRevealed(initRevealed);
+      setRevealedWords(initRevealedWords);
+      setAttempts(initAttempts);
+
+      console.log('loadNewTemplate: initRevealedWords', initRevealedWords);
+      console.log('loadNewTemplate: initRevealed', initRevealed);
+      console.log('loadNewTemplate: initAttempts', initAttempts);
     } catch (err) {
       console.error('Failed to load template:', err);
       Alert.alert('Error', 'Failed to load constructor sentence.');
@@ -98,25 +119,35 @@ const ConstructorScreen = ({ navigation }: Props) => {
 
   const handleChange = (idx: number, text: string) => {
     setAnswers((prev) => ({ ...prev, [idx]: text }));
-    setPerBlankResult((prev) => ({ ...prev, [idx]: null })); // clear red/green while editing
+    setPerBlankResult((prev) => ({ ...prev, [idx]: null }));
   };
 
   const handleReset = () => {
-    // Clear user input for this template; keep revealed values
     const cleared: Record<number, string> = {};
+    const clearedAttempts: Record<number, number> = {};
     Object.keys(answers).forEach((k) => {
       const i = Number(k);
-      cleared[i] = revealed[i] ? (answers[i] || '') : '';
+      cleared[i] = revealed[i] ? (revealedWords[i] || '') : '';
+      clearedAttempts[i] = 0;
     });
     setAnswers(cleared);
+    setAttempts(clearedAttempts);
     setPerBlankResult({});
     setFeedback(null);
+
+    console.log('handleReset: clearedAnswers', cleared);
+    console.log('handleReset: clearedAttempts', clearedAttempts);
   };
 
   const handleSubmit = async () => {
     if (!template) return;
     setSubmitting(true);
     setFeedback(null);
+
+    console.log('handleSubmit: current attempts', attempts);
+    console.log('handleSubmit: current answers', answers);
+    console.log('handleSubmit: current revealed', revealed);
+    console.log('handleSubmit: current revealedWords', revealedWords);
 
     try {
       const payload = {
@@ -130,23 +161,62 @@ const ConstructorScreen = ({ navigation }: Props) => {
       const res = await api.post<FinalizeSentenceResponse>('/api/sentences/finalize', payload);
       const data = res.data;
 
-      // build maps
+      console.log('handleSubmit: finalize response data', data);
+      console.log('handleSubmit: perBlank from server', data.perBlank);
+
       const updatedResult: Record<number, boolean | null> = {};
       const updRevealed: Record<number, boolean> = { ...revealed };
+      const updRevealedWords: Record<number, string> = { ...revealedWords };
+      const updAttempts: Record<number, number> = { ...attempts };
 
       data.perBlank.forEach((pb) => {
-        updatedResult[pb.blankIndex] = pb.isCorrect;
-        if (pb.reveal) {
-          updRevealed[pb.blankIndex] = true;
-          if (pb.revealedWord) {
-            // lock revealed word
-            setAnswers((prev) => ({ ...prev, [pb.blankIndex]: pb.revealedWord || '' }));
+        const idx = pb.blankIndex;
+        updatedResult[idx] = pb.isCorrect;
+
+        console.log(`handleSubmit: processing blank ${idx}, isCorrect: ${pb.isCorrect}, server reveal: ${pb.reveal}, server revealedWord: ${pb.revealedWord}`);
+
+        if (!pb.isCorrect && !updRevealed[idx]) {
+          updAttempts[idx] = (updAttempts[idx] || 0) + 1;
+          console.log(`handleSubmit: incremented attempts for ${idx} to ${updAttempts[idx]}`);
+
+          if (updAttempts[idx] >= 3) {
+            const word = updRevealedWords[idx] || pb.revealedWord;
+            if (word) {
+              updRevealed[idx] = true;
+              updRevealedWords[idx] = word;
+              setAnswers((prev) => ({ ...prev, [idx]: word }));
+              updAttempts[idx] = 0;
+              console.log(`handleSubmit: reveal triggered for ${idx}, setting answer to ${word}`);
+            } else {
+              console.log(`handleSubmit: reveal NOT triggered for ${idx}, attempts: ${updAttempts[idx]}, no revealedWord available`);
+              Alert.alert('Error', `Correct word for blank ${idx} not available from server.`);
+            }
+          } else {
+            console.log(`handleSubmit: reveal NOT triggered for ${idx}, attempts: ${updAttempts[idx]}, has revealedWord: ${!!updRevealedWords[idx]}`);
           }
+        }
+
+        if (pb.reveal && pb.revealedWord) {
+          updRevealed[idx] = true;
+          updRevealedWords[idx] = pb.revealedWord;
+          setAnswers((prev) => ({ ...prev, [idx]: pb.revealedWord }));
+          updAttempts[idx] = 0;
+          console.log(`handleSubmit: server reveal for ${idx}, setting answer to ${pb.revealedWord}`);
+        } else if (pb.reveal && !pb.revealedWord) {
+          console.log(`handleSubmit: server reveal for ${idx}, but revealedWord is null`);
+          Alert.alert('Error', `Server indicated reveal for blank ${idx} but provided no word.`);
         }
       });
 
       setPerBlankResult(updatedResult);
       setRevealed(updRevealed);
+      setRevealedWords(updRevealedWords);
+      setAttempts(updAttempts);
+
+      console.log('handleSubmit: updated revealed', updRevealed);
+      console.log('handleSubmit: updated revealedWords', updRevealedWords);
+      console.log('handleSubmit: updated attempts', updAttempts);
+      console.log('handleSubmit: updated perBlankResult', updatedResult);
 
       if (data.allCorrect) {
         setFeedback('success');
@@ -156,8 +226,6 @@ const ConstructorScreen = ({ navigation }: Props) => {
         }, 500);
       } else {
         setFeedback('error');
-
-        // clear only wrong & not revealed inputs so user can retry
         setAnswers((prev) => {
           const next = { ...prev };
           Object.keys(updatedResult).forEach((k) => {
@@ -168,9 +236,9 @@ const ConstructorScreen = ({ navigation }: Props) => {
           });
           return next;
         });
-
-        // brief flash then remove
         setTimeout(() => setFeedback(null), 700);
+
+        console.log('handleSubmit: answers after clearing wrong ones', answers);
       }
     } catch (err) {
       console.error('Finalize failed:', err);
@@ -196,11 +264,10 @@ const ConstructorScreen = ({ navigation }: Props) => {
 
   return (
     <LinearGradient colors={['#f7b4c4d6', '#bf86fcc2']} style={quizStyles.container}>
-      {/* Centered content area */}
       <View style={cStyles.contentCenter}>
         <View
           style={[
-            quizStyles.questionButton,             // reuse your yellow rounded box
+            quizStyles.questionButton,
             feedback === 'success' && cStyles.successFlash,
             feedback === 'error' && cStyles.errorFlash,
           ]}
@@ -215,11 +282,12 @@ const ConstructorScreen = ({ navigation }: Props) => {
                     </Text>
                   );
                 }
-                // blank
-                const bIdx = chunk.blankIndex ?? i; // stable key fallback
+                const bIdx = chunk.blankIndex ?? i;
                 const isRevealed = !!revealed[bIdx];
-                const result = perBlankResult[bIdx]; // true | false | null
+                const result = perBlankResult[bIdx];
                 const value = answers[bIdx] ?? '';
+
+                console.log(`Render blank ${bIdx}: isRevealed ${isRevealed}, value '${value}', placeholder '${isRevealed ? revealedWords[bIdx] || '...' : '...'}', result ${result}`);
 
                 return (
                   <TextInput
@@ -235,7 +303,7 @@ const ConstructorScreen = ({ navigation }: Props) => {
                       result === true && cStyles.blankInputCorrect,
                       result === false && cStyles.blankInputWrong,
                     ]}
-                    placeholder={isRevealed ? 'revealed' : '...'}
+                    placeholder={isRevealed ? (revealedWords[bIdx] || 'Answer not available') : '...'}
                     placeholderTextColor="#246396"
                   />
                 );
@@ -247,7 +315,6 @@ const ConstructorScreen = ({ navigation }: Props) => {
         </View>
       </View>
 
-      {/* Bottom nav reused from quiz */}
       <View style={quizStyles.bottomBar}>
         <TouchableOpacity style={quizStyles.navItem} onPress={() => navigation.navigate('Home')}>
           <Ionicons name="home" size={30} color="#97d0feff" />
