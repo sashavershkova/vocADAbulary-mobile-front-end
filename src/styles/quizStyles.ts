@@ -117,10 +117,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flex: 1,
   },
-<<<<<<< HEAD
-
-  
-=======
   navIconActive: {
     shadowColor: '#FFFFFF',
     shadowOpacity: 1,
@@ -135,7 +131,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     width: '100%',
   },
->>>>>>> polish3
 });
 
 export default styles;
