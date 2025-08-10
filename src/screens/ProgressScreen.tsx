@@ -1,12 +1,5 @@
 import React, { useEffect, useState, useLayoutEffect } from 'react';
-import {
-  Image,
-  View,
-  Text,
-  ActivityIndicator,
-  Alert,
-  TouchableOpacity
-} from 'react-native';
+import { Animated, Image, View, Text, ActivityIndicator, Pressable, Alert, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigation';
@@ -16,7 +9,6 @@ import { getCreatedCount } from '../api/flashcards';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import styles from '../styles/progressStyles';
-import greenstick from '../assets/images/greenstick.png';
 import bluestick from '../assets/images/bluestick.png';
 import PopoverHint from '../screens/PopoverHint';
 
@@ -37,7 +29,7 @@ type ProgressSummary = {
 
 const ProgressScreen = () => {
   const [hintVisible, setHintVisible] = useState(false);
-  const isGreen = false;
+  const stickScale = React.useRef(new Animated.Value(1)).current;
   const navigation = useNavigation<ProgressNavProp>();
   const { user } = useMockUser();
   const userId = user.id;
@@ -49,7 +41,6 @@ const ProgressScreen = () => {
 
   const fetchSummary = async () => {
     try {
-      // grab both in parallel
       const [data, created] = await Promise.all([
         getUserProgressSummary(userId),
         getCreatedCount()
@@ -85,15 +76,20 @@ const ProgressScreen = () => {
         color: '#246396ff'
       },
       headerLeft: () => (
-        <TouchableOpacity
-          onPress={() => setHintVisible(true)}
-          style={{ marginLeft: 15 }}
+        <Pressable
+          onPress={() => {
+            Animated.sequence([
+              Animated.timing(stickScale, { toValue: 0.5, duration: 100, useNativeDriver: true }), // сжать вдвое
+              Animated.timing(stickScale, { toValue: 1.0, duration: 100, useNativeDriver: true }), // вернуть норму
+            ]).start(() => setHintVisible(true));
+          }}
+          style={{ marginLeft: 16, padding: 2 }}
         >
-          <Image
-            source={isGreen ? greenstick : bluestick}
-            style={{ width: 30, height: 50, marginLeft: 15 }}
+          <Animated.Image
+            source={bluestick} 
+            style={{ width: 30, height: 50, transform: [{ scale: stickScale }] }}
           />
-        </TouchableOpacity>
+        </Pressable>
       ),
       headerRight: () => (
         <View style={styles.userWrapper}>
@@ -118,12 +114,12 @@ const ProgressScreen = () => {
     label: string,
     value: string | number
   ) => (
-    <TouchableOpacity style={styles.metricButton}>
+    <View style={styles.metricButton}>
       <Ionicons name={icon} size={24} color="#077bb4ff" />
       <Text style={styles.metricText}>
         {label}: {value}
       </Text>
-    </TouchableOpacity>
+    </View>
   );
 
   return (
@@ -148,28 +144,27 @@ const ProgressScreen = () => {
         )}
       </View>
 
-      <PopoverHint
-        visible={hintVisible}
-        onClose={() => setHintVisible(false)}
-      >
+      <PopoverHint visible={hintVisible} onClose={() => setHintVisible(false)}>
         <Text style={styles.hintText}>
-          This is your personal data center — track every flashcard like it's a
-          quantum particle.{"\n\n"}
-          - Learned words? You're basically a linguistic Einstein.{"\n\n"}
-          - In-progress cards? Still in a superposition.{"\n\n"}
-          - Quizzes passed? Let's just say you're not Penny.{"\n\n"}
+          This is your PERSONAL DATA CENTER — track every flashcard like it's a quantum particle.{"\n\n"}
+          - LEARNED WORDS? You're basically a linguistic Einstein.{"\n\n"}
+          - IN-PROGRESS cards? Still in a superposition.{"\n\n"}
+          - QUIZZES passed? Let's just say you're not Penny.{"\n\n"}
           Now go forth, young Padawan of Knowledge!
         </Text>
       </PopoverHint>
 
       <View style={styles.buttonBar}>
-        <TouchableOpacity
-          style={styles.navItem}
+        <Pressable
           onPress={() => navigation.navigate('Home')}
+          style={({ pressed }) => [
+            styles.navItem,            
+            pressed && styles.navIconActive, 
+          ]}
         >
           <Ionicons name="home" size={35} color="#97d0feff" />
           <Text style={styles.navText}>HOME</Text>
-        </TouchableOpacity>
+        </Pressable>
       </View>
     </LinearGradient>
   );

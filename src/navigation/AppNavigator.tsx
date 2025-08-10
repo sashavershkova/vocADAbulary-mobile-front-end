@@ -1,4 +1,3 @@
-// src/navigation/AppNavigator.tsx
 import React, { createRef } from 'react';
 import {
   NavigationContainer,
@@ -7,7 +6,6 @@ import {
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigation';
 
-// screens import
 import SplashScreen from '../screens/SplashScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import LoginScreen from '../screens/LoginScreen';
@@ -27,7 +25,6 @@ import SignUpScreen from '../screens/SignUpScreen';
 import { TouchableOpacity } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
-// создаём ссылку на NavigationContainer
 export const navigationRef = createRef<
   NavigationContainerRef<RootStackParamList>
 >();
@@ -62,7 +59,7 @@ const AppNavigator = () => (
       <Stack.Screen name="Topics" component={TopicsScreen} options={{ title: 'TOPICS' }} />
       <Stack.Screen name="Topic" component={TopicScreen} options={{ title: 'TOPIC' }} />
       <Stack.Screen name="Settings" component={SettingsScreen} options={{ title: 'SETTINGS' }} />
-      <Stack.Screen name="SignUp" component={SignUpScreen} options={{ title: 'Sign Up' }} />
+      <Stack.Screen name="SignUp" component={SignUpScreen} options={{ title: 'SIGN UP' }} />
       <Stack.Screen 
       name="Flashcard" 
       component={FlashcardScreen} 
@@ -71,7 +68,7 @@ const AppNavigator = () => (
           headerBackVisible: false, 
           headerLeft: () => (
             <TouchableOpacity onPress={() => navigation.goBack()} style={{ marginLeft: 10 }}>
-              <Ionicons name="arrow-back" size={28} color="#2c6f33" />
+              <Ionicons name="chevron-back-circle" size={30} color="#2c6f33" style={{ marginTop: -7 }} />
             </TouchableOpacity>
         ),
         })}
@@ -85,7 +82,7 @@ const AppNavigator = () => (
           headerBackVisible: false, 
           headerLeft: () => (
             <TouchableOpacity onPress={() => navigation.goBack()} style={{ marginLeft: 10 }}>
-              <Ionicons name="arrow-back" size={28} color="#246396" />
+              <Ionicons name="chevron-back-circle" size={30} color="#313bae8c" style={{ marginTop: -7 }} />
             </TouchableOpacity>
           ),
         })}
@@ -101,7 +98,7 @@ const AppNavigator = () => (
           headerBackVisible: false, 
           headerLeft: () => (
             <TouchableOpacity onPress={() => navigation.goBack()} style={{ marginLeft: 10 }}>
-              <Ionicons name="arrow-back" size={28} color="#246396" />
+              <Ionicons name="chevron-back-circle" size={30} color="#313bae8c" style={{ marginTop: -7 }} />
             </TouchableOpacity>
         ),
         })} 

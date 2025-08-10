@@ -1,13 +1,13 @@
 import React, { useEffect, useState, useLayoutEffect } from 'react';
 import {
-  Image,
+  Animated,
   Text,
-  TouchableOpacity,
   FlatList,
   Alert,
   ActivityIndicator,
   View,
   Modal,
+  Pressable,
   TextInput,
   Keyboard,
 } from 'react-native';
@@ -20,8 +20,7 @@ import { getAllTopics } from '../api/topics';
 import { getFlashcardsByTopic, getAllFlashcards } from '../api/flashcards';
 import { useMockUser } from '../context/UserContext';
 import greenstick from '../assets/images/greenstick.png';
-import bluestick from '../assets/images/bluestick.png';
-import PopoverHint from '../screens/PopoverHint';
+import PopoverHint from './PopoverHint';
 import api from '../api/axiosInstance';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Topics'>;
@@ -38,24 +37,24 @@ type FlashcardLite = {
 };
 
 const topicGradients: [string, string][] = [
-  ['#b3e5f9ff', '#e3bef8ff'],
-  ['#FFE8C2', '#FFC1C1'],
-  ['#a0f5cdff', '#f6f690ff'],
-  ['#C6F1F8', '#DFFFEA'],
-  ['#ECD8FF', '#FFE5EC'],
+  ['#b3e5f9c2', '#e3bef8bb'],
+  ['#feffc2bc', '#ffc1c1b3'],
+  ['#a0f5cdc4', '#f6f690c7'],
+  ['#b1f0fac2', '#8cf9b2c0'],
+  ['#d8b5f8b7', '#f9c2d1a5'],
 ];
 
 const topicGradientsActive: [string, string][] = [
   ['#85d9eeff', '#a9f057ff'],
-  ['#f6cb7cff', '#f29898ff'],
+  ['#f8cb76ff', '#f88484ff'],
   ['#85f4cbff', '#c6fa72ff'],
-  ['#e0f3f6ff', '#41faeaff'],
+  ['#9eebf7ff', '#41fa97ff'],
   ['#b295f1ff', '#f5a995ff'],
 ];
 
 const TopicsScreen = ({ navigation }: Props) => {
   const [hintVisible, setHintVisible] = useState(false);
-  const isGreen = true;
+  const stickScale = React.useRef(new Animated.Value(1)).current;
 
   const { user } = useMockUser();
   const userId = user.id;
@@ -65,7 +64,7 @@ const TopicsScreen = ({ navigation }: Props) => {
   const [loading, setLoading] = useState(true);
   const [activeId, setActiveId] = useState<number | null>(null);
 
-  // --- Search modal state ---
+  // Search modal
   const [searchOpen, setSearchOpen] = useState(false);
   const [allMineOrPublic, setAllMineOrPublic] = useState<FlashcardLite[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -82,9 +81,20 @@ const TopicsScreen = ({ navigation }: Props) => {
         color: '#2c6f33',
       },
       headerLeft: () => (
-        <TouchableOpacity onPress={() => setHintVisible(true)} style={{ marginLeft: 10 }}>
-          <Image source={isGreen ? greenstick : bluestick} style={{ width: 30, height: 50, marginLeft: 15 }} />
-        </TouchableOpacity>
+        <Pressable
+          onPress={() => {
+            Animated.sequence([
+              Animated.timing(stickScale, { toValue: 0.5, duration: 100, useNativeDriver: true }),
+              Animated.timing(stickScale, { toValue: 1.0, duration: 100, useNativeDriver: true }),
+            ]).start(() => setHintVisible(true));
+          }}
+          style={{ marginLeft: 16, padding: 2 }}
+        >
+          <Animated.Image
+            source={greenstick}
+            style={{ width: 30, height: 50, transform: [{ scale: stickScale }] }}
+          />
+        </Pressable>
       ),
       headerRight: () => (
         <View style={styles.userWrapper}>
@@ -95,13 +105,12 @@ const TopicsScreen = ({ navigation }: Props) => {
         </View>
       ),
     });
-  }, [navigation, initials]);
+  }, [navigation, initials, stickScale]);
 
   useEffect(() => {
     (async () => {
       try {
         const data = await getAllTopics();
-        console.log('[topics count]', data.length, data.slice(0, 3));
         setTopics(data);
       } catch (err) {
         console.error('Error fetching topics:', err);
@@ -111,7 +120,6 @@ const TopicsScreen = ({ navigation }: Props) => {
     })();
   }, []);
 
-  // Load all cards when the search opens; filter out other users’ cards
   useEffect(() => {
     if (!searchOpen) {
       setSearchQuery('');
@@ -142,7 +150,6 @@ const TopicsScreen = ({ navigation }: Props) => {
 
   const handleTopicPress = (topicId: number, topicName: string) => {
     setActiveId(topicId);
-
     setTimeout(async () => {
       try {
         const flashcards = await getFlashcardsByTopic(topicId);
@@ -160,7 +167,6 @@ const TopicsScreen = ({ navigation }: Props) => {
         } as any);
       } catch (err) {
         console.error('Error fetching flashcards:', err);
-        Alert.alert('Failed to fetch flashcards');
       } finally {
         setActiveId(null);
       }
@@ -172,7 +178,6 @@ const TopicsScreen = ({ navigation }: Props) => {
       let topicId = card.topicId ?? null;
       let topicName = card.topicName ?? '';
 
-      // If topicId wasn't in the search result, fetch the card detail to get it
       if (!topicId || topicId <= 0) {
         try {
           const { data } = await api.get(`/api/flashcards/${card.id}`);
@@ -189,10 +194,9 @@ const TopicsScreen = ({ navigation }: Props) => {
           flashcardId: card.id,
           topicId,
           topicName,
-          flashcards: deck, // ✅ full deck so NEXT/BACK/SEARCH work
+          flashcards: deck,
         } as any);
       } else {
-        // Fallback: no topic found, open single-card mode
         navigation.navigate('Flashcard', {
           flashcardId: card.id,
           topicId: -1,
@@ -208,33 +212,49 @@ const TopicsScreen = ({ navigation }: Props) => {
   const renderTopic = ({ item, index }: { item: Topic; index: number }) => {
     const isActive = activeId === item.id;
 
-    const gradient: string[] = isActive
-      ? [...topicGradientsActive[index % topicGradientsActive.length]]
-      : [...topicGradients[index % topicGradients.length]];
+    const idleGradient = topicGradients[index % topicGradients.length];
+    const activeGradient = topicGradientsActive[index % topicGradientsActive.length];
 
-    const borderColor = isActive ? '#e8dbf8ff' : '#006400';
+    const idleBorder = '#00640064';
+    const activeBorder = '#e8dbf8ff';
 
     return (
-      <View style={styles.topicBoxWrapper}>
-        <TouchableOpacity
-          style={styles.topicTouchable}
-          activeOpacity={0.9}
-          onPress={() => handleTopicPress(item.id, item.name)}
-        >
-          <View style={isActive ? styles.topicShadowWrapper : undefined}>
+      <Pressable
+        hitSlop={10}
+        onPress={() => handleTopicPress(item.id, item.name)}
+        style={({ pressed }) => [
+          (pressed || isActive) ? styles.pillButtonWhiteShadow : styles.topicBoxWrapper,
+        ]}
+      >
+        {({ pressed }) => {
+          const showActive = pressed || isActive;
+          const colors = showActive ? activeGradient : idleGradient;
+          const borderColor = showActive ? '#FFFFFF' : (isActive ? activeBorder : idleBorder);
+
+          return (
             <LinearGradient
-              colors={gradient}
+              colors={colors}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
-              style={[styles.topicBox, { borderColor }]}
+              style={[
+                styles.pillButton,
+                { borderColor },
+                pressed && styles.pillButtonActiveBorder,
+              ]}
             >
-              <Text style={[styles.topicText, isActive && styles.topicTextActive]}>
+              <Text
+                style={[styles.topicText, showActive && styles.topicTextActive]}
+                numberOfLines={1}
+                ellipsizeMode="clip"
+                adjustsFontSizeToFit
+                minimumFontScale={0.9}
+              >
                 {item.name}
               </Text>
             </LinearGradient>
-          </View>
-        </TouchableOpacity>
-      </View>
+          );
+        }}
+      </Pressable>
     );
   };
 
@@ -253,9 +273,19 @@ const TopicsScreen = ({ navigation }: Props) => {
     <LinearGradient colors={['#abf5ab64', '#347134bc']} style={{ flex: 1 }}>
       <PopoverHint visible={hintVisible} onClose={() => setHintVisible(false)}>
         <Text style={styles.text}>
-          Welcome to the word playground - FLASHCARDS!{"\n\n"}
-          Pick a topic — any topic. Cards appear in random order.{"\n"}
-          Learned cards graduate to Quiz & Phrase Lab. Save your faves to Wallet.{"\n\n"}
+          Welcome to the word playground, ADIE!{"\n\n"}
+          Pick a *TOPIC* — any topic. Each one's a wormhole into tech vocabulary.{"\n"}
+          Cards appear in random order, just like Sheldon's emotions.{"\n\n"}
+
+          Not sure how to say the word? Hit *SOUND* — it's like Raj reading bedtime stories.{"\n"}
+          Still confused? Tap the *HINT*. Think of it as Leonard patiently explaining to Penny.{"\n"}
+          Still lost? FLIP the card like you're flipping universes in string theory.{"\n\n"}
+
+          All words start *In Progress* — kind of like Howard's mustache.{"\n"}
+          Once you mark a word as *Learned*, it joins the *OUIZ* and *CONSTRUCTOR* for its final showdown.{"\n"}
+          Fell in love with a word? *SAVE* it to your *WALLET* and whisper sweet nothings to it later.{"\n\n"}
+
+          Ready to study like Sheldon, struggle like Leonard, and shine like Penny on trivia night?{"\n"}
           Bazinga awaits.
         </Text>
       </PopoverHint>
@@ -275,36 +305,48 @@ const TopicsScreen = ({ navigation }: Props) => {
         )}
       </View>
 
-      {/* Bottom bar — SAME icon & style as Flashcard screen */}
       <View style={styles.bottomBar}>
-        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Home')}>
-          <Ionicons name="home" size={35} color="#8feda0ff" />
-          <Text style={styles.navText}>HOME</Text>
-        </TouchableOpacity>
+        <Pressable style={styles.navItem} onPress={() => navigation.navigate('Home')} hitSlop={10}>
+          {({ pressed }) => (
+            <>
+              <View style={[styles.navIconCircle, pressed && styles.navIconActive]}>
+                <Ionicons name="home" size={35} color="#8feda0ff" />
+              </View>
+              <Text style={styles.navText}>HOME</Text>
+            </>
+          )}
+        </Pressable>
 
-        <TouchableOpacity style={styles.navItem} onPress={() => setSearchOpen(true)}>
-          <Ionicons name="search-outline" size={35} color="#8feda0ff" />
-          <Text style={styles.navText}>SEARCH</Text>
-        </TouchableOpacity>
+        <Pressable style={styles.navItem} onPress={() => setSearchOpen(true)} hitSlop={10}>
+          {({ pressed }) => (
+            <>
+              <View style={[styles.navIconCircle, pressed && styles.navIconActive]}>
+                <Ionicons name="search-outline" size={35} color="#8feda0ff" />
+              </View>
+              <Text style={styles.navText}>SEARCH</Text>
+            </>
+          )}
+        </Pressable>
 
-        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Fallback')}>
-          <Ionicons name="add-circle" size={35} color="#8feda0ff" />
-          <Text style={styles.navText}>ADD</Text>
-        </TouchableOpacity>
+        <Pressable style={styles.navItem} onPress={() => navigation.navigate('Fallback')} hitSlop={10}>
+          {({ pressed }) => (
+            <>
+              <View style={[styles.navIconCircle, pressed && styles.navIconActive]}>
+                <Ionicons name="add-circle" size={35} color="#8feda0ff" />
+              </View>
+              <Text style={styles.navText}>ADD</Text>
+            </>
+          )}
+        </Pressable>
       </View>
 
-      {/* Search Modal */}
       <Modal
         visible={searchOpen}
         transparent
         animationType="fade"
         onRequestClose={() => setSearchOpen(false)}
       >
-        <TouchableOpacity
-          style={styles.searchModalBackground}
-          activeOpacity={1}
-          onPress={Keyboard.dismiss}
-        >
+        <Pressable style={styles.searchModalBackground} onPress={Keyboard.dismiss}>
           <View style={styles.searchModalContainer}>
             <Text style={styles.searchModalTitle}>I'm looking for ...</Text>
 
@@ -324,11 +366,10 @@ const TopicsScreen = ({ navigation }: Props) => {
             ) : null}
 
             {filtered.map((card) => (
-              <TouchableOpacity
+              <Pressable
                 key={card.id}
                 onPress={() => openSearchResult(card)}
                 style={styles.searchResultBox}
-                activeOpacity={0.8}
               >
                 <Text style={styles.searchResultWord}>{card.word}</Text>
                 {!!card.definition && (
@@ -336,17 +377,14 @@ const TopicsScreen = ({ navigation }: Props) => {
                     {card.definition}
                   </Text>
                 )}
-              </TouchableOpacity>
+              </Pressable>
             ))}
 
-            <TouchableOpacity
-              onPress={() => setSearchOpen(false)}
-              style={styles.searchCloseBtn}
-            >
+            <Pressable onPress={() => setSearchOpen(false)} style={styles.searchCloseBtn}>
               <Ionicons name="close-circle" size={22} color="#767776ff" />
-            </TouchableOpacity>
+            </Pressable>
           </View>
-        </TouchableOpacity>
+        </Pressable>
       </Modal>
     </LinearGradient>
   );

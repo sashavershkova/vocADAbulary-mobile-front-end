@@ -1,13 +1,12 @@
 import React, { useEffect, useState, useLayoutEffect, useCallback } from 'react';
 import { useMockUser } from '../context/UserContext';
-import { Image, View, Text, TouchableOpacity, Alert, ScrollView, ActivityIndicator } from 'react-native';
+import { View, Text, Animated, Alert, Pressable, ActivityIndicator } from 'react-native';
 import styles from '../styles/quizStyles';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigation';
 import api from '../api/axiosInstance';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
-import greenstick from '../assets/images/greenstick.png';
 import bluestick from '../assets/images/bluestick.png';
 import PopoverHint from '../screens/PopoverHint';
 
@@ -28,7 +27,8 @@ type Quiz = {
 
 const QuizScreen = ({ navigation }: Props) => {
   const [hintVisible, setHintVisible] = useState(false);
-  const isGreen = false;
+  const stickScale = React.useRef(new Animated.Value(1)).current;
+  
   const { user } = useMockUser();
   const username = user.username;
   const initials = username?.charAt(0).toUpperCase() || '?';
@@ -42,7 +42,6 @@ const QuizScreen = ({ navigation }: Props) => {
   useLayoutEffect(() => {
     navigation.setOptions({
       title: 'QUIZ',
-      headerBackVisible: false,
       headerStyle: {
         backgroundColor: '#f9bcdeff',
       },
@@ -52,13 +51,21 @@ const QuizScreen = ({ navigation }: Props) => {
         color: '#246396',
       },
       headerLeft: () => (
-        <TouchableOpacity onPress={() => setHintVisible(true)} style={{ marginLeft: 10 }}>
-          <Image
-            source={isGreen ? greenstick : bluestick}
-            style={{ width: 30, height: 50, marginLeft: 15 }}
-          />
-        </TouchableOpacity>
-      ),
+      <Pressable
+        onPress={() => {
+          Animated.sequence([
+            Animated.timing(stickScale, { toValue: 0.5, duration: 100, useNativeDriver: true }), // сжать вдвое
+            Animated.timing(stickScale, { toValue: 1.0, duration: 100, useNativeDriver: true }), // вернуть норму
+          ]).start(() => setHintVisible(true));
+        }}
+        style={{ marginLeft: 16, padding: 2 }}
+      >
+        <Animated.Image
+          source={bluestick} 
+          style={{ width: 30, height: 50, transform: [{ scale: stickScale }] }}
+        />
+      </Pressable>
+    ),
       headerRight: () => (
         <View style={styles.userWrapper}>
           <View style={styles.initialsCircle}>
@@ -68,14 +75,12 @@ const QuizScreen = ({ navigation }: Props) => {
         </View>
       ),
     });
-  }, [navigation]);
+  }, [navigation, hintVisible]);
 
-  // Helper to shuffle arrays
   const shuffleArray = <T,>(array: T[]): T[] => {
     return [...array].sort(() => Math.random() - 0.5);
   };
 
-  // Helper to fetch and process quizzes
   const fetchAllQuizzes = useCallback(async () => {
     setLoading(true);
     try {
@@ -95,7 +100,7 @@ const QuizScreen = ({ navigation }: Props) => {
           ]),
         }));
         setQuizzes(shuffleArray(transformedQuizzes));
-        setCurrentQuizIndex(0); // reset index after fetch
+        setCurrentQuizIndex(0); 
       }
       setSelectedAnswerId(null);
       setIsSubmitted(false);
@@ -117,10 +122,8 @@ const QuizScreen = ({ navigation }: Props) => {
         quizId: quizId,
         is_passed: isPassed,
       });
-      // Optional: handle success, e.g., show a toast
     } catch (error) {
       console.error('Failed to post quiz attempt:', error);
-      // Optional: show error to user
     }
   };
 
@@ -139,7 +142,6 @@ const QuizScreen = ({ navigation }: Props) => {
     postQuizAttempt(currentQuiz.id, isPassed);
   };
 
-  // NEW: handleNext now re-fetches quizzes when reaching the end
   const handleNext = async () => {
     const nextQuizIndex = currentQuizIndex + 1;
     if (nextQuizIndex < quizzes.length) {
@@ -157,7 +159,6 @@ const QuizScreen = ({ navigation }: Props) => {
     setIsSubmitted(false);
   };
 
-  // ------ SPINNER while loading ------
   if (loading || !currentQuiz) {
     return (
       <LinearGradient colors={['#f7b4c4d6', '#bf86fcc2']} style={{ flex: 1 }}>
@@ -176,66 +177,82 @@ const QuizScreen = ({ navigation }: Props) => {
 
       <PopoverHint visible={hintVisible} onClose={() => setHintVisible(false)}>
         <Text style={styles.text}>
-          Bazinga! You've entered the QUIZ Zone!{"\n\n"}
+          Bazinga! You've entered the *QUIZ* Zone!{"\n\n"}
           Each card is a question to test your technical superpowers (or at least your memory).{"\n"}
-          Your job? Pick the correct answer and try not to pull a Sheldon.{"\n\n"}
-
+          Your job? PICK the correct answer and try not to pull a Sheldon.{"\n\n"}
           Here's the twist:{"\n"}
           - Every word will appear twice throughout the quiz.{"\n"}
           - If you get it right both times — congrats, you're officially smarter than Raj before coffee.{"\n"}
           - Get it wrong? No worries. Even Leonard needed a second chance.{"\n\n"}
-
           Treat this like your own personal CERN, smashing answers together until brilliance appears.{"\n\n"}
-
           Let's see if your brain is more Sheldon or Penny today.{"\n"}
           Fun fact: Penny learned Java faster than Sheldon learned sarcasm.{"\n\n"}
-
-          Good luck, genius! 
+          Good luck, GENIUS!
         </Text>
       </PopoverHint>
 
-      <ScrollView contentContainerStyle={styles.answersContainer}>
+      <View style={styles.answersContainer}>
         {currentQuiz.answers?.map((answer, index) => {
           const isSelected = selectedAnswerId === index;
+          const isCorrect = !!answer.correct;
+
           return (
-            <TouchableOpacity
+            <Pressable
               key={index}
               onPress={() => handleSelect(index)}
-              style={[
-                styles.answerBox,
-                !isSubmitted && isSelected && styles.selectedAnswerBox,
-                isSubmitted && answer.correct && styles.correctAnswerBox,
-                isSubmitted && isSelected && !answer.correct && styles.wrongAnswerBox,
+              disabled={isSubmitted} 
+              style={({ pressed }) => [
+                
+                styles.pillButton,
+                
+                !isSubmitted && (isSelected || pressed) && styles.pillButtonActive,
+                
+                isSubmitted && isCorrect && styles.correctAnswerBox,
+                isSubmitted && isSelected && !isCorrect && styles.wrongAnswerBox,
               ]}
             >
               <Text style={styles.answerText}>{answer.text}</Text>
-            </TouchableOpacity>
+            </Pressable>
           );
         })}
-      </ScrollView>
-        <View style={styles.bottomBar}>
-          <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Home')}>
-            <Ionicons name="home" size={30} color="#97d0feff" />
-            <Text style={styles.navText}>HOME</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.navItem} onPress={handleReset}>
-            <Ionicons name="refresh-circle" size={35} color="#97d0feff" />
-            <Text style={styles.navText}>RESET</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.navItem} onPress={handleSubmit}>
-            <Ionicons name="checkmark-circle" size={35} color="#97d0feff" />
-            <Text style={styles.navText}>SUBMIT</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.navItem} onPress={handleNext}>
-            <Ionicons name="arrow-forward-circle" size={35} color="#97d0feff" />
-            <Text style={styles.navText}>NEXT</Text>
-          </TouchableOpacity>
-        </View>
+      </View>
 
+      <View style={styles.bottomBar}>
+        <Pressable
+          style={({ pressed }) => [styles.navIcon, pressed && styles.navIconActive]}
+          onPress={() => navigation.navigate('Home')}
+        >
+          <Ionicons name="home" size={35} color="#97d0feff" />
+          <Text style={styles.navText}>HOME</Text>
+        </Pressable>
 
+        <Pressable
+          style={({ pressed }) => [styles.navIcon, pressed && styles.navIconActive]}
+          onPress={handleReset}
+        >
+          <Ionicons name="refresh-circle" size={35} color="#97d0feff" />
+          <Text style={styles.navText}>RESET</Text>
+        </Pressable>
 
+        <Pressable
+          style={({ pressed }) => [styles.navIcon, pressed && styles.navIconActive]}
+          onPress={handleSubmit}
+        >
+          <Ionicons name="checkmark-circle" size={35} color="#97d0feff" />
+          <Text style={styles.navText}>SUBMIT</Text>
+        </Pressable>
+
+        <Pressable
+          style={({ pressed }) => [styles.navIcon, pressed && styles.navIconActive]}
+          onPress={handleNext}
+        >
+          <Ionicons name="arrow-forward-circle" size={35} color="#97d0feff" />
+          <Text style={styles.navText}>NEXT</Text>
+        </Pressable>
+      </View>
     </LinearGradient>
   );
+
 };
 
 export default QuizScreen;

@@ -8,6 +8,7 @@ import {
   Animated,
   Modal,
   TextInput,
+  Pressable,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useMockUser } from '../context/UserContext';
@@ -28,7 +29,13 @@ import {
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Flashcard'>;
 
-type Flashcard = ApiFlashcard & {
+type Flashcard = {
+  id: number;
+  word: string;
+  definition: string;
+  example: string;
+  audioUrl: string;
+  createdBy: number | null;     
   phonetic?: string;
   synonyms?: string;
   createdBy: number | null; // public cards are null
@@ -291,7 +298,6 @@ const FlashcardScreen = async ({ route, navigation }: Props) => {
     }
   };
 
-  // --- SEARCH (within current deck) ---
   const handleSearch = (query: string) => {
     setSearchQuery(query);
     if (query.trim().length === 0) {
@@ -311,175 +317,211 @@ const FlashcardScreen = async ({ route, navigation }: Props) => {
   }
 
   return (
-    <LinearGradient colors={['#abf5ab64', '#347134bc']} style={{ flex: 1 }}>
-      {/* Search Modal */}
-      <Modal
-        visible={searchOpen}
-        transparent
-        animationType="fade"
-        onRequestClose={() => setSearchOpen(false)}
-      >
-        <View style={styles.searchModalBackground}>
-          <View style={styles.searchModalContainer}>
-            <Text style={styles.searchModalTitle}>I'm looking for ...</Text>
-            <TextInput
-              placeholder="Type to search…"
-              value={searchQuery}
-              onChangeText={handleSearch}
-              style={styles.searchInput}
-              autoFocus
-            />
-            {searchResults.length === 0 && !!searchQuery && (
-              <Text style={styles.noResultsText}>No cards found.</Text>
-            )}
-            {searchResults.map(card => (
-              <TouchableOpacity
-                key={card.id}
-                onPress={() => {
-                  setCurrentCard(card);
-                  setShowExample(false);
-                  setFlipped(false);
-                  flipAnim.setValue(0);
-                  setSearchOpen(false);
-                  setSearchQuery('');
-                  setSearchResults([]);
-                }}
-                style={styles.searchResultBox}
-              >
-                <Text style={styles.searchResultWord}>{card.word}</Text>
-                <Text style={styles.searchResultDef}>
-                  {card.definition?.slice(0, 40)}…
-                </Text>
-              </TouchableOpacity>
-            ))}
-            <TouchableOpacity
-              onPress={() => setSearchOpen(false)}
-              style={styles.searchCloseBtn}
-            >
-              <Ionicons name="close-circle" size={22} color="#767776ff" />
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-      {/* End Search Modal */}
-
-      <View style={styles.container}>
-        {/* Card block */}
-        <View style={{ alignItems: 'center', justifyContent: 'center', height: 250 }}>
-          <View style={{ width: 370, position: 'relative' }}>
-            <View style={{ height: 250 }}>
-              {/* Front */}
-              <Animated.View
-                style={[
-                  styles.card,
-                  { backfaceVisibility: 'hidden', transform: [{ rotateY: frontInterpolate }] },
-                ]}
-                pointerEvents={flipped ? 'none' : 'auto'}
-              >
-                {topicName && <Text style={styles.topicLabelInside}>{topicName}</Text>}
-
-                <TouchableOpacity
-                  style={styles.soundButtonTopRight}
-                  onPress={handlePlayAudio}
-                  activeOpacity={0.7}
-                >
-                  {ttsLoading ? (
-                    <ActivityIndicator size="small" color="rgba(216, 129, 245, 1)" />
-                  ) : (
-                    <Ionicons name="volume-high" size={30} color="rgba(216, 129, 245, 1)" />
-                  )}
-                </TouchableOpacity>
-
-                {/* Content */}
-                <TouchableOpacity
-                  style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
-                  activeOpacity={1}
-                  onPress={flipCard}
-                >
-                  <Text style={styles.word}>{currentCard.word}</Text>
-                  {currentCard?.phonetic && (
-                    <Text style={styles.phoneticsUnder}>/{currentCard.phonetic}/</Text>
-                  )}
-                </TouchableOpacity>
-
-                <View style={styles.cardButtons}>
-                  <TouchableOpacity onPress={handleDelete} activeOpacity={0.7}>
-                    <Ionicons name="trash" size={30} color="rgba(216, 129, 245, 1)" />
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={handleAddToWallet} activeOpacity={0.7}>
-                    <Ionicons name="wallet" size={30} color="rgba(216, 129, 245, 1)" />
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={() => updateStatus('LEARNED')} activeOpacity={0.7}>
-                    <Ionicons name="checkmark-circle" size={30} color="rgba(216, 129, 245, 1)" />
-                  </TouchableOpacity>
-                </View>
-              </Animated.View>
-
-              {/* Back */}
-              <Animated.View
-                style={[
-                  styles.card,
-                  {
-                    position: 'absolute',
-                    top: 0,
-                    backfaceVisibility: 'hidden',
-                    transform: [{ rotateY: backInterpolate }],
-                  },
-                ]}
-                pointerEvents={flipped ? 'auto' : 'none'}
-              >
-                {topicName && <Text style={styles.topicLabelInside}>{topicName}</Text>}
-
-                <TouchableOpacity
-                  style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
-                  activeOpacity={1}
-                  onPress={flipCard}
-                >
-                  <Text style={styles.definition}>{currentCard.definition}</Text>
-                </TouchableOpacity>
-              </Animated.View>
-            </View>
-          </View>
-        </View>
-
-        <View style={styles.exampleSection}>
-          <TouchableOpacity onPress={() => setShowExample(!showExample)}>
-            <Ionicons name="bulb" size={50} color="rgba(216, 129, 245, 1)" />
-            <Text style={(styles.navText, styles.hintText)}>HINT</Text>
-          </TouchableOpacity>
-          {showExample && (
-            <View style={styles.exampleBubble}>
-              <Text style={styles.exampleText}>
-                Example:
-                {'\n'}
-                {currentCard.example}
-                {currentCard.synonyms ? `\n\nSynonyms: ${currentCard.synonyms}` : ''}
-              </Text>
-            </View>
+  <LinearGradient colors={['#abf5ab64', '#347134bc']} style={{ flex: 1 }}>
+    <Modal
+      visible={searchOpen}
+      transparent
+      animationType="fade"
+      onRequestClose={() => setSearchOpen(false)}
+    >
+      <View style={styles.searchModalBackground}>
+        <View style={styles.searchModalContainer}>
+          <Text style={styles.searchModalTitle}>I'm looking for ...</Text>
+          <TextInput
+            placeholder="Type to search…"
+            value={searchQuery}
+            onChangeText={handleSearch}
+            style={styles.searchInput}
+            autoFocus
+          />
+          {searchResults.length === 0 && !!searchQuery && (
+            <Text style={styles.noResultsText}>No cards found.</Text>
           )}
-        </View>
-
-        <View style={styles.bottomBar}>
-          <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Home')}>
-            <Ionicons name="home" size={35} color="#8feda0ff" />
-            <Text style={styles.navText}>HOME</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.navItem} onPress={() => setSearchOpen(true)}>
-            <Ionicons name="search-outline" size={35} color="#8feda0ff" />
-            <Text style={styles.navText}>SEARCH</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={handlePrev}>
-            <Ionicons name="arrow-back-circle" size={35} color="#8feda0ff" />
-            <Text style={styles.navText}>BACK</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={handleNext}>
-            <Ionicons name="arrow-forward-circle" size={35} color="#8feda0ff" />
-            <Text style={styles.navText}>NEXT</Text>
+          {searchResults.map(card => (
+            <TouchableOpacity
+              key={card.id}
+              onPress={() => {
+                setCurrentCard(card);
+                setShowExample(false);
+                setFlipped(false);
+                flipAnim.setValue(0);
+                setSearchOpen(false);
+                setSearchQuery('');
+                setSearchResults([]);
+              }}
+              style={styles.searchResultBox}
+            >
+              <Text style={styles.searchResultWord}>{card.word}</Text>
+              <Text style={styles.searchResultDef}>
+                {card.definition?.slice(0, 40)}…
+              </Text>
+            </TouchableOpacity>
+          ))}
+          <TouchableOpacity
+            onPress={() => setSearchOpen(false)}
+            style={styles.searchCloseBtn}
+          >
+            <Ionicons name="close-circle" size={22} color="#767776ff" />
           </TouchableOpacity>
         </View>
       </View>
-    </LinearGradient>
-  );
+    </Modal>
+
+    <View style={styles.container}>
+      <View style={{ alignItems: 'center', justifyContent: 'center', height: 250 }}>
+        <View style={{ width: 370, position: 'relative' }}>
+          <View style={{ height: 250 }}>
+            <Animated.View
+              style={[
+                styles.card,
+                { backfaceVisibility: 'hidden', transform: [{ rotateY: frontInterpolate }] },
+              ]}
+              pointerEvents={flipped ? 'none' : 'auto'}
+            >
+              {topicName && <Text style={styles.topicLabelInside}>{topicName}</Text>}
+
+              <Pressable style={styles.soundButtonTopRight} onPress={handlePlayAudio} hitSlop={10}>
+                {({ pressed }) => (
+                  <View style={[styles.iconButton, pressed && styles.iconButtonActive]}>
+                    {ttsLoading ? (
+                      <ActivityIndicator size="small" color="rgba(216, 129, 245, 1)" />
+                    ) : (
+                      <Ionicons name="volume-high" size={30} color="rgba(216, 129, 245, 1)" />
+                    )}
+                  </View>
+                )}
+              </Pressable>
+
+              <TouchableOpacity
+                style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+                activeOpacity={1}
+                onPress={flipCard}
+              >
+                <Text style={styles.word}>{currentCard.word}</Text>
+                {currentCard?.phonetic && (
+                  <Text style={styles.phoneticsUnder}>/{currentCard.phonetic}/</Text>
+                )}
+              </TouchableOpacity>
+
+              <View style={styles.cardButtons}>
+                <Pressable onPress={handleDelete} hitSlop={10}>
+                  {({ pressed }) => (
+                    <View style={[styles.iconButton, pressed && styles.iconButtonActive]}>
+                      <Ionicons name="trash" size={30} color="rgba(216, 129, 245, 1)" />
+                    </View>
+                  )}
+                </Pressable>
+
+                <Pressable onPress={handleAddToWallet} hitSlop={10}>
+                  {({ pressed }) => (
+                    <View style={[styles.iconButton, pressed && styles.iconButtonActive]}>
+                      <Ionicons name="wallet" size={30} color="rgba(216, 129, 245, 1)" />
+                    </View>
+                  )}
+                </Pressable>
+
+                <Pressable onPress={() => updateStatus('LEARNED')} hitSlop={10}>
+                  {({ pressed }) => (
+                    <View style={[styles.iconButton, pressed && styles.iconButtonActive]}>
+                      <Ionicons name="checkmark-circle" size={30} color="rgba(216, 129, 245, 1)" />
+                    </View>
+                  )}
+                </Pressable>
+              </View>
+            </Animated.View>
+
+            <Animated.View
+              style={[
+                styles.card,
+                { position: 'absolute', top: 0, backfaceVisibility: 'hidden', transform: [{ rotateY: backInterpolate }] },
+              ]}
+              pointerEvents={flipped ? 'auto' : 'none'}
+            >
+              {topicName && <Text style={styles.topicLabelInside}>{topicName}</Text>}
+
+              <TouchableOpacity
+                style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+                activeOpacity={1}
+                onPress={flipCard}
+              >
+                <Text style={styles.definition}>{currentCard.definition}</Text>
+              </TouchableOpacity>
+            </Animated.View>
+          </View>
+        </View>
+      </View>
+
+      <View style={styles.exampleSection}>
+        <Pressable onPress={() => setShowExample(!showExample)} hitSlop={10}>
+          {({ pressed }) => (
+            <View style={[styles.navIcon, pressed && styles.navIconActive]}>
+              <Ionicons name="bulb" size={50} color="rgba(216, 129, 245, 1)" />
+            </View>
+          )}
+        </Pressable>
+        <Text style={[styles.navText, styles.hintText]}>HINT</Text>
+
+        {showExample && (
+          <View style={styles.exampleBubble}>
+            <Text style={styles.exampleText}>
+              Example:
+              {'\n'}
+              {currentCard.example}
+              {currentCard.synonyms ? `\n\nSynonyms: ${currentCard.synonyms}` : ""}
+            </Text>
+          </View>
+        )}
+      </View>
+
+      <View style={styles.bottomBar}>
+        <Pressable style={styles.navItem} onPress={() => navigation.navigate('Home')} hitSlop={10}>
+          {({ pressed }) => (
+            <>
+              <View style={[styles.navIcon, pressed && styles.navIconActive]}>
+                <Ionicons name="home" size={35} color="#8feda0ff" />
+              </View>
+              <Text style={styles.navText}>HOME</Text>
+            </>
+          )}
+        </Pressable>
+
+        <Pressable style={styles.navItem} onPress={() => setSearchOpen(true)} hitSlop={10}>
+          {({ pressed }) => (
+            <>
+              <View style={[styles.navIcon, pressed && styles.navIconActive]}>
+                <Ionicons name="search-outline" size={35} color="#8feda0ff" />
+              </View>
+              <Text style={styles.navText}>SEARCH</Text>
+            </>
+          )}
+        </Pressable>
+
+        <Pressable onPress={handlePrev} hitSlop={10}>
+          {({ pressed }) => (
+            <>
+              <View style={[styles.navIcon, pressed && styles.navIconActive]}>
+                <Ionicons name="arrow-back-circle" size={35} color="#8feda0ff" />
+              </View>
+              <Text style={styles.navText}>BACK</Text>
+            </>
+          )}
+        </Pressable>
+
+        <Pressable onPress={handleNext} hitSlop={10}>
+          {({ pressed }) => (
+            <>
+              <View style={[styles.navIcon, pressed && styles.navIconActive]}>
+                <Ionicons name="arrow-forward-circle" size={35} color="#8feda0ff" />
+              </View>
+              <Text style={styles.navText}>NEXT</Text>
+            </>
+          )}
+        </Pressable>
+      </View>
+    </View>
+  </LinearGradient>
+);
+
 };
 
 export default FlashcardScreen;

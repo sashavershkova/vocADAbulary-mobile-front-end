@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { Modal, View, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import { Modal, View, StyleSheet, TouchableOpacity, Text, Pressable } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 type Props = {
@@ -20,7 +19,6 @@ const PopoverHint = ({ visible, onClose, children }: Props) => {
       <TouchableOpacity style={styles.overlay} activeOpacity={1} onPress={onClose}>
         <View style={styles.popover}>
           <View style={styles.textWrapper}>
-            {/* Единый текст-контейнер: шрифт применится ко всему содержимому */}
             <Text style={styles.text}>{children}</Text>
           </View>
 
@@ -62,7 +60,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
   },
   text: {
-    fontFamily: 'ArchitectsDaughter', // ключ ровно как в useFonts
+    fontFamily: 'ArchitectsDaughter', 
     fontSize: 16,
     color: '#767776ff',
     textAlign: 'left',
