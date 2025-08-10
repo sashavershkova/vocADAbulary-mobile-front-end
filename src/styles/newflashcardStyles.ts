@@ -43,31 +43,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     shadowOffset: { width: 0, height: 0 },
   },
-  bottomBar: {
-    position: "absolute",
-    bottom: 20,
-    left: 20,
-    right: 20,
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
-    shadowColor: '#313131ff',
-    shadowOpacity: 0.8,
-    shadowOffset: { width: 3, height: 6 },
-  },
-  navItem: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
-  },
-  navText: {
-    fontSize: 14,
-    color: '#93cbf9ff',
-    fontFamily: 'ArchitectsDaughter',
-    marginTop: 4,
-    textAlign: 'center',
-    width: '100%',
-  },
   initialsCircle: {
     backgroundColor: '#97d0feff',
     borderColor: '#313bae8c',
@@ -91,13 +66,11 @@ const styles = StyleSheet.create({
     marginTop: -5,
     textAlign: 'center',
   },
-
   dropdownWrapper: {
     position: 'relative',
     zIndex: 10,
-    marginBottom: 25, // чтобы список не перекрывал следующее поле
+    marginBottom: 25,
   },
-
   dropdownHeader: {
     backgroundColor: '#313bae28',
     borderRadius: 30,
@@ -111,14 +84,12 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 3, height: 6 },
     zIndex: 11,
     borderColor: "#313bae5f",
-    borderWidth: 2, 
+    borderWidth: 2,
   },
-
   dropdownArrow: {
     fontSize: 25,
     color: '#246396',
   },
-
   dropdownHeaderText: {
     fontSize: 20,
     color: '#b0f4c9ff',
@@ -141,18 +112,92 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 16,
   },
-
   dropdownItemSelected: {
     backgroundColor: '#313bae5f',
     borderRadius: 10,
   },
-
   dropdownItemText: {
     fontSize: 16,
     fontFamily: 'ArchitectsDaughter',
     color: '#246396',
-  }
-
+  },
+  navIcon: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    borderWidth: 2,
+    borderColor: '#246396ff',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#313131ff',
+    shadowOpacity: 0.8,
+    shadowOffset: { width: 2, height: 2 },
+    shadowRadius: 3,
+    backgroundColor: '#87CEFA',
+  },
+  navIconActive: {
+    shadowColor: '#ffffffff',
+    shadowOpacity: 1,
+    shadowOffset: { width: 0, height: 0 },
+    shadowRadius: 6,
+  },
+  inputBase: {
+    width: '100%',
+    borderWidth: 1,
+    borderColor: '#00640064',
+    borderRadius: 20,
+    backgroundColor: '#ebf8e4ff',
+    marginBottom: 15,
+    shadowColor: '#313131ff',
+    shadowOpacity: 0.5,
+    shadowOffset: { width: 3, height: 6 },
+    shadowRadius: 2,
+    color: '#767677ff',
+  },
+  inputFocused: {
+    borderColor: '#ffffff',
+    borderWidth: 2,
+    borderRadius: 18,
+    shadowColor: '#ffffffff',
+    shadowOpacity: 1,
+    shadowOffset: { width: 0, height: 0 },
+    shadowRadius: 10,
+  },
+  inputField: {
+    padding: 12,
+    fontSize: 20,
+    fontFamily: 'ArchitectsDaughter',
+    backgroundColor: 'transparent',
+    color: '#246396',
+    textAlignVertical: 'top',
+  },
+  bottomBar: {
+    position: 'absolute',
+    bottom: 20,
+    left: 20,
+    right: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+  },
+  navItem: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 4,
+    minWidth: 90,
+  },
+  navText: {
+    fontSize: 14,
+    color: '#93cbf9ff',
+    fontFamily: 'ArchitectsDaughter',
+    marginTop: 4,
+    textAlign: 'center',
+  },
+  iconGlyphGlow: {
+    textShadowColor: '#ffffff',
+    textShadowOffset: { width: 0, height: 0 },
+    textShadowRadius: 8,
+  },
 });
 
 export default styles;

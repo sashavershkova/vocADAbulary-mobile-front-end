@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
     right: width * 0.04,
     width: width * (2 / 3),
     height: height * (2.5 / 4),
-    backgroundColor: '#97fa97b0',
+    backgroundColor: '#97fa9799',
     borderWidth: 1.5,
     borderColor: '#00640064',
     borderRadius: 30,
@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     shadowColor: '#ffffff',
     shadowOpacity: 1,
     shadowOffset: { width: 0, height: 0 },
-    shadowRadius: 12, // крупная кнопка — чуть шире свечение
+    shadowRadius: 12,
   },
   progressButton: {
     position: 'absolute',
@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     left: width * 0.05,
     width: width * 0.22,
     height: height * 0.09,
-    backgroundColor: '#e3a4f8c7',
+    backgroundColor: '#e3a4f8a8',
     borderRadius: 30,
     justifyContent: 'center',
     alignItems: 'center',
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     left: width * 0.05,
     width: width * 0.22,
     height: height * 0.515,
-    backgroundColor: '#e3a4f8c7',
+    backgroundColor: '#e3a4f8a8',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 30,
@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 121,
     bottom: 15,
-    backgroundColor: '#e3a4f8c7',
+    backgroundColor: '#e3a4f8a8',
     width: 160,
     height: 190,
     borderRadius: 30,
@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 120,
     right: 20,
-    backgroundColor: '#e3a4f8c7',
+    backgroundColor: '#e3a4f8a8',
     width: width * 0.22,
     height: height * 0.09,
     borderRadius: 30,
@@ -188,7 +188,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 16,
     right: 20,
-    backgroundColor: '#ecf83eda',
+    backgroundColor: '#ecf83eb3',
     width: 90,
     height: 90,
     borderRadius: 50,
@@ -215,7 +215,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.8,
     shadowOffset: { width: 3, height: 6 },
   },
-// Texts on buttons
+  // Texts on buttons
   buttonText: {
     fontSize: 20,
     fontFamily: 'ArchitectsDaughter',
@@ -293,8 +293,6 @@ const styles = StyleSheet.create({
     marginTop: -5,
     textAlign: 'center',
   },
-
-
 });
 
 export default styles;

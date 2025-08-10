@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
   metricButton: {
     width: '85%',
     backgroundColor: '#87CEFA',
-    borderRadius: 10,
+    borderRadius: 20,
     paddingVertical: 14,
     paddingHorizontal: 20,
     marginVertical: 10,
@@ -51,7 +51,6 @@ const styles = StyleSheet.create({
     fontFamily: 'ArchitectsDaughter',
     color: '#246396ff',
   },
-  
   homeButton: {
     alignItems: 'center',
   },
@@ -61,7 +60,6 @@ const styles = StyleSheet.create({
     color: '#246396ff',
     marginTop: 4,
   },
-
   userWrapper: {
     alignItems: 'center',
     justifyContent: 'flex-start',
@@ -90,7 +88,6 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     marginHorizontal: 10,
   },
-
   buttonBar: {
     position: "absolute",
     bottom: 20,
@@ -103,7 +100,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.8,
     shadowOffset: { width: 3, height: 6 },
   },
-
   navIcon: {
     width: 50,
     height: 50,
@@ -112,20 +108,18 @@ const styles = StyleSheet.create({
     borderColor: '#246396ff',
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#313131ff', // обычная серая тень
+    shadowColor: '#313131ff',
     shadowOpacity: 0.8,
     shadowOffset: { width: 2, height: 2 },
     shadowRadius: 3,
-    backgroundColor: '#87CEFA', // фон под иконкой
+    backgroundColor: '#87CEFA',
   },
-
   navIconActive: {
-    shadowColor: '#ffffffff', // белая тень
+    shadowColor: '#ffffffff',
     shadowOpacity: 1,
     shadowOffset: { width: 0, height: 0 },
     shadowRadius: 4,
   },
-
 });
 
 export default styles;

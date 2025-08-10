@@ -1,7 +1,6 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
-  // ---------- layout ----------
   container: {
     flex: 1,
     paddingHorizontal: 20,
@@ -13,10 +12,8 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     paddingTop: 10,
-    paddingBottom: 110, // чтобы контент не уезжал под нижнюю панель
+    paddingBottom: 110,
   },
-
-  // ---------- labels ----------
   label: {
     fontFamily: 'ArchitectsDaughter',
     fontSize: 20,
@@ -24,15 +21,13 @@ const styles = StyleSheet.create({
     marginBottom: 1,
     marginTop: 1,
   },
-
-  // ---------- inputs (как в Login) ----------
   inputBase: {
     width: '100%',
     borderWidth: 3,
     borderColor: '#bf86fca8',
     borderRadius: 20,
     backgroundColor: '#fbf6fbfd',
-    marginBottom: 16, // нормальный шаг между полями (не 5 см)
+    marginBottom: 16,
     shadowColor: '#313131ff',
     shadowOpacity: 0.5,
     shadowOffset: { width: 3, height: 6 },
@@ -59,8 +54,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#f4f4f4',
     color: '#4d4e4dff',
   },
-
-  // ---------- delete ----------
   deleteWrapper: {
     alignItems: 'center',
     marginTop: 28,
@@ -93,8 +86,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: 'ArchitectsDaughter',
   },
-
-  // ---------- bottom bar (без обёрток) ----------
   bottomBar: {
     position: 'absolute',
     bottom: 20,
@@ -126,8 +117,6 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 0 },
     shadowRadius: 4,
   },
-
-  // ---------- header user ----------
   initialsCircle: {
     backgroundColor: '#97d0feff',
     borderRadius: 20,

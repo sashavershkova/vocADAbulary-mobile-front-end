@@ -1,13 +1,12 @@
 import React, { useEffect, useState, useLayoutEffect, useCallback } from 'react';
 import { useMockUser } from '../context/UserContext';
-import { Image, View, Text, Animated, Alert, Pressable, ActivityIndicator } from 'react-native';
+import { View, Text, Animated, Alert, Pressable, ActivityIndicator } from 'react-native';
 import styles from '../styles/quizStyles';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigation';
 import api from '../api/axiosInstance';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
-// import greenstick from '../assets/images/greenstick.png';
 import bluestick from '../assets/images/bluestick.png';
 import PopoverHint from '../screens/PopoverHint';
 
@@ -29,7 +28,6 @@ type Quiz = {
 const QuizScreen = ({ navigation }: Props) => {
   const [hintVisible, setHintVisible] = useState(false);
   const stickScale = React.useRef(new Animated.Value(1)).current;
-  const isGreen = false;
   
   const { user } = useMockUser();
   const username = user.username;
@@ -44,7 +42,6 @@ const QuizScreen = ({ navigation }: Props) => {
   useLayoutEffect(() => {
     navigation.setOptions({
       title: 'QUIZ',
-      // headerBackVisible: false,
       headerStyle: {
         backgroundColor: '#f9bcdeff',
       },
@@ -64,7 +61,7 @@ const QuizScreen = ({ navigation }: Props) => {
         style={{ marginLeft: 16, padding: 2 }}
       >
         <Animated.Image
-          source={bluestick} // всегда синий
+          source={bluestick} 
           style={{ width: 30, height: 50, transform: [{ scale: stickScale }] }}
         />
       </Pressable>
@@ -80,12 +77,10 @@ const QuizScreen = ({ navigation }: Props) => {
     });
   }, [navigation, hintVisible]);
 
-  // Helper to shuffle arrays
   const shuffleArray = <T,>(array: T[]): T[] => {
     return [...array].sort(() => Math.random() - 0.5);
   };
 
-  // Helper to fetch and process quizzes
   const fetchAllQuizzes = useCallback(async () => {
     setLoading(true);
     try {
@@ -105,7 +100,7 @@ const QuizScreen = ({ navigation }: Props) => {
           ]),
         }));
         setQuizzes(shuffleArray(transformedQuizzes));
-        setCurrentQuizIndex(0); // reset index after fetch
+        setCurrentQuizIndex(0); 
       }
       setSelectedAnswerId(null);
       setIsSubmitted(false);
@@ -127,10 +122,8 @@ const QuizScreen = ({ navigation }: Props) => {
         quizId: quizId,
         is_passed: isPassed,
       });
-      // Optional: handle success, e.g., show a toast
     } catch (error) {
       console.error('Failed to post quiz attempt:', error);
-      // Optional: show error to user
     }
   };
 
@@ -149,7 +142,6 @@ const QuizScreen = ({ navigation }: Props) => {
     postQuizAttempt(currentQuiz.id, isPassed);
   };
 
-  // NEW: handleNext now re-fetches quizzes when reaching the end
   const handleNext = async () => {
     const nextQuizIndex = currentQuizIndex + 1;
     if (nextQuizIndex < quizzes.length) {
@@ -167,7 +159,6 @@ const QuizScreen = ({ navigation }: Props) => {
     setIsSubmitted(false);
   };
 
-  // ------ SPINNER while loading ------
   if (loading || !currentQuiz) {
     return (
       <LinearGradient colors={['#f7b4c4d6', '#bf86fcc2']} style={{ flex: 1 }}>
@@ -186,9 +177,9 @@ const QuizScreen = ({ navigation }: Props) => {
 
       <PopoverHint visible={hintVisible} onClose={() => setHintVisible(false)}>
         <Text style={styles.text}>
-          Bazinga! You've entered the QUIZ Zone!{"\n\n"}
+          Bazinga! You've entered the *QUIZ* Zone!{"\n\n"}
           Each card is a question to test your technical superpowers (or at least your memory).{"\n"}
-          Your job? Pick the correct answer and try not to pull a Sheldon.{"\n\n"}
+          Your job? PICK the correct answer and try not to pull a Sheldon.{"\n\n"}
           Here's the twist:{"\n"}
           - Every word will appear twice throughout the quiz.{"\n"}
           - If you get it right both times — congrats, you're officially smarter than Raj before coffee.{"\n"}
@@ -196,7 +187,7 @@ const QuizScreen = ({ navigation }: Props) => {
           Treat this like your own personal CERN, smashing answers together until brilliance appears.{"\n\n"}
           Let's see if your brain is more Sheldon or Penny today.{"\n"}
           Fun fact: Penny learned Java faster than Sheldon learned sarcasm.{"\n\n"}
-          Good luck, genius!
+          Good luck, GENIUS!
         </Text>
       </PopoverHint>
 
@@ -209,13 +200,13 @@ const QuizScreen = ({ navigation }: Props) => {
             <Pressable
               key={index}
               onPress={() => handleSelect(index)}
-              disabled={isSubmitted} // после сабмита ответы не нажимаются
+              disabled={isSubmitted} 
               style={({ pressed }) => [
-                // базовое состояние кнопки-ответа
+                
                 styles.pillButton,
-                // до сабмита: выделяем выбранный/нажимаемый вариант
+                
                 !isSubmitted && (isSelected || pressed) && styles.pillButtonActive,
-                // после сабмита: показываем правильность
+                
                 isSubmitted && isCorrect && styles.correctAnswerBox,
                 isSubmitted && isSelected && !isCorrect && styles.wrongAnswerBox,
               ]}
@@ -231,7 +222,7 @@ const QuizScreen = ({ navigation }: Props) => {
           style={({ pressed }) => [styles.navIcon, pressed && styles.navIconActive]}
           onPress={() => navigation.navigate('Home')}
         >
-          <Ionicons name="home" size={30} color="#97d0feff" />
+          <Ionicons name="home" size={35} color="#97d0feff" />
           <Text style={styles.navText}>HOME</Text>
         </Pressable>
 

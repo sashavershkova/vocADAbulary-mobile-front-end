@@ -30,6 +30,9 @@ const NewFlashcardScreen = () => {
   const userId = user.id;
   const username = user.username;
   const initials = username?.charAt(0).toUpperCase() || "?";
+  const [wordFocused, setWordFocused] = useState(false);
+  const [defFocused, setDefFocused] = useState(false);
+  const [exFocused, setExFocused] = useState(false);
 
   const [word, setWord] = useState("");
   const [definition, setDefinition] = useState("");
@@ -38,7 +41,6 @@ const NewFlashcardScreen = () => {
   const [selectedTopicId, setSelectedTopicId] = useState<number | null>(null);
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  // Header
   useLayoutEffect(() => {
     navigation.setOptions({
       title: "NEW FLASHCARD",
@@ -62,7 +64,6 @@ const NewFlashcardScreen = () => {
     });
   }, [navigation]);
 
-  // Fetch topics
   useEffect(() => {
     const fetchTopics = async () => {
       try {
@@ -77,7 +78,6 @@ const NewFlashcardScreen = () => {
     fetchTopics();
   }, []);
 
-  // Save flashcard
   const handleSave = async () => {
     if (!word || !definition || !example || !selectedTopicId) {
       Alert.alert('Missing fields', 'Please fill out all fields.');
@@ -99,97 +99,129 @@ const NewFlashcardScreen = () => {
   };
 
   return (
-  <LinearGradient colors={["#b0f4c9ff", "#313bae8c"]} style={styles.container}>
-    <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
-      {/* SELECT TOPIC */}
-      <Text style={styles.label}>Select the Topic</Text>
+    <LinearGradient colors={["#b0f4c9ff", "#313bae8c"]} style={styles.container}>
+      <ScrollView contentContainerStyle={{ paddingBottom: 120 }}>
+        <Text style={styles.label}>Select the Topic</Text>
 
-      <View style={styles.dropdownWrapper}>
-        <TouchableOpacity
-          style={styles.dropdownHeader}
-          onPress={() => setDropdownOpen(!dropdownOpen)}
-          activeOpacity={0.8}
+        <View style={styles.dropdownWrapper}>
+          <TouchableOpacity
+            style={styles.dropdownHeader}
+            onPress={() => setDropdownOpen(!dropdownOpen)}
+            activeOpacity={0.8}
+          >
+            <Text style={styles.dropdownHeaderText}>
+              {selectedTopicId
+                ? topics.find((t) => t.id === selectedTopicId)?.name
+                : "Select a topic"}
+            </Text>
+            <Text style={styles.dropdownArrow}>{dropdownOpen ? "▴" : "▾"}</Text>
+          </TouchableOpacity>
+
+          {dropdownOpen && (
+            <View style={styles.dropdownOverlay}>
+              <ScrollView style={styles.dropdownList} nestedScrollEnabled>
+                {topics.map((topic) => (
+                  <TouchableOpacity
+                    key={topic.id}
+                    onPress={() => {
+                      setSelectedTopicId(topic.id);
+                      setDropdownOpen(false);
+                    }}
+                    style={[
+                      styles.dropdownItem,
+                      selectedTopicId === topic.id && styles.dropdownItemSelected,
+                    ]}
+                  >
+                    <Text style={styles.dropdownItemText}>{topic.name}</Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+            </View>
+          )}
+        </View>
+
+        <Text style={styles.label}>Add New Word</Text>
+        <View style={[styles.inputBase, wordFocused && styles.inputFocused]}>
+          <TextInput
+            style={styles.inputField}
+            placeholder="Enter word"
+            placeholderTextColor="#7b7a7aff"
+            value={word}
+            onChangeText={setWord}
+            onFocus={() => setWordFocused(true)}
+            onBlur={() => setWordFocused(false)}
+          />
+        </View>
+
+        <Text style={styles.label}>Add Definition</Text>
+        <View style={[styles.inputBase, defFocused && styles.inputFocused, { minHeight: 150 }]}>
+          <TextInput
+            style={[styles.inputField, { minHeight: 150 }]}
+            placeholder="Enter definition"
+            placeholderTextColor="#7b7a7aff"
+            multiline
+            value={definition}
+            onChangeText={setDefinition}
+            onFocus={() => setDefFocused(true)}
+            onBlur={() => setDefFocused(false)}
+          />
+        </View>
+
+        <Text style={styles.label}>Add Example</Text>
+        <View style={[styles.inputBase, exFocused && styles.inputFocused, { minHeight: 150 }]}>
+          <TextInput
+            style={[styles.inputField, { minHeight: 150 }]}
+            placeholder="Enter example"
+            placeholderTextColor="#7b7a7aff"
+            multiline
+            value={example}
+            onChangeText={setExample}
+            onFocus={() => setExFocused(true)}
+            onBlur={() => setExFocused(false)}
+          />
+        </View>
+      </ScrollView>
+
+      <View style={styles.bottomBar}>
+        <Pressable
+          onPress={() => navigation.navigate("Home")}
+          hitSlop={10}
+          style={({ pressed }) => [styles.navItem]}
         >
-          <Text style={styles.dropdownHeaderText}>
-            {selectedTopicId
-              ? topics.find((t) => t.id === selectedTopicId)?.name
-              : "Select a topic"}
-          </Text>
-          <Text style={styles.dropdownArrow}>{dropdownOpen ? "▴" : "▾"}</Text>
-        </TouchableOpacity>
+          {({ pressed }) => (
+            <>
+              <Ionicons
+                name="home"
+                size={35}
+                color="#97d0feff"
+                style={pressed && styles.iconGlyphGlow}
+              />
+              <Text style={styles.navText}>HOME</Text>
+            </>
+          )}
+        </Pressable>
 
-        {dropdownOpen && (
-          <View style={styles.dropdownOverlay}>
-            <ScrollView style={styles.dropdownList} nestedScrollEnabled={true}>
-              {topics.map((topic) => (
-                <TouchableOpacity
-                  key={topic.id}
-                  onPress={() => {
-                    setSelectedTopicId(topic.id);
-                    setDropdownOpen(false);
-                  }}
-                  style={[
-                    styles.dropdownItem,
-                    selectedTopicId === topic.id && styles.dropdownItemSelected,
-                  ]}
-                >
-                  <Text style={styles.dropdownItemText}>{topic.name}</Text>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-          </View>
-        )}
+        <Pressable
+          onPress={handleSave}
+          hitSlop={10}
+          style={({ pressed }) => [styles.navItem]}
+        >
+          {({ pressed }) => (
+            <>
+              <Ionicons
+                name="checkmark-circle"
+                size={35}
+                color="#97d0feff"
+                style={pressed && styles.iconGlyphGlow}
+              />
+              <Text style={styles.navText}>SUBMIT</Text>
+            </>
+          )}
+        </Pressable>
       </View>
+    </LinearGradient>
+  );
 
-      {/* WORD */}
-      <Text style={styles.label}>Add New Word</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter word"
-        placeholderTextColor="#313131ff'"
-        value={word}
-        onChangeText={setWord}
-      />
-
-      {/* DEFINITION */}
-      <Text style={styles.label}>Add Definition</Text>
-      <TextInput
-        style={styles.longInput}
-        placeholder="Enter definition"
-        placeholderTextColor="#313131ff'"
-        multiline
-        numberOfLines={4}
-        value={definition}
-        onChangeText={setDefinition}
-      />
-
-      {/* EXAMPLE */}
-      <Text style={styles.label}>Add Example</Text>
-      <TextInput
-        style={styles.longInput}
-        placeholder="Enter example"
-        placeholderTextColor="#313131ff'"
-        multiline
-        numberOfLines={4}
-        value={example}
-        onChangeText={setExample}
-      />
-    </ScrollView>
-
-    {/* BOTTOM BAR */}
-    <View style={styles.bottomBar}>
-      <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate("Home")}>
-        <Ionicons name="home" size={35} color="#97d0feff" />
-        <Text style={styles.navText}>HOME</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity onPress={handleSave} style={styles.navItem}>
-        <Ionicons name="checkmark-circle" size={35} color="#97d0feff" />
-        <Text style={styles.navText}>SUBMIT</Text>
-      </TouchableOpacity>
-    </View>
-  </LinearGradient>
-);
 
 };
 

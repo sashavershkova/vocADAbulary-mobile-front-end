@@ -1,4 +1,3 @@
-// src/navigation/AppNavigator.tsx
 import React, { createRef } from 'react';
 import {
   NavigationContainer,
@@ -7,7 +6,6 @@ import {
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigation';
 
-// screens import
 import SplashScreen from '../screens/SplashScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import LoginScreen from '../screens/LoginScreen';
@@ -27,7 +25,6 @@ import SignUpScreen from '../screens/SignUpScreen';
 import { TouchableOpacity } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
-// создаём ссылку на NavigationContainer
 export const navigationRef = createRef<
   NavigationContainerRef<RootStackParamList>
 >();
@@ -62,7 +59,7 @@ const AppNavigator = () => (
       <Stack.Screen name="Topics" component={TopicsScreen} options={{ title: 'TOPICS' }} />
       <Stack.Screen name="Topic" component={TopicScreen} options={{ title: 'TOPIC' }} />
       <Stack.Screen name="Settings" component={SettingsScreen} options={{ title: 'SETTINGS' }} />
-      <Stack.Screen name="SignUp" component={SignUpScreen} options={{ title: 'Sign Up' }} />
+      <Stack.Screen name="SignUp" component={SignUpScreen} options={{ title: 'SIGN UP' }} />
       <Stack.Screen 
       name="Flashcard" 
       component={FlashcardScreen} 

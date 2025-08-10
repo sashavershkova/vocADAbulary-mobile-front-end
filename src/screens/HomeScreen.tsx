@@ -11,7 +11,6 @@ import ProgressIcon from '../assets/images/progress.png';
 import SettingsIcon from '../assets/images/settings.png';
 import ExitIcon from '../assets/images/exit.png';
 import greenstick from '../assets/images/greenstick.png';
-// import bluestick from '../assets/images/bluestick.png';
 import PopoverHint from '../screens/PopoverHint';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
@@ -20,7 +19,6 @@ const HomeScreen = ({ navigation }: Props) => {
   const [hintVisible, setHintVisible] = useState(false);
   const stickScale = React.useRef(new Animated.Value(1)).current;
   
-  // const isGreen = true; // пока вручную
   const { user } = useMockUser();
   const userId = user.id;
   const username = user.username;
@@ -49,7 +47,7 @@ const HomeScreen = ({ navigation }: Props) => {
         style={{ marginLeft: 16, padding: 2 }}
       >
         <Animated.Image
-          source={greenstick} // всегда синий
+          source={greenstick} 
           style={{ width: 30, height: 50, transform: [{ scale: stickScale }] }}
         />
       </Pressable>
@@ -76,12 +74,12 @@ const HomeScreen = ({ navigation }: Props) => {
         This is where you dive into learning, tweak your settings, track your nerdy progress… and all that jazz!{"\n"}
         (Penny would be proud. Sheldon? Skeptical, but intrigued.){"\n\n"}
 
-        Head to LEARN to boost your vocab like a true tech wizard.{"\n\n"}
-        Test your skills in QUIZ and CONSTRUCTOR — no whiteboards or equations required.{"\n\n"}
-        Stash your favorite words in the WALLET, because knowledge is the new collectible.{"\n\n"}
-        Spy on your progress in PROGRESS.
+        Head to *LEARN* to boost your vocab like a true tech wizard.{"\n\n"}
+        Test your skills in *QUIZ* and *CONSTRUCTOR* — no whiteboards or equations required.{"\n\n"}
+        Stash your favorite words in the *WALLET*, because knowledge is the new collectible.{"\n\n"}
+        Spy on your progress in *PROGRESS*.
         (like Sheldon checking bus schedules — obsessively and with scientific precision).{"\n\n"}
-        And if you're feeling bold, mess with your voice in SETTINGS — we won't tell Leonard.{"\n\n"}
+        And if you're feeling bold, mess with your voice in *SETTINGS* — we won't tell Leonard.{"\n\n"}
 
         Because hey — training might be tough, but when the tech battle begins, you'll be ready.{"\n"}
         Bazinga, genius!

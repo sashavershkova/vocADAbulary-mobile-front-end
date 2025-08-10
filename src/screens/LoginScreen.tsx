@@ -78,11 +78,9 @@ const LoginScreen = ({ navigation }: Props) => {
 
       const { id, role } = response.data;
 
-      // Save in context
       setUser({ id, username });
       console.log('✅ User set in context:', { id, username });
 
-      // Set headers for mock backend
       api.defaults.headers.common['X-Mock-User-Id'] = id;
       api.defaults.headers.common['X-Mock-User-Role'] = role;
 
@@ -123,7 +121,6 @@ const LoginScreen = ({ navigation }: Props) => {
       </View>
     </View>
 
-    {/* Username */}
     <View style={[styles.inputBase, focused === 'username' && styles.inputFocused]}>
       <TextInput
         placeholder="Username"
@@ -136,7 +133,6 @@ const LoginScreen = ({ navigation }: Props) => {
       />
     </View>
 
-    {/* Password */}
     <View style={[styles.inputBase, focused === 'password' && styles.inputFocused]}>
       <TextInput
         placeholder="Password"
@@ -149,7 +145,6 @@ const LoginScreen = ({ navigation }: Props) => {
       />
     </View>
 
-    {/* Remember Me */}
     <TouchableOpacity
       style={styles.checkboxRow}
       onPress={() => setRememberMe(!rememberMe)}
@@ -171,12 +166,10 @@ const LoginScreen = ({ navigation }: Props) => {
       <Text style={styles.checkboxText}>Remember Me</Text>
     </TouchableOpacity>
 
-    {/* Forgot */}
     <TouchableOpacity>
       <Text style={styles.forgotText}>Forgot Username / Password?</Text>
     </TouchableOpacity>
 
-    {/* SIGN IN pill */}
     <Pressable
       onPress={handleLogin}
       style={({ pressed }) => [styles.pillButton, pressed && styles.pillButtonActive]}
@@ -184,7 +177,6 @@ const LoginScreen = ({ navigation }: Props) => {
       <Text style={styles.pillButtonText}>SIGN IN</Text>
     </Pressable>
 
-    {/* Sign Up link */}
     <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
       <Text style={styles.forgotText}>
         Don't you have an account yet? Sign up!

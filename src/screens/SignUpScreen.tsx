@@ -1,31 +1,59 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert, Pressable, ActivityIndicator } from 'react-native';
-import styles from '../styles/signUpStyles';
+import React, { useState, useLayoutEffect } from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Alert,
+  Pressable,
+  ActivityIndicator,
+} from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
-import { signUpUser } from '../api/auth'; // import from the file above
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import styles from '../styles/signUpStyles';
+import { signUpUser } from '../api/auth';
+import { RootStackParamList } from '../types/navigation';
+
+type Nav = NativeStackNavigationProp<RootStackParamList, 'SignUp'>;
 
 const SignUpScreen = () => {
+  const navigation = useNavigation<Nav>();
+
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState(''); // Mock only
+  const [password, setPassword] = useState(''); 
   const [loading, setLoading] = useState(false);
-  const navigation = useNavigation();
+  const [focused, setFocused] = useState<null | 'username' | 'email' | 'password'>(null);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title: 'Sign Up',
+      headerBackVisible: false,
+      headerStyle: { backgroundColor: '#abf5ab64' }, 
+      headerTitleStyle: {
+        fontFamily: 'ArchitectsDaughter',
+        fontSize: 28,
+        color: '#2c6f33',
+      },
+    });
+  }, [navigation]);
 
   const handleSignUp = async () => {
-    if (!username || !email) {
+    if (!username.trim() || !email.trim()) {
       Alert.alert('Error', 'Please fill in all required fields.');
       return;
     }
     setLoading(true);
     try {
-      await signUpUser(username, email);
-      Alert.alert('Success', `Registered with username: ${username}`);
+      await signUpUser(username.trim(), email.trim());
+      Alert.alert('Success', `Registered with username: ${username.trim()}`);
       setUsername('');
       setEmail('');
       setPassword('');
       navigation.navigate('Login');
     } catch (error: any) {
-      if (error.response && error.response.data) {
+      if (error?.response?.data) {
         Alert.alert('Error', error.response.data || 'Signup failed.');
       } else {
         Alert.alert('Error', 'Could not sign up.');
@@ -36,48 +64,60 @@ const SignUpScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <TextInput
-        placeholder="Username"
-        style={styles.input}
-        value={username}
-        onChangeText={setUsername}
-        autoCapitalize="none"
-      />
+    <LinearGradient colors={['#abf5ab64', '#347134bc']} style={styles.container}>
+      <View style={[styles.inputBase, focused === 'username' && styles.inputFocused]}>
+        <TextInput
+          placeholder="Username"
+          style={styles.inputField}
+          value={username}
+          onChangeText={setUsername}
+          autoCapitalize="none"
+          onFocus={() => setFocused('username')}
+          onBlur={() => setFocused(null)}
+        />
+      </View>
 
-      <TextInput
-        placeholder="Email"
-        style={styles.input}
-        value={email}
-        onChangeText={setEmail}
-        autoCapitalize="none"
-        keyboardType="email-address"
-      />
+      <View style={[styles.inputBase, focused === 'email' && styles.inputFocused]}>
+        <TextInput
+          placeholder="Email"
+          style={styles.inputField}
+          value={email}
+          onChangeText={setEmail}
+          autoCapitalize="none"
+          keyboardType="email-address"
+          onFocus={() => setFocused('email')}
+          onBlur={() => setFocused(null)}
+        />
+      </View>
 
-      <TextInput
-        placeholder="Password"
-        style={styles.input}
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
+      <View style={[styles.inputBase, focused === 'password' && styles.inputFocused]}>
+        <TextInput
+          placeholder="Password"
+          style={styles.inputField}
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+          onFocus={() => setFocused('password')}
+          onBlur={() => setFocused(null)}
+        />
+      </View>
 
-      <TouchableOpacity
+      <Pressable
         onPress={handleSignUp}
-        style={styles.simpleButton}
         disabled={loading}
+        style={({ pressed }) => [styles.pillButton, pressed && styles.pillButtonActive]}
       >
         {loading ? (
-          <ActivityIndicator color="#fff" />
+          <ActivityIndicator color="#006400" />
         ) : (
-          <Text style={styles.simpleButtonText}>Create Account</Text>
+          <Text style={styles.pillButtonText}>CREATE ACCOUNT</Text>
         )}
-      </TouchableOpacity>
+      </Pressable>
 
       <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-        <Text style={styles.backToLoginText}>Back to Login</Text>
+        <Text style={styles.forgotText}>Back to Login</Text>
       </TouchableOpacity>
-    </View>
+    </LinearGradient>
   );
 };
 

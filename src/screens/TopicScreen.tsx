@@ -3,7 +3,7 @@ import { View, Text, Pressable, ActivityIndicator } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigation';
 import styles from '../styles/topicStyles';
-import api from '../api/axiosInstance'; // ✅ Axios instance
+import api from '../api/axiosInstance'; 
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Topic'>;
 
@@ -67,7 +67,6 @@ const TopicScreen = ({ route }: Props) => {
         <Text style={styles.example}>Example: {randomCard.example}</Text>
         <Text style={styles.synonyms}>Synonyms: {randomCard.synonyms}</Text>
         <Text style={styles.phonetic}>{randomCard.phonetic}</Text>
-        {/* You can later add audio playback for audioUrl here */}
       </View>
     </View>
   );

@@ -21,9 +21,9 @@ const SettingsScreen = ({ navigation }: Props) => {
   const username = user.username || '';
   const initials = username.charAt(0).toUpperCase();
 
-  const [usernameInput, setUsernameInput] = useState('');  // ввод нового имени
-  const [email, setEmail] = useState('');                  // ввод нового email
-  const [usernameFocused, setUsernameFocused] = useState(false); // фокус инпута name
+  const [usernameInput, setUsernameInput] = useState('');  
+  const [email, setEmail] = useState('');                  
+  const [usernameFocused, setUsernameFocused] = useState(false); 
   const [emailFocused, setEmailFocused] = useState(false);
   const [currentUsername, setCurrentUsername] = useState('');
   const [currentEmail, setCurrentEmail] = useState('');
@@ -185,7 +185,6 @@ const SettingsScreen = ({ navigation }: Props) => {
     </PopoverHint>
 
     <View style={styles.content}>
-      {/* ---------- USERNAME ---------- */}
       <View style={{ marginBottom: 24 }}>
         <Text style={styles.label}>CURRENT USERNAME: {currentUsername}</Text>
 
@@ -206,7 +205,6 @@ const SettingsScreen = ({ navigation }: Props) => {
         </View>
       </View>
 
-      {/* ---------- EMAIL ---------- */}
       <View>
         <Text style={styles.label}>CURRENT EMAIL: {currentEmail}</Text>
 
@@ -228,7 +226,6 @@ const SettingsScreen = ({ navigation }: Props) => {
         </View>
       </View>
 
-      {/* ---------- DELETE (по центру) ---------- */}
       <View style={styles.deleteWrapper}>
         <Pressable
           onPress={handleDelete}
@@ -239,7 +236,6 @@ const SettingsScreen = ({ navigation }: Props) => {
       </View>
     </View>
 
-    {/* ---------- BOTTOM BAR (без «обёрток») ---------- */}
     <View style={styles.bottomBar}>
       <Pressable
         onPress={() => navigation.navigate('Home')}
@@ -268,8 +264,6 @@ const SettingsScreen = ({ navigation }: Props) => {
     </View>
   </LinearGradient>
 );
-
-
 };
 
 export default SettingsScreen;

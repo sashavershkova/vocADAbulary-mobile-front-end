@@ -1,4 +1,4 @@
-import React, { use, useEffect, useState, useLayoutEffect } from "react";
+import React, { useEffect, useState, useLayoutEffect } from "react";
 import { View, Text, TextInput, TouchableOpacity, FlatList, Alert, Pressable, ActivityIndicator } from "react-native";
 import { useMockUser } from "../context/UserContext";
 import { Ionicons } from "@expo/vector-icons";
@@ -17,7 +17,7 @@ const LearnedFlashcardsScreen = () => {
   const userId = user.id;
   const username = user.username;
   const initials = username?.charAt(0).toUpperCase() || '?';
-
+  const [searchFocused, setSearchFocused] = useState(false);
   const [flashcards, setFlashcards] = useState<WalletFlashcard[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState("");
@@ -90,16 +90,20 @@ const LearnedFlashcardsScreen = () => {
 
   return (
     <LinearGradient colors={["#b0f4c9ff", "#313bae8c"]} style={styles.container}>
-      <TextInput
-        style={styles.searchBar}
-        placeholder="Search in learned..."
-        value={searchText}
-        onChangeText={setSearchText}
-      />
+      <View style={[styles.inputBase, searchFocused && styles.inputFocused]}>
+        <TextInput
+          style={styles.inputField}
+          placeholder="Search in learned..."
+          value={searchText}
+          onChangeText={setSearchText}
+          onFocus={() => setSearchFocused(true)}
+          onBlur={() => setSearchFocused(false)}
+        />
+      </View>
 
       <FlatList
         data={filteredFlashcards}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => String(item.id)}
         style={{ marginBottom: 90 }}
         contentContainerStyle={styles.cardList}
         renderItem={({ item }) => (
@@ -109,29 +113,46 @@ const LearnedFlashcardsScreen = () => {
             </View>
 
             <View style={styles.iconRow}>
-              <TouchableOpacity onPress={() => moveBackToMainDeck(item.id)}>
-                <View style={styles.returnCircleWrapper}>
-                  <View style={styles.returnCircle}>
-                    <Ionicons name="return-up-back" size={24} color="#246396" />
-                  </View>
-                  <Text style={styles.returnLabel}>UNWALLET</Text>
-                </View>
-              </TouchableOpacity>
+              <View style={styles.returnCircleWrapper}>
+                <Pressable
+                  onPress={() => moveBackToMainDeck(item.id)}
+                  hitSlop={10}
+                  style={styles.returnCircleBox}
+                >
+                  {({ pressed }) => (
+                    <>
+                      <View style={[styles.returnHalo, pressed && styles.returnHaloOn]} />
+                      <View style={[styles.returnCircle, pressed && styles.returnCirclePressed]}>
+                        <Ionicons
+                          name="return-up-back"
+                          size={24}
+                          color="#246396"
+                          style={pressed && styles.iconGlyphGlow}
+                        />
+                      </View>
+                    </>
+                  )}
+                </Pressable>
+                <Text style={styles.returnLabel}>UNWALLET</Text>
+              </View>
             </View>
           </View>
-        )}
+        )
+        }
+        ListFooterComponent={< View style={{ height: 100 }} />}
       />
 
       <View style={styles.bottomBar}>
-        <TouchableOpacity
-          style={styles.navItem}
-          onPress={() => navigation.navigate('Home')}
+        <Pressable
+          onPress={() => navigation.navigate("Home")}
+          hitSlop={10}
+          style={({ pressed }) => [styles.navItem, pressed && styles.iconButtonActive]}
         >
           <Ionicons name="home" size={35} color="#97d0feff" />
           <Text style={styles.navText}>HOME</Text>
-        </TouchableOpacity>
+        </Pressable>
       </View>
-    </LinearGradient>
+    </LinearGradient >
   );
 
 };

@@ -1,4 +1,3 @@
-// src/screens/FallbackScreen.tsx
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
@@ -20,7 +19,6 @@ const FallbackScreen: React.FC = () => {
       </Text>
       <Text style={styles.subtext}>This screen doesn't exist yet.</Text>
 
-      {/* кнопка "Home" */}
       <TouchableOpacity
         style={styles.homeButton}
         onPress={() => navigation.navigate('Home')}

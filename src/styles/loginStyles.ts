@@ -8,7 +8,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 20,
   },
-  // Title
   titleRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -26,7 +25,6 @@ const styles = StyleSheet.create({
     textShadowRadius: 6,
     shadowOpacity: 0.1,
   },
-  // Avatar
   avatar: {
     width: 100,
     height: 100,
@@ -40,7 +38,6 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 3, height: 6 },
     shadowRadius: 1,
   },
-  // Input
   inputBase: {
     width: '100%',
     borderWidth: 1,
@@ -57,7 +54,7 @@ const styles = StyleSheet.create({
     borderColor: '#ffffff',
     borderWidth: 2,
     borderRadius: 18,
-    shadowColor: '#ffffffff', 
+    shadowColor: '#ffffffff',
     shadowOpacity: 1,
     shadowOffset: { width: 0, height: 0 },
     shadowRadius: 10,
@@ -68,8 +65,6 @@ const styles = StyleSheet.create({
     fontFamily: 'ArchitectsDaughter',
     backgroundColor: 'transparent',
   },
-
-  // Other buttons
   checkboxRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -85,7 +80,7 @@ const styles = StyleSheet.create({
   forgotText: {
     color: '#006400',
     textDecorationLine: 'underline',
-    marginTop: 10,
+    marginTop: 15,
     fontSize: 16,
     fontFamily: 'ArchitectsDaughter',
   },

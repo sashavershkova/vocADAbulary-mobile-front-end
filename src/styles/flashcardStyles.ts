@@ -30,9 +30,7 @@ export default StyleSheet.create({
   },
   card: {
     backgroundColor: '#fff176',
-    borderColor: '#4CAF50',
-    borderWidth: 2,
-    borderRadius: 16,
+    borderRadius: 20,
     width: 370,
     height: 300,
     alignSelf: 'center',
@@ -63,16 +61,6 @@ export default StyleSheet.create({
     alignItems: 'center',
     zIndex: 5,
   },
-  // phoneticsBlob: {
-  //   paddingHorizontal: 8,
-  //   paddingVertical: 4,
-  //   borderRadius: 12,
-  //   marginLeft: 6,
-  // },
-  // phoneticsText: {
-  //   fontSize: 25,
-  //   color: '#2c6f33',
-  // },
   phoneticsUnder: {
     marginTop: 8,
     fontSize: 24,
@@ -80,10 +68,6 @@ export default StyleSheet.create({
     fontFamily: 'ArchitectsDaughter',
     textAlign: 'center',
   },
-  // soundButton: {
-  //   borderRadius: 20,
-  //   padding: 6,
-  // },
   soundButtonTopRight: {
     position: 'absolute',
     top: 10,
@@ -155,26 +139,6 @@ export default StyleSheet.create({
     marginTop: -5,
     textAlign: 'center',
   },
-
-  // TOPIC LABEL (above card)
-  // topicLabelContainer: {
-  //   width: 370, // Same as card width
-  //   alignItems: 'flex-start',
-  //   alignSelf: 'center',
-  //   marginBottom: 4,
-  // },
-  // topicLabelText: {
-  //   fontFamily: 'ArchitectsDaughter',
-  //   fontSize: 20,
-  //   color: '#2c6f33',
-  //   opacity: 0.88,
-  //   fontWeight: 'bold',
-  //   marginLeft: 10,
-  //   marginBottom: 3,
-  //   textShadowColor: '#c0e3bf',
-  //   textShadowRadius: 2,
-  //   letterSpacing: 0.2,
-  // },
   topicLabelInside: {
     position: 'absolute',
     top: 10,
@@ -188,8 +152,6 @@ export default StyleSheet.create({
     textShadowRadius: 2,
     letterSpacing: 0.2,
   },
-
-  // SEARCH MODAL STYLES
   searchModalBackground: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.20)',
@@ -258,12 +220,34 @@ export default StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
-  // hintButton: { alignItems: 'center' },
   hintText: {
     marginTop: 3,
     fontFamily: 'ArchitectsDaughter',
     fontSize: 18,
     color: '#2c6f33',
     marginLeft: 9,
+  },
+  navIconActive: {
+    shadowColor: '#ffffffff',
+    shadowOpacity: 1,
+    shadowOffset: { width: 0, height: 0 },
+    shadowRadius: 4,
+  },
+  cardIconActive: {
+    shadowColor: '#ffffff',
+    shadowOpacity: 1,
+    shadowOffset: { width: 0, height: 0 },
+    shadowRadius: 8,
+
+  },
+  iconButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  iconButtonActive: {
+    shadowColor: '#7704fbff',
+    shadowOpacity: 1,
+    shadowOffset: { width: 0, height: 0 },
+    shadowRadius: 4,
   },
 });

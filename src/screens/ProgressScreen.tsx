@@ -9,7 +9,6 @@ import { getCreatedCount } from '../api/flashcards';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import styles from '../styles/progressStyles';
-// import greenstick from '../assets/images/greenstick.png';
 import bluestick from '../assets/images/bluestick.png';
 import PopoverHint from '../screens/PopoverHint';
 
@@ -31,7 +30,6 @@ type ProgressSummary = {
 const ProgressScreen = () => {
   const [hintVisible, setHintVisible] = useState(false);
   const stickScale = React.useRef(new Animated.Value(1)).current;
-  // const isGreen = false;
   const navigation = useNavigation<ProgressNavProp>();
   const { user } = useMockUser();
   const userId = user.id;
@@ -43,7 +41,6 @@ const ProgressScreen = () => {
 
   const fetchSummary = async () => {
     try {
-      // grab both in parallel
       const [data, created] = await Promise.all([
         getUserProgressSummary(userId),
         getCreatedCount()
@@ -85,7 +82,7 @@ const ProgressScreen = () => {
           style={{ marginLeft: 16, padding: 2 }}
         >
           <Animated.Image
-            source={bluestick} // всегда синий
+            source={bluestick} 
             style={{ width: 30, height: 50, transform: [{ scale: stickScale }] }}
           />
         </Pressable>
@@ -137,10 +134,10 @@ const ProgressScreen = () => {
 
       <PopoverHint visible={hintVisible} onClose={() => setHintVisible(false)}>
         <Text style={styles.hintText}>
-          This is your personal data center — track every flashcard like it's a quantum particle.{"\n\n"}
-          - Learned words? You're basically a linguistic Einstein.{"\n\n"}
-          - In-progress cards? Still in a superposition.{"\n\n"}
-          - Quizzes passed? Let's just say you're not Penny.{"\n\n"}
+          This is your PERSONAL DATA CENTER — track every flashcard like it's a quantum particle.{"\n\n"}
+          - LEARNED WORDS? You're basically a linguistic Einstein.{"\n\n"}
+          - IN-PROGRESS cards? Still in a superposition.{"\n\n"}
+          - QUIZZES passed? Let's just say you're not Penny.{"\n\n"}
           Now go forth, young Padawan of Knowledge!
         </Text>
       </PopoverHint>
@@ -149,8 +146,8 @@ const ProgressScreen = () => {
         <Pressable
           onPress={() => navigation.navigate('Home')}
           style={({ pressed }) => [
-            styles.navItem,            // базовая раскладка элемента бара
-            pressed && styles.navIconActive, // белое свечение при нажатии
+            styles.navItem,            
+            pressed && styles.navIconActive, 
           ]}
         >
           <Ionicons name="home" size={35} color="#97d0feff" />

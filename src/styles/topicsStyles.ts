@@ -1,39 +1,45 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-  },
+  container: { flex: 1, padding: 20 },
   topicList: {
+    paddingTop: 20,
     paddingBottom: 20,
   },
   topicBoxWrapper: {
     marginVertical: 10,
     alignItems: 'center',
-    shadowColor: '#313131ff',
+    shadowColor: '#313131FF',
     shadowOpacity: 0.8,
-    shadowOffset: { width: 3, height: 6 },
+    shadowOffset: { width: 4, height: 6 },
+    shadowRadius: 6,
   },
-  topicTouchable: {
-    borderRadius: 40,
-    overflow: 'visible',
-    // shadowColor: '#313131ff',
-    // shadowOpacity: 0.8,
-    // shadowOffset: { width: 3, height: 6 },
-  },
-  topicBox: {
+  pillButton: {
     width: 300,
-    height: 80,
-    borderRadius: 40,
+    height: 70,
+    borderRadius: 30,
     paddingVertical: 20,
     paddingHorizontal: 30,
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 1.5,
+    borderWidth: 2, // как в Quiz
+    alignSelf: 'center',
+  },
+  pillButtonActiveBorder: {
+    borderColor: '#FFFFFF',
+    borderWidth: 2,
+  },
+  pillButtonWhiteShadow: {
+    marginVertical: 10,
+    alignItems: 'center',
+    shadowColor: '#FFFFFF',
+    shadowOpacity: 1,
+    shadowOffset: { width: 0, height: 0 },
+    shadowRadius: 9,
+    borderRadius: 40,
   },
   topicText: {
-    fontSize: 25,
+    fontSize: 30,
     fontWeight: 'bold',
     textAlign: 'center',
     fontFamily: 'ArchitectsDaughter',
@@ -45,51 +51,36 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 1, height: 2 },
     textShadowRadius: 2,
   },
-  topicShadowWrapper: {
-    shadowColor: '#006400',
-    shadowOffset: { width: 1, height: 3 },
-    shadowOpacity: 0.3,
-    shadowRadius: 6,
-    borderRadius: 20,
-    backgroundColor: 'transparent',
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
+  loadingContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  userWrapper: {
     alignItems: 'center',
-  },
-  simpleButton: {
-    backgroundColor: '#F8C8DC',
-    borderRadius: 20,
-    paddingVertical: 10,
-    paddingHorizontal: 30,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 1.5,
-    borderColor: '#006400',
-    marginTop: 30,
-  },
-  simpleButtonText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#006400',
-    fontFamily: 'ArchitectsDaughter',
+    justifyContent: 'flex-start',
+    marginRight: 8,
+    paddingTop: 8,
+    minWidth: 60,
   },
   initialsCircle: {
-    backgroundColor: '#8feda0ff',
-    borderColor: '#2c6f33',
+    backgroundColor: '#b8efb7',
+    borderRadius: 20,
     width: 25,
     height: 25,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1.5,
-    borderRadius: 20,
+    borderColor: '#2c6f33',
   },
   initialsText: {
     fontFamily: 'ArchitectsDaughter',
+    fontSize: 18,
     color: '#2c6f33',
     fontWeight: 'bold',
-    fontSize: 18,
+  },
+  userLabel: {
+    fontSize: 14,
+    color: '#2c6f33',
+    fontFamily: 'ArchitectsDaughter',
+    marginTop: -5,
+    textAlign: 'center',
   },
   bottomBar: {
     position: 'absolute',
@@ -99,75 +90,35 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    shadowColor: '#313131ff',
+    shadowColor: '#313131FF',
     shadowOpacity: 0.8,
-    shadowOffset: { width: 4, height: 6 },
-  },
-  // homeButton: {
-  //   alignItems: 'center',
-    
-  // },
-  addButton: {
-    width: 56,
-    height: 56,
-    backgroundColor: '#9edd81ff',
-    borderRadius: 28,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  buttonText: {
-    color: '#006400',
-    marginTop: 4,
-    fontFamily: 'ArchitectsDaughter',
-    fontSize: 14,
-  },
-  userWrapper: {
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    marginRight: 8,
-    paddingTop: 8,
-    minWidth: 60,
-  },
-  userLabel: {
-    fontSize: 14,
-    color: '#2c6f33',
-    fontFamily: 'ArchitectsDaughter',
-    marginTop: -5,
-    textAlign: 'center',
-  },
-  navText: {
-    fontSize: 16,
-    fontFamily: 'ArchitectsDaughter',
-    color: '#8feda0ff',
-    textAlign: 'center',
+    shadowOffset: { width: 3, height: 6 },
   },
   navItem: {
     alignItems: 'center',
     justifyContent: 'center',
-    flexDirection: 'column',
-    marginHorizontal: 10,
+    flex: 1,
   },
-
-  /** 🔍 Search Feature Styles **/
-  navItemCenter: {
+  navText: {
+    fontSize: 14,
+    color: '#8feda0ff',
+    fontFamily: 'ArchitectsDaughter',
+    marginTop: -5,
+    textAlign: 'center',
+    width: '100%',
+  },
+  navIconCircle: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#e7ffe8',
-    borderRadius: 18,
-    paddingHorizontal: 18,
-    paddingVertical: 8,
-    borderWidth: 1.5,
-    borderColor: '#8feda0ff',
-    shadowColor: '#2c6f33',
-    shadowOpacity: 0.15,
-    shadowRadius: 10,
   },
-  navTextCenter: {
-    fontSize: 16,
-    color: '#2c6f33',
-    fontFamily: 'ArchitectsDaughter',
-    marginTop: 4,
-    letterSpacing: 1,
+  navIconActive: {
+    shadowColor: '#FFFFFF',
+    shadowOpacity: 1,
+    shadowOffset: { width: 0, height: 0 },
+    shadowRadius: 4,
   },
   searchModalBackground: {
     flex: 1,
@@ -227,65 +178,7 @@ const styles = StyleSheet.create({
     color: '#555',
     fontFamily: 'ArchitectsDaughter',
   },
-  searchCloseBtn: {
-    position: 'absolute',
-    top: 6,
-    right: 6,
-  },
-  searchCloseText: {
-    color: '#767776ff',
-    fontFamily: 'ArchitectsDaughter',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-// КНОПКА (пилюля) — статическое состояние
-pillButton: {
-  minWidth: 80,
-  height: 56,
-  paddingHorizontal: 22,
-  borderRadius: 40,                 // максимально скруглённая
-  flexDirection: 'row',
-  alignItems: 'center',
-  justifyContent: 'center',
-  gap: 8,
-
-  backgroundColor: '#e2a4f7ee',
-  borderWidth: 1.5,
-  borderColor: '#2c6f33',
-
-  // статичная тень
-  shadowColor: '#313131ff',
-  shadowOpacity: 0.8,
-  shadowOffset: { width: 3, height: 6 },
-  shadowRadius: 6,
-  elevation: 6,
-},
-
-// КНОПКА — активное (динамическое) состояние
-pillButtonActive: {
-  // белая «светящаяся» тень
-  shadowColor: '#ffffffff',
-  shadowOpacity: 0.95,
-  shadowOffset: { width: 0, height: 8 },
-  shadowRadius: 10,
-  elevation: 12,
-},
-
-// ИНФО-ПОВЕРХНОСТЬ (не кнопка)
-infoSurface: {
-  borderRadius: 16,                // односкругление для всех не-кнопок
-  backgroundColor: '#cef4caf0',
-  borderWidth: 1,
-  borderColor: '#246396',
-  paddingVertical: 10,
-  paddingHorizontal: 20,
-
-  shadowColor: '#313131ff',
-  shadowOpacity: 0.8,
-  shadowOffset: { width: 3, height: 6 },
-},
-
-
+  searchCloseBtn: { position: 'absolute', top: 6, right: 6 },
 });
 
 export default styles;
