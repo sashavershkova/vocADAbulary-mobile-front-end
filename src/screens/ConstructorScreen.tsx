@@ -107,7 +107,7 @@ const ConstructorScreen = ({ navigation }: Props) => {
       console.log('loadNewTemplate: initAttempts', initAttempts);
     } catch (err) {
       console.error('Failed to load template:', err);
-      Alert.alert('Error', 'Failed to load constructor sentence.');
+      Alert.alert('Error', 'Failed to load constructor sentence. Please learn some words first.');
     } finally {
       setLoading(false);
     }
