@@ -35,13 +35,9 @@ type Flashcard = {
   definition: string;
   example: string;
   audioUrl: string;
-  createdBy: number | null;     
   phonetic?: string;
   synonyms?: string;
   createdBy: number | null; // public cards are null
-  audioUrl: string;
-  definition: string;
-  example: string;  
 };
 
 const logTime = (label: string) => {

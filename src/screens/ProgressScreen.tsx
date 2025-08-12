@@ -134,7 +134,7 @@ const ProgressScreen = () => {
         {renderButton('flash', 'Quizzes Passed', summary.quizzesPassed)}
         {renderButton(
           'school', // <-- changed icon to fit context accuracy.  used to be "chatbubble-ellipses"
-          'Context Usage Accuracy',
+          'Usage Accuracy', //too long, doesn't fit into button
           `${summary.sentenceProficiency.toFixed(0)}%`
         )}
         {renderButton(

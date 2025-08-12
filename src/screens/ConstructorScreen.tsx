@@ -34,6 +34,8 @@ const ConstructorScreen = ({ navigation }: Props) => {
   const [perBlankResult, setPerBlankResult] = useState<Record<number, boolean | null>>({});
   const [feedback, setFeedback] = useState<'success' | 'error' | null>(null);
   const [submitting, setSubmitting] = useState<boolean>(false);
+  const [resetCount, setResetCount] = useState<number>(0);
+  const [, forceUpdate] = useState<{}>({});
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -70,6 +72,9 @@ const ConstructorScreen = ({ navigation }: Props) => {
       const t = tRes.data;
       setTemplate(t);
 
+      // Reset session stats for the new template (fresh start)
+      await api.post('/api/sentences/reset', { templateId: t.id });
+
       const pRes = await api.get<PrepareSentenceResponse>(`/api/sentences/templates/${t.id}/prepare`);
       const p = pRes.data;
 
@@ -82,6 +87,7 @@ const ConstructorScreen = ({ navigation }: Props) => {
       const initRevealed: Record<number, boolean> = {};
       const initRevealedWords: Record<number, string> = {};
       const initAttempts: Record<number, number> = {};
+      
       gotChunks.forEach((c) => {
         if (c.type === 'blank' && typeof c.blankIndex === 'number') {
           initRevealed[c.blankIndex] = !!c.reveal;
@@ -97,14 +103,13 @@ const ConstructorScreen = ({ navigation }: Props) => {
           }
         }
       });
+      
       setAnswers(initAnswers);
       setRevealed(initRevealed);
       setRevealedWords(initRevealedWords);
       setAttempts(initAttempts);
 
-      console.log('loadNewTemplate: initRevealedWords', initRevealedWords);
-      console.log('loadNewTemplate: initRevealed', initRevealed);
-      console.log('loadNewTemplate: initAttempts', initAttempts);
+      console.log('loadNewTemplate: fresh template loaded');
     } catch (err) {
       console.error('Failed to load template:', err);
       Alert.alert('Error', 'Failed to load constructor sentence. Please learn some words first.');
@@ -122,21 +127,73 @@ const ConstructorScreen = ({ navigation }: Props) => {
     setPerBlankResult((prev) => ({ ...prev, [idx]: null }));
   };
 
-  const handleReset = () => {
+  const handleReset = async () => {
+    // Clear frontend state
     const cleared: Record<number, string> = {};
     const clearedAttempts: Record<number, number> = {};
     Object.keys(answers).forEach((k) => {
       const i = Number(k);
-      cleared[i] = revealed[i] ? (revealedWords[i] || '') : '';
+      cleared[i] = '';
       clearedAttempts[i] = 0;
     });
+    
     setAnswers(cleared);
     setAttempts(clearedAttempts);
     setPerBlankResult({});
     setFeedback(null);
+    setResetCount((prev) => prev + 1);
+    setRevealed({});
+    setRevealedWords({});
 
     console.log('handleReset: clearedAnswers', cleared);
     console.log('handleReset: clearedAttempts', clearedAttempts);
+
+    // Reset backend session state (not persistent stats)
+    if (template) {
+      try {
+        await api.post('/api/sentences/reset', { templateId: template.id });
+        console.log('Backend session stats reset successfully');
+        
+        // Reload template to get fresh reveal status
+        const pRes = await api.get<PrepareSentenceResponse>(`/api/sentences/templates/${template.id}/prepare`);
+        const p = pRes.data;
+        
+        const gotChunks = p?.chunks ?? [];
+        setChunks(gotChunks);
+
+        // Reinitialize state based on fresh backend response
+        const initAnswers: Record<number, string> = {};
+        const initRevealed: Record<number, boolean> = {};
+        const initRevealedWords: Record<number, string> = {};
+        const initAttempts: Record<number, number> = {};
+        
+        gotChunks.forEach((c) => {
+          if (c.type === 'blank' && typeof c.blankIndex === 'number') {
+            initRevealed[c.blankIndex] = !!c.reveal;
+            initAttempts[c.blankIndex] = 0;
+            if (c.reveal && c.revealedWord) {
+              initRevealedWords[c.blankIndex] = c.revealedWord;
+              initAnswers[c.blankIndex] = c.revealedWord;
+            } else {
+              initAnswers[c.blankIndex] = '';
+              if (c.revealedWord) {
+                initRevealedWords[c.blankIndex] = c.revealedWord;
+              }
+            }
+          }
+        });
+        
+        setAnswers(initAnswers);
+        setRevealed(initRevealed);
+        setRevealedWords(initRevealedWords);
+        setAttempts(initAttempts);
+        
+        console.log('Reset: fresh state loaded from backend');
+      } catch (err) {
+        console.error('Failed to reset backend session stats:', err);
+        Alert.alert('Error', 'Failed to reset session. Please try again.');
+      }
+    }
   };
 
   const handleSubmit = async () => {
@@ -199,7 +256,7 @@ const ConstructorScreen = ({ navigation }: Props) => {
         if (pb.reveal && pb.revealedWord) {
           updRevealed[idx] = true;
           updRevealedWords[idx] = pb.revealedWord;
-          setAnswers((prev) => ({ ...prev, [idx]: pb.revealedWord }));
+          setAnswers((prev) => ({ ...prev, [idx]: pb.revealedWord || '' }));
           updAttempts[idx] = 0;
           console.log(`handleSubmit: server reveal for ${idx}, setting answer to ${pb.revealedWord}`);
         } else if (pb.reveal && !pb.revealedWord) {
@@ -291,7 +348,7 @@ const ConstructorScreen = ({ navigation }: Props) => {
 
                 return (
                   <TextInput
-                    key={`b-${bIdx}`}
+                    key={`b-${bIdx}-${resetCount}`}
                     editable={!isRevealed}
                     value={value}
                     onChangeText={(txt) => handleChange(bIdx, txt)}
