@@ -1,14 +1,11 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
-  // Базовый контейнер — как в Quiz
   container: {
     flex: 1,
     paddingHorizontal: 20,
     paddingTop: 100,
   },
-
-  // ===== header user badge (как в Quiz) =====
   userWrapper: {
     alignItems: 'center',
     justifyContent: 'flex-start',
@@ -39,8 +36,6 @@ const styles = StyleSheet.create({
     marginTop: -5,
     textAlign: 'center',
   },
-
-  // ===== интро над карточкой =====
   introWrap: {
     alignItems: 'center',
     marginTop: 8,
@@ -59,34 +54,27 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 8,
   },
-
-  // ===== область контента с карточкой =====
   contentArea: {
     flex: 1,
-    justifyContent: 'flex-end',   // тянем к низу
-    paddingBottom: 200,           // подняли от футера
+    justifyContent: 'flex-end',   
+    paddingBottom: 200,           
   },
-
-  // Жёлтая «карточка»
   cardBox: {
     backgroundColor: '#FFF176',
     borderRadius: 28,
     paddingVertical: 22,
     paddingHorizontal: 24,
-    minHeight: 260,               // фиксированная «масса»
+    minHeight: 260,               
     justifyContent: 'flex-start',
     shadowColor: '#313131FF',
     shadowOpacity: 0.8,
     shadowOffset: { width: 4, height: 6 },
     shadowRadius: 8,
   },
-
-  // Поток текста внутри карточки
   templateRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'center',
-    // НЕ центрируем: обычный поток со строками
     rowGap: 8,
     columnGap: 8,
   },
@@ -96,8 +84,6 @@ const styles = StyleSheet.create({
     color: '#2C6F33',
     lineHeight: 42,
   },
-
-  // Поле для ввода (занимает ~80–85% строки)
   blankInput: {
     height: 56,
     minWidth: '78%',
@@ -132,8 +118,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#F86A6ACD',
     borderColor: '#F86A6AFF',
   },
-
-  // ===== bottom bar (как в Quiz) =====
   bottomBar: {
     position: 'absolute',
     bottom: 20,
@@ -165,8 +149,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     width: '100%',
   },
-
-  // Текст, который показываем в подсказках
   hintText: {
     marginTop: 3,
     fontFamily: 'ArchitectsDaughter',

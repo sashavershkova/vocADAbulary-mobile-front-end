@@ -88,7 +88,6 @@ const LearnedFlashcardsScreen = () => {
 
   if (loading) return <ActivityIndicator style={{ flex: 1 }} size="large" />;
 
-  // ——— мини-карточка без флипа/фонетики/звука ———
   const MiniLearned = memo(function MiniLearned({
     item,
     onUnwallet,
@@ -113,7 +112,6 @@ const LearnedFlashcardsScreen = () => {
               </Text>
             </View>
 
-            {/* UNWALLET — круг + halo, подпись тем же шрифтом */}
             <View style={[styles.miniActionsRow, { justifyContent: "center" }]}>
               <View style={S.btnWrap}>
                 <Pressable
@@ -146,7 +144,6 @@ const LearnedFlashcardsScreen = () => {
 
   return (
     <LinearGradient colors={["#b0f4c9ff", "#313bae8c"]} style={styles.container}>
-      {/* поиск как в Wallet */}
       <View style={styles.searchOuter}>
         <View style={[styles.inputBase, searchFocused && styles.inputFocused]}>
           <TextInput
@@ -164,7 +161,7 @@ const LearnedFlashcardsScreen = () => {
         data={filteredFlashcards}
         keyExtractor={(item) => String(item.id)}
         numColumns={2}
-        columnWrapperStyle={{ justifyContent: "flex-start" }}   // ширину/зазоры задают стили
+        columnWrapperStyle={{ justifyContent: "flex-start" }}   
         contentContainerStyle={styles.cardGridList}
         renderItem={({ item }) => (
           <MiniLearned item={item} onUnwallet={moveBackToMainDeck} />
@@ -190,7 +187,6 @@ const LearnedFlashcardsScreen = () => {
 
 export default LearnedFlashcardsScreen;
 
-/** Локальные стили только для кнопки UNWALLET (чтобы точно отрисовался круг + шрифт) */
 const S = StyleSheet.create({
   btnWrap: { alignItems: "center", justifyContent: "center" },
   btnPressArea: { alignItems: "center", justifyContent: "center" },

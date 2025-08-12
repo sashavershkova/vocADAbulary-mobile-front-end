@@ -45,7 +45,6 @@ const WalletScreen = () => {
   const [searchText, setSearchText] = useState("");
   const hasEnsuredDir = useRef(false);
 
-  // ---------- data ----------
   const fetchWallet = async () => {
     if (!hasEnsuredDir.current) {
       await ensureCacheDirExists();
@@ -120,14 +119,12 @@ const WalletScreen = () => {
     }
   }, [userId]);
 
-  // ---------- list ----------
   const filteredFlashcards = flashcards.filter((fc) =>
     fc.word.toLowerCase().includes(searchText.toLowerCase())
   );
 
   if (loading) return <ActivityIndicator style={{ flex: 1 }} size="large" />;
 
-  // ---------- card ----------
   type MiniProps = {
     item: WalletFlashcard;
     onDelete: (id: number) => void;
@@ -138,11 +135,9 @@ const WalletScreen = () => {
     const flip = useRef(new Animated.Value(0)).current;
     const [flipped, setFlipped] = useState(false);
 
-    // локальная фонетика — не сбрасываем при кликах
     const [localPhon, setLocalPhon] = useState(item.phonetic ?? "");
     const phonToShow = localPhon || item.phonetic || "";
 
-    // ЛОКАЛЬНЫЙ playing — не трогаем родителя => нет массовых ре-рендеров
     const [playing, setPlaying] = useState(false);
 
     const front = flip.interpolate({ inputRange: [0, 180], outputRange: ["0deg", "180deg"] });
@@ -179,7 +174,6 @@ const WalletScreen = () => {
     return (
       <View style={styles.cardTileWrapper}>
         <View style={{ height: CARD_HEIGHT }}>
-          {/* FRONT */}
           <Animated.View
             style={[
               styles.miniCard,
@@ -187,7 +181,6 @@ const WalletScreen = () => {
             ]}
             pointerEvents={flipped ? "none" : "auto"}
           >
-            {/* кликается вся верхняя зона */}
             <Pressable
               style={{ flexGrow: 1, width: "100%", alignItems: "center", justifyContent: "center" }}
               onPress={toggle}
@@ -202,7 +195,6 @@ const WalletScreen = () => {
                 {item.word}
               </Text>
 
-              {/* фикс высоты строки — без прыжков */}
               <View style={{ minHeight: 22, justifyContent: "center" }}>
                 {phonToShow !== "" && (
                   <Text style={styles.miniPhonetic}>/{phonToShow}/</Text>
@@ -238,7 +230,6 @@ const WalletScreen = () => {
             </View>
           </Animated.View>
 
-          {/* BACK */}
           <Animated.View
             style={[
               styles.miniCardBack,
@@ -255,7 +246,6 @@ const WalletScreen = () => {
     );
   };
 
-  // мемо — карточка не будет перерисовываться без нужды
   const MiniCard = memo(MiniCardInner, (prev, next) => {
     return (
       prev.item.id === next.item.id &&
@@ -280,7 +270,6 @@ const WalletScreen = () => {
         </Text>
       </PopoverHint>
 
-      {/* Поиск с правильными полями */}
       <View style={styles.searchOuter}>
         <View style={[styles.inputBase, searchFocused && styles.inputFocused]}>
           <TextInput

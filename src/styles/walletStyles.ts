@@ -1,21 +1,17 @@
 import { StyleSheet, Dimensions } from "react-native";
 
-/** мм → dp (1in = 25.4mm; 1in = 160dp) */
 export const mm = (n: number) => (n / 25.4) * 160;
 
-/** Поля/зазоры (можешь подрегулировать цифры в мм) */
 export const EDGE_MM = 3;
 export const GAP_MM  = 2.0;
 export const EDGE = mm(EDGE_MM);
 export const GAP  = mm(GAP_MM);
 export const HALF_GAP = GAP / 2;
 
-/** Фикс-размер карточки (мм) */
 export const CARD_W_MM = 30;
-export const CARD_H_MM = 30;                // ← высота здесь
+export const CARD_H_MM = 30;                
 export const CARD_HEIGHT = Math.round(mm(CARD_H_MM));
 
-/** Рассчитываем точную ширину на экране: 2 колонки + GAP + EDGE */
 const W = Dimensions.get("window").width;
 const desired = Math.round(mm(CARD_W_MM));
 const maxByScreen = Math.floor((W - EDGE * 2 - GAP) / 2);
@@ -24,14 +20,13 @@ export const CARD_WIDTH = Math.min(desired, maxByScreen);
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 0, // поля даём списком
+    paddingHorizontal: 0, 
     paddingTop: 30,
     shadowColor: "#313131ff",
     shadowOpacity: 0.8,
     shadowOffset: { width: 3, height: 6 },
   },
 
-  // ===== Search =====
   searchOuter: { paddingHorizontal: EDGE },
   inputBase: {
     width: "100%",
@@ -62,19 +57,16 @@ const styles = StyleSheet.create({
     color: "#4d4e4dff",
     backgroundColor: "transparent",
   },
-
-  // ===== 2×N сетка мини-карточек =====
   cardGridList: {
     paddingTop: 12,
     paddingBottom: 90,
-    paddingHorizontal: Math.max(0, EDGE - HALF_GAP), // чтобы по краям было ровно EDGE
+    paddingHorizontal: Math.max(0, EDGE - HALF_GAP), 
   },
   cardTileWrapper: {
     width: CARD_WIDTH,
     marginHorizontal: HALF_GAP,
     marginBottom: GAP,
   },
-
   miniCard: {
     width: "100%",
     height: CARD_HEIGHT,
@@ -105,7 +97,6 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 3, height: 6 },
     shadowRadius: 6,
   },
-
   miniWord: {
     fontFamily: "ArchitectsDaughter",
     fontSize: 24,
@@ -114,13 +105,12 @@ const styles = StyleSheet.create({
   },
   miniPhonetic: {
     marginTop: 6,
-    minHeight: 22,                    // фикс высоты — не дёргается
+    minHeight: 22,                    
     textAlign: "center",
     fontFamily: "ArchitectsDaughter",
     fontSize: 16,
     color: "#246396",
   },
-
   miniActionsRow: {
     marginTop: "auto",
     paddingBottom: 10,
@@ -135,8 +125,6 @@ const styles = StyleSheet.create({
     color: "#4d4e4dff",
     textAlign: "center",
   },
-
-  // ===== Bottom bar / user / icons =====
   bottomBar: {
     position: "absolute",
     bottom: 20,
@@ -158,7 +146,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     width: "100%",
   },
-    // --- для круглой кнопки UNWALLET с «ореолом» ---
   returnCircleBox: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -177,8 +164,6 @@ const styles = StyleSheet.create({
   returnCirclePressed: {
     transform: [{ scale: 0.95 }],
   },
-
-
   userWrapper: { alignItems: "center", justifyContent: "flex-start", marginRight: 5, paddingTop: 5, minWidth: 60 },
   userLabel: { fontSize: 14, color: "#313bae8c", fontFamily: "ArchitectsDaughter", marginTop: -5, textAlign: "center" },
   initialsCircle: {

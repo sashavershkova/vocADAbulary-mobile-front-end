@@ -22,7 +22,6 @@ import PopoverHint from './PopoverHint';
 type Props = NativeStackScreenProps<RootStackParamList, 'Constructor'>;
 
 const ConstructorScreen = ({ navigation }: Props) => {
-  // ——— Stickman hint ———
   const [hintVisible, setHintVisible] = useState(false);
   const stickScale = useRef(new Animated.Value(1)).current;
 
@@ -30,7 +29,6 @@ const ConstructorScreen = ({ navigation }: Props) => {
   const username = user?.username ?? '';
   const initials = username?.charAt(0)?.toUpperCase() || '?';
 
-  // ——— data ———
   const [loading, setLoading] = useState<boolean>(true);
   const [template, setTemplate] = useState<TemplateResponseWithBlank | null>(null);
   const [chunks, setChunks] = useState<Chunk[]>([]);
@@ -42,7 +40,6 @@ const ConstructorScreen = ({ navigation }: Props) => {
   const [feedback, setFeedback] = useState<'success' | 'error' | null>(null);
   const [submitting, setSubmitting] = useState<boolean>(false);
 
-  // фокус конкретного инпута (для подсветки и снятия по тапу в пустое место)
   const [focusedIdx, setFocusedIdx] = useState<number | null>(null);
 
   useLayoutEffect(() => {
@@ -94,7 +91,6 @@ const ConstructorScreen = ({ navigation }: Props) => {
       const t = tRes.data;
       setTemplate(t);
 
-      // Reset session stats for the new template (fresh start)
       await api.post('/api/sentences/reset', { templateId: t.id });
 
       const pRes = await api.get<PrepareSentenceResponse>(`/api/sentences/templates/${t.id}/prepare`);
@@ -145,7 +141,6 @@ const ConstructorScreen = ({ navigation }: Props) => {
   };
 
   const handleReset = async () => {
-    // Clear frontend state
     const cleared: Record<number, string> = {};
     const clearedAttempts: Record<number, number> = {};
     Object.keys(answers).forEach((k) => {
@@ -221,7 +216,6 @@ const ConstructorScreen = ({ navigation }: Props) => {
         }, 500);
       } else {
         setFeedback('error');
-        // очищаем только неправильно введённые и не раскрытые
         setAnswers((prev) => {
           const next = { ...prev };
           Object.keys(updatedResult).forEach((k) => {
@@ -258,7 +252,6 @@ const ConstructorScreen = ({ navigation }: Props) => {
 
   return (
     <LinearGradient colors={['#f7b4c4d6', '#bf86fcc2']} style={styles.container}>
-      {/* хинт со стикмена */}
       <PopoverHint visible={hintVisible} onClose={() => setHintVisible(false)}>
         <Text style={styles.hintText}>
         Welcome to the *CONSTRUCTOR*, adi, where your brain gets a workout Sheldon would actually approve of. {"\n\n"}
@@ -267,16 +260,13 @@ const ConstructorScreen = ({ navigation }: Props) => {
         </Text>
       </PopoverHint>
 
-      {/* Тап по пустому месту снимает фокус с инпутов */}
       <Pressable style={{ flex: 1 }} onPress={() => setFocusedIdx(null)}>
-        {/* Интро-текст */}
         <View style={styles.introWrap}>
           <Text style={styles.introLineSmall}>You Are on The Finish Line, Adie:))</Text>
           <Text style={styles.introLineSmall}>Check Your Tech Voice!</Text>
           <Text style={styles.introLineBig}>Fill in The Blanks:</Text>
         </View>
 
-        {/* Карточка внизу */}
         <View style={styles.contentArea}>
           <View
             style={[
@@ -330,7 +320,6 @@ const ConstructorScreen = ({ navigation }: Props) => {
         </View>
       </Pressable>
 
-      {/* Bottom bar — та же подсветка, что и в Quiz */}
       <View style={styles.bottomBar}>
         <Pressable
           style={({ pressed }) => [styles.navIcon, pressed && styles.navIconActive]}
