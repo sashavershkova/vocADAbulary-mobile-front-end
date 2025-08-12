@@ -1,160 +1,55 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Dimensions } from "react-native";
+
+/** мм → dp (1in = 25.4mm; 1in = 160dp) */
+export const mm = (n: number) => (n / 25.4) * 160;
+
+/** Поля/зазоры (можешь подрегулировать цифры в мм) */
+export const EDGE_MM = 3;
+export const GAP_MM  = 2.0;
+export const EDGE = mm(EDGE_MM);
+export const GAP  = mm(GAP_MM);
+export const HALF_GAP = GAP / 2;
+
+/** Фикс-размер карточки (мм) */
+export const CARD_W_MM = 30;
+export const CARD_H_MM = 30;                // ← высота здесь
+export const CARD_HEIGHT = Math.round(mm(CARD_H_MM));
+
+/** Рассчитываем точную ширину на экране: 2 колонки + GAP + EDGE */
+const W = Dimensions.get("window").width;
+const desired = Math.round(mm(CARD_W_MM));
+const maxByScreen = Math.floor((W - EDGE * 2 - GAP) / 2);
+export const CARD_WIDTH = Math.min(desired, maxByScreen);
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 20,
+    paddingHorizontal: 0, // поля даём списком
     paddingTop: 30,
-    shadowColor: '#313131ff',
+    shadowColor: "#313131ff",
     shadowOpacity: 0.8,
     shadowOffset: { width: 3, height: 6 },
   },
-  searchBar: {
-    backgroundColor: "#ffffffdd",
-    fontFamily: 'ArchitectsDaughter',
-    borderRadius: 30,
-    padding: 10,
-    marginBottom: 30,
-    fontSize: 18,
-    color: '#767677ff',
-    borderWidth: 3,
-    borderColor: "#313bae8c",
-    gap: 12,
-    shadowColor: '#313131ff',
-    shadowOpacity: 0.8,
-    shadowOffset: { width: 3, height: 6 },
-  },
-  cardList: {
-    gap: 12,
-    paddingBottom: 80,
-  },
-  cardRow: {
-    backgroundColor: "#faef8dff",
-    borderRadius: 20,
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    justifyContent: "space-between",
-    borderWidth: 2,
-    borderColor: "#f8f4c5ff",
-    gap: 12,
-    width: '99%',
-    overflow: 'visible',
-  },
-  initials: {
-    color: '#2c6f33ff',
-    fontWeight: 'bold',
-    fontSize: 16,
-  },
-  initialsCircle: {
-    backgroundColor: '#97d0feff',
-    borderColor: '#313bae8c',
-    width: 25,
-    height: 25,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 20,
-    borderWidth: 1.5,
-  },
-  initialsText: {
-    fontFamily: 'ArchitectsDaughter',
-    color: "#246396",
-    fontWeight: 'bold',
-    fontSize: 18,
-  },
-  termText: {
-    fontFamily: 'ArchitectsDaughter',
-    fontSize: 18,
-    color: '#246396',
-    fontWeight: 'normal',
-  },
-  bottomBar: {
-    position: "absolute",
-    bottom: 20,
-    left: 20,
-    right: 20,
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
-    shadowColor: '#313131ff',
-    shadowOpacity: 0.8,
-    shadowOffset: { width: 3, height: 6 },
-  },
-  navItem: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
-  },
-  navText: {
-    fontSize: 14,
-    color: '#93cbf9ff',
-    fontFamily: 'ArchitectsDaughter',
-    marginTop: 4,
-    textAlign: 'center',
-    width: '100%',
-  },
-  userWrapper: {
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    marginRight: 5,
-    paddingTop: 5,
-    minWidth: 60,
-  },
-  userLabel: {
-    fontSize: 14,
-    color: '#313bae8c',
-    fontFamily: 'ArchitectsDaughter',
-    marginTop: -5,
-    textAlign: 'center',
-  },
-  iconRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-    overflow: 'visible',
-    zIndex: 1,
-  },
-  returnCircleWrapper: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'column',
-  },
-  returnCircle: {
-    width: 25,
-    height: 25,
-    borderRadius: 18,
-    backgroundColor: '#93cbf9ff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#313131ff',
-    shadowOpacity: 0.8,
-    shadowOffset: { width: 3, height: 6 },
-  },
-  returnLabel: {
-    fontSize: 12,
-    color: '#246396',
-    fontFamily: 'ArchitectsDaughter',
-    marginTop: 4,
-    textAlign: 'center',
-  },
+
+  // ===== Search =====
+  searchOuter: { paddingHorizontal: EDGE },
   inputBase: {
-    width: '100%',
+    width: "100%",
     borderWidth: 3,
-    borderColor: '#313bae61',
+    borderColor: "#313bae61",
     borderRadius: 20,
-    backgroundColor: '#e3f8f2fc',
+    backgroundColor: "#e3f8f2fc",
     marginBottom: 16,
-    shadowColor: '#313131ff',
+    shadowColor: "#313131ff",
     shadowOpacity: 0.5,
     shadowOffset: { width: 3, height: 6 },
     shadowRadius: 2,
   },
   inputFocused: {
-    borderColor: '#ffffff',
+    borderColor: "#ffffff",
     borderWidth: 2,
     borderRadius: 20,
-    shadowColor: '#ffffffff',
+    shadowColor: "#ffffffff",
     shadowOpacity: 1,
     shadowOffset: { width: 0, height: 0 },
     shadowRadius: 10,
@@ -163,50 +58,153 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 18,
     fontSize: 18,
-    fontFamily: 'ArchitectsDaughter',
-    color: '#4d4e4dff',
-    backgroundColor: 'transparent',
+    fontFamily: "ArchitectsDaughter",
+    color: "#4d4e4dff",
+    backgroundColor: "transparent",
   },
-  disabledInput: {
-    backgroundColor: '#f4f4f4',
-    color: '#4d4e4dff',
+
+  // ===== 2×N сетка мини-карточек =====
+  cardGridList: {
+    paddingTop: 12,
+    paddingBottom: 90,
+    paddingHorizontal: Math.max(0, EDGE - HALF_GAP), // чтобы по краям было ровно EDGE
   },
-  navIcon: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
+  cardTileWrapper: {
+    width: CARD_WIDTH,
+    marginHorizontal: HALF_GAP,
+    marginBottom: GAP,
+  },
+
+  miniCard: {
+    width: "100%",
+    height: CARD_HEIGHT,
+    backgroundColor: "#faef8dff",
+    borderRadius: 16,
     borderWidth: 2,
-    borderColor: '#246396ff',
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: '#313131ff',
+    borderColor: "#f8f4c5ff",
+    paddingTop: 12,
+    paddingHorizontal: 10,
+    alignItems: "center",
+    justifyContent: "flex-start",
+    shadowColor: "#313131ff",
     shadowOpacity: 0.8,
-    shadowOffset: { width: 2, height: 2 },
-    shadowRadius: 3,
-    backgroundColor: '#87CEFA',
+    shadowOffset: { width: 3, height: 6 },
+    shadowRadius: 6,
   },
-  navIconActive: {
-    shadowColor: '#ffffffff',
-    shadowOpacity: 1,
-    shadowOffset: { width: 0, height: 0 },
-    shadowRadius: 4,
+  miniCardBack: {
+    width: "100%",
+    height: CARD_HEIGHT,
+    backgroundColor: "#faef8dff",
+    borderRadius: 16,
+    borderWidth: 2,
+    borderColor: "#f8f4c5ff",
+    padding: 12,
+    justifyContent: "center",
+    shadowColor: "#313131ff",
+    shadowOpacity: 0.8,
+    shadowOffset: { width: 3, height: 6 },
+    shadowRadius: 6,
   },
-  iconButton: {
-    justifyContent: 'center',
+
+  miniWord: {
+    fontFamily: "ArchitectsDaughter",
+    fontSize: 24,
+    textAlign: "center",
+    color: "#246396",
+  },
+  miniPhonetic: {
+    marginTop: 6,
+    minHeight: 22,                    // фикс высоты — не дёргается
+    textAlign: "center",
+    fontFamily: "ArchitectsDaughter",
+    fontSize: 16,
+    color: "#246396",
+  },
+
+  miniActionsRow: {
+    marginTop: "auto",
+    paddingBottom: 10,
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    alignItems: "center",
+  },
+  miniDefinition: {
+    fontFamily: "ArchitectsDaughter",
+    fontSize: 16,
+    color: "#4d4e4dff",
+    textAlign: "center",
+  },
+
+  // ===== Bottom bar / user / icons =====
+  bottomBar: {
+    position: "absolute",
+    bottom: 20,
+    left: 20,
+    right: 20,
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
+    shadowColor: "#313131ff",
+    shadowOpacity: 0.8,
+    shadowOffset: { width: 3, height: 6 },
+  },
+  navItem: { alignItems: "center", justifyContent: "center", flex: 1 },
+  navText: {
+    fontSize: 14,
+    color: "#93cbf9ff",
+    fontFamily: "ArchitectsDaughter",
+    marginTop: 4,
+    textAlign: "center",
+    width: "100%",
+  },
+    // --- для круглой кнопки UNWALLET с «ореолом» ---
+  returnCircleBox: {
     alignItems: 'center',
+    justifyContent: 'center',
   },
+  returnHalo: {
+    position: 'absolute',
+    width: 38,
+    height: 38,
+    borderRadius: 20,
+    backgroundColor: '#ffffff',
+    opacity: 0,
+  },
+  returnHaloOn: {
+    opacity: 0.85,
+  },
+  returnCirclePressed: {
+    transform: [{ scale: 0.95 }],
+  },
+
+
+  userWrapper: { alignItems: "center", justifyContent: "flex-start", marginRight: 5, paddingTop: 5, minWidth: 60 },
+  userLabel: { fontSize: 14, color: "#313bae8c", fontFamily: "ArchitectsDaughter", marginTop: -5, textAlign: "center" },
+  initialsCircle: {
+    backgroundColor: "#97d0feff",
+    borderColor: "#313bae8c",
+    width: 25,
+    height: 25,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 20,
+    borderWidth: 1.5,
+  },
+  initialsText: { fontFamily: "ArchitectsDaughter", color: "#246396", fontWeight: "bold", fontSize: 18 },
+
+  iconButton: { justifyContent: "center", alignItems: "center" },
   iconButtonActive: {
-    shadowColor: '#ffffffff',
+    shadowColor: "rgba(216,129,245,1)",
     shadowOpacity: 1,
     shadowOffset: { width: 1, height: 1 },
     shadowRadius: 4,
     borderRadius: 18,
   },
-  iconGlyphGlow: {
-    textShadowColor: '#ffffff',
-    textShadowOffset: { width: 0, height: 0 },
-    textShadowRadius: 8,
-  },
+  iconGlyphGlow: { textShadowColor: "#ffffff", textShadowOffset: { width: 0, height: 0 }, textShadowRadius: 8 },
+
+  text: { fontFamily: "ArchitectsDaughter", fontSize: 16, lineHeight: 22, color: "#246396", textAlign: "left" },
 });
 
 export default styles;
+export { CARD_WIDTH, CARD_HEIGHT };

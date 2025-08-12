@@ -3,11 +3,13 @@ import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 20 },
   topicList: {
-    paddingTop: 20,
+    paddingTop: 30,
     paddingBottom: 20,
+    paddingHorizontal: 14,
   },
   topicBoxWrapper: {
-    marginVertical: 10,
+    width: '48%',
+    marginBottom: 16,
     alignItems: 'center',
     shadowColor: '#313131FF',
     shadowOpacity: 0.8,
@@ -15,31 +17,32 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
   },
   pillButton: {
-    width: 300,
-    height: 70,
-    borderRadius: 30,
-    paddingVertical: 20,
-    paddingHorizontal: 30,
+    width: '100%',
+    height: 110,
+    borderRadius: 20,
+    paddingVertical: 16,
+    paddingHorizontal: 14,
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 2, // как в Quiz
-    alignSelf: 'center',
+    borderWidth: 2,
+    alignSelf: 'auto',
   },
+
   pillButtonActiveBorder: {
     borderColor: '#FFFFFF',
     borderWidth: 2,
   },
   pillButtonWhiteShadow: {
-    marginVertical: 10,
+    marginVertical: 0,
     alignItems: 'center',
     shadowColor: '#FFFFFF',
     shadowOpacity: 1,
     shadowOffset: { width: 0, height: 0 },
     shadowRadius: 9,
-    borderRadius: 40,
+    borderRadius: 18,
   },
   topicText: {
-    fontSize: 30,
+    fontSize: 24,
     fontWeight: 'bold',
     textAlign: 'center',
     fontFamily: 'ArchitectsDaughter',
@@ -178,7 +181,19 @@ const styles = StyleSheet.create({
     color: '#555',
     fontFamily: 'ArchitectsDaughter',
   },
-  searchCloseBtn: { position: 'absolute', top: 6, right: 6 },
+  searchCloseBtn: {
+    position: 'absolute', top: 6, right: 6
+  },
+  topicShadowActive: {
+    shadowColor: '#FFFFFF',
+    shadowOpacity: 1,
+    shadowOffset: { width: 0, height: 0 },
+    shadowRadius: 9,
+  },
+  topicScaleActive: {
+    transform: [{ scale: 1.12 }],
+    zIndex: 1,
+  },
 });
 
 export default styles;
