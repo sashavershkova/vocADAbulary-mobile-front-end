@@ -223,7 +223,9 @@ const TopicsScreen = ({ navigation }: Props) => {
         hitSlop={10}
         onPress={() => handleTopicPress(item.id, item.name)}
         style={({ pressed }) => [
-          (pressed || isActive) ? styles.pillButtonWhiteShadow : styles.topicBoxWrapper,
+          styles.topicBoxWrapper,
+          (pressed || isActive) && styles.topicScaleActive,
+          (pressed || isActive) && styles.topicShadowActive,
         ]}
       >
         {({ pressed }) => {
@@ -244,10 +246,8 @@ const TopicsScreen = ({ navigation }: Props) => {
             >
               <Text
                 style={[styles.topicText, showActive && styles.topicTextActive]}
-                numberOfLines={1}
-                ellipsizeMode="clip"
-                adjustsFontSizeToFit
-                minimumFontScale={0.9}
+                numberOfLines={2}
+                ellipsizeMode="tail"
               >
                 {item.name}
               </Text>
@@ -301,6 +301,8 @@ const TopicsScreen = ({ navigation }: Props) => {
             keyExtractor={(item) => item.id.toString()}
             renderItem={renderTopic}
             contentContainerStyle={styles.topicList}
+            numColumns={2}
+            columnWrapperStyle={{ justifyContent: 'space-between', paddingBottom: 16 }}
           />
         )}
       </View>

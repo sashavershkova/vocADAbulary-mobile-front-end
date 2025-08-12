@@ -1,11 +1,10 @@
-import React, { useEffect, useLayoutEffect, useState } from 'react';
-import { View, Text, TextInput, Alert, ActivityIndicator, TouchableOpacity } from 'react-native';
+import React, { useEffect, useLayoutEffect, useState, useRef } from 'react';
+import { View, Text, TextInput, Alert, ActivityIndicator, Pressable, Animated } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-import quizStyles from '../styles/quizStyles';
-import cStyles from '../styles/constructorStyles';
+import styles from '../styles/constructorStyles';
 import api from '../api/axiosInstance';
 import { useMockUser } from '../context/UserContext';
 import { RootStackParamList } from '../types/navigation';
@@ -17,13 +16,21 @@ import {
   FinalizeSentenceResponse,
 } from '../types/sentences';
 
+import bluestick from '../assets/images/bluestick.png';
+import PopoverHint from './PopoverHint';
+
 type Props = NativeStackScreenProps<RootStackParamList, 'Constructor'>;
 
 const ConstructorScreen = ({ navigation }: Props) => {
+  // ——— Stickman hint ———
+  const [hintVisible, setHintVisible] = useState(false);
+  const stickScale = useRef(new Animated.Value(1)).current;
+
   const { user } = useMockUser();
   const username = user?.username ?? '';
   const initials = username?.charAt(0)?.toUpperCase() || '?';
 
+  // ——— data ———
   const [loading, setLoading] = useState<boolean>(true);
   const [template, setTemplate] = useState<TemplateResponseWithBlank | null>(null);
   const [chunks, setChunks] = useState<Chunk[]>([]);
@@ -34,8 +41,9 @@ const ConstructorScreen = ({ navigation }: Props) => {
   const [perBlankResult, setPerBlankResult] = useState<Record<number, boolean | null>>({});
   const [feedback, setFeedback] = useState<'success' | 'error' | null>(null);
   const [submitting, setSubmitting] = useState<boolean>(false);
-  const [resetCount, setResetCount] = useState<number>(0);
-  const [, forceUpdate] = useState<{}>({});
+
+  // фокус конкретного инпута (для подсветки и снятия по тапу в пустое место)
+  const [focusedIdx, setFocusedIdx] = useState<number | null>(null);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -43,20 +51,33 @@ const ConstructorScreen = ({ navigation }: Props) => {
       headerBackVisible: false,
       headerStyle: { backgroundColor: '#f7b4c4d6' },
       headerTitleStyle: {
-        fontFamily: 'ArchitectsDaughter-Regular',
-        fontSize: 36,
+        fontFamily: 'ArchitectsDaughter',
+        fontSize: 30,
         color: '#246396',
       },
+      headerLeft: () => (
+        <Pressable
+          onPress={() => {
+            Animated.sequence([
+              Animated.timing(stickScale, { toValue: 0.5, duration: 100, useNativeDriver: true }),
+              Animated.timing(stickScale, { toValue: 1.0, duration: 100, useNativeDriver: true }),
+            ]).start(() => setHintVisible(true));
+          }}
+          style={{ marginLeft: 16, padding: 2 }}
+        >
+          <Animated.Image source={bluestick} style={{ width: 30, height: 50, transform: [{ scale: stickScale }] }} />
+        </Pressable>
+      ),
       headerRight: () => (
-        <View style={quizStyles.userWrapper}>
-          <View style={quizStyles.initialsCircle}>
-            <Text style={quizStyles.initialsText}>{initials}</Text>
+        <View style={styles.userWrapper}>
+          <View style={styles.initialsCircle}>
+            <Text style={styles.initialsText}>{initials}</Text>
           </View>
-          <Text style={quizStyles.userLabel}>User</Text>
+          <Text style={styles.userLabel}>User</Text>
         </View>
       ),
     });
-  }, [navigation, initials]);
+  }, [navigation, initials, stickScale]);
 
   const loadNewTemplate = async () => {
     setLoading(true);
@@ -66,6 +87,7 @@ const ConstructorScreen = ({ navigation }: Props) => {
     setRevealed({});
     setRevealedWords({});
     setAttempts({});
+    setFocusedIdx(null);
 
     try {
       const tRes = await api.get<TemplateResponseWithBlank>('/api/sentences/templates/random');
@@ -78,8 +100,6 @@ const ConstructorScreen = ({ navigation }: Props) => {
       const pRes = await api.get<PrepareSentenceResponse>(`/api/sentences/templates/${t.id}/prepare`);
       const p = pRes.data;
 
-      console.log('loadNewTemplate: prepare response', p);
-
       const gotChunks = p?.chunks ?? [];
       setChunks(gotChunks);
 
@@ -87,29 +107,26 @@ const ConstructorScreen = ({ navigation }: Props) => {
       const initRevealed: Record<number, boolean> = {};
       const initRevealedWords: Record<number, string> = {};
       const initAttempts: Record<number, number> = {};
-      
-      gotChunks.forEach((c) => {
-        if (c.type === 'blank' && typeof c.blankIndex === 'number') {
-          initRevealed[c.blankIndex] = !!c.reveal;
-          initAttempts[c.blankIndex] = 0;
+
+      gotChunks.forEach((c, i) => {
+        if (c.type === 'blank') {
+          const idx = typeof c.blankIndex === 'number' ? c.blankIndex : i;
+          initRevealed[idx] = !!c.reveal;
+          initAttempts[idx] = 0;
           if (c.reveal && c.revealedWord) {
-            initRevealedWords[c.blankIndex] = c.revealedWord;
-            initAnswers[c.blankIndex] = c.revealedWord;
+            initRevealedWords[idx] = c.revealedWord;
+            initAnswers[idx] = c.revealedWord;
           } else {
-            initAnswers[c.blankIndex] = '';
-            if (c.revealedWord) {
-              initRevealedWords[c.blankIndex] = c.revealedWord;
-            }
+            initAnswers[idx] = '';
+            if (c.revealedWord) initRevealedWords[idx] = c.revealedWord;
           }
         }
       });
-      
+
       setAnswers(initAnswers);
       setRevealed(initRevealed);
       setRevealedWords(initRevealedWords);
       setAttempts(initAttempts);
-
-      console.log('loadNewTemplate: fresh template loaded');
     } catch (err) {
       console.error('Failed to load template:', err);
       Alert.alert('Error', 'Failed to load constructor sentence. Please learn some words first.');
@@ -141,70 +158,13 @@ const ConstructorScreen = ({ navigation }: Props) => {
     setAttempts(clearedAttempts);
     setPerBlankResult({});
     setFeedback(null);
-    setResetCount((prev) => prev + 1);
-    setRevealed({});
-    setRevealedWords({});
-
-    console.log('handleReset: clearedAnswers', cleared);
-    console.log('handleReset: clearedAttempts', clearedAttempts);
-
-    // Reset backend session state (not persistent stats)
-    if (template) {
-      try {
-        await api.post('/api/sentences/reset', { templateId: template.id });
-        console.log('Backend session stats reset successfully');
-        
-        // Reload template to get fresh reveal status
-        const pRes = await api.get<PrepareSentenceResponse>(`/api/sentences/templates/${template.id}/prepare`);
-        const p = pRes.data;
-        
-        const gotChunks = p?.chunks ?? [];
-        setChunks(gotChunks);
-
-        // Reinitialize state based on fresh backend response
-        const initAnswers: Record<number, string> = {};
-        const initRevealed: Record<number, boolean> = {};
-        const initRevealedWords: Record<number, string> = {};
-        const initAttempts: Record<number, number> = {};
-        
-        gotChunks.forEach((c) => {
-          if (c.type === 'blank' && typeof c.blankIndex === 'number') {
-            initRevealed[c.blankIndex] = !!c.reveal;
-            initAttempts[c.blankIndex] = 0;
-            if (c.reveal && c.revealedWord) {
-              initRevealedWords[c.blankIndex] = c.revealedWord;
-              initAnswers[c.blankIndex] = c.revealedWord;
-            } else {
-              initAnswers[c.blankIndex] = '';
-              if (c.revealedWord) {
-                initRevealedWords[c.blankIndex] = c.revealedWord;
-              }
-            }
-          }
-        });
-        
-        setAnswers(initAnswers);
-        setRevealed(initRevealed);
-        setRevealedWords(initRevealedWords);
-        setAttempts(initAttempts);
-        
-        console.log('Reset: fresh state loaded from backend');
-      } catch (err) {
-        console.error('Failed to reset backend session stats:', err);
-        Alert.alert('Error', 'Failed to reset session. Please try again.');
-      }
-    }
+    setFocusedIdx(null);
   };
 
   const handleSubmit = async () => {
     if (!template) return;
     setSubmitting(true);
     setFeedback(null);
-
-    console.log('handleSubmit: current attempts', attempts);
-    console.log('handleSubmit: current answers', answers);
-    console.log('handleSubmit: current revealed', revealed);
-    console.log('handleSubmit: current revealedWords', revealedWords);
 
     try {
       const payload = {
@@ -218,9 +178,6 @@ const ConstructorScreen = ({ navigation }: Props) => {
       const res = await api.post<FinalizeSentenceResponse>('/api/sentences/finalize', payload);
       const data = res.data;
 
-      console.log('handleSubmit: finalize response data', data);
-      console.log('handleSubmit: perBlank from server', data.perBlank);
-
       const updatedResult: Record<number, boolean | null> = {};
       const updRevealed: Record<number, boolean> = { ...revealed };
       const updRevealedWords: Record<number, string> = { ...revealedWords };
@@ -230,12 +187,8 @@ const ConstructorScreen = ({ navigation }: Props) => {
         const idx = pb.blankIndex;
         updatedResult[idx] = pb.isCorrect;
 
-        console.log(`handleSubmit: processing blank ${idx}, isCorrect: ${pb.isCorrect}, server reveal: ${pb.reveal}, server revealedWord: ${pb.revealedWord}`);
-
         if (!pb.isCorrect && !updRevealed[idx]) {
           updAttempts[idx] = (updAttempts[idx] || 0) + 1;
-          console.log(`handleSubmit: incremented attempts for ${idx} to ${updAttempts[idx]}`);
-
           if (updAttempts[idx] >= 3) {
             const word = updRevealedWords[idx] || pb.revealedWord;
             if (word) {
@@ -243,13 +196,7 @@ const ConstructorScreen = ({ navigation }: Props) => {
               updRevealedWords[idx] = word;
               setAnswers((prev) => ({ ...prev, [idx]: word }));
               updAttempts[idx] = 0;
-              console.log(`handleSubmit: reveal triggered for ${idx}, setting answer to ${word}`);
-            } else {
-              console.log(`handleSubmit: reveal NOT triggered for ${idx}, attempts: ${updAttempts[idx]}, no revealedWord available`);
-              Alert.alert('Error', `Correct word for blank ${idx} not available from server.`);
             }
-          } else {
-            console.log(`handleSubmit: reveal NOT triggered for ${idx}, attempts: ${updAttempts[idx]}, has revealedWord: ${!!updRevealedWords[idx]}`);
           }
         }
 
@@ -258,10 +205,6 @@ const ConstructorScreen = ({ navigation }: Props) => {
           updRevealedWords[idx] = pb.revealedWord;
           setAnswers((prev) => ({ ...prev, [idx]: pb.revealedWord || '' }));
           updAttempts[idx] = 0;
-          console.log(`handleSubmit: server reveal for ${idx}, setting answer to ${pb.revealedWord}`);
-        } else if (pb.reveal && !pb.revealedWord) {
-          console.log(`handleSubmit: server reveal for ${idx}, but revealedWord is null`);
-          Alert.alert('Error', `Server indicated reveal for blank ${idx} but provided no word.`);
         }
       });
 
@@ -269,11 +212,6 @@ const ConstructorScreen = ({ navigation }: Props) => {
       setRevealed(updRevealed);
       setRevealedWords(updRevealedWords);
       setAttempts(updAttempts);
-
-      console.log('handleSubmit: updated revealed', updRevealed);
-      console.log('handleSubmit: updated revealedWords', updRevealedWords);
-      console.log('handleSubmit: updated attempts', updAttempts);
-      console.log('handleSubmit: updated perBlankResult', updatedResult);
 
       if (data.allCorrect) {
         setFeedback('success');
@@ -283,20 +221,18 @@ const ConstructorScreen = ({ navigation }: Props) => {
         }, 500);
       } else {
         setFeedback('error');
+        // очищаем только неправильно введённые и не раскрытые
         setAnswers((prev) => {
           const next = { ...prev };
           Object.keys(updatedResult).forEach((k) => {
             const idx = Number(k);
-            if (updatedResult[idx] === false && !updRevealed[idx]) {
-              next[idx] = '';
-            }
+            if (updatedResult[idx] === false && !updRevealed[idx]) next[idx] = '';
           });
           return next;
         });
         setTimeout(() => setFeedback(null), 700);
-
-        console.log('handleSubmit: answers after clearing wrong ones', answers);
       }
+      setFocusedIdx(null);
     } catch (err) {
       console.error('Finalize failed:', err);
       Alert.alert('Error', 'Could not check your answer.');
@@ -306,6 +242,7 @@ const ConstructorScreen = ({ navigation }: Props) => {
   };
 
   const handleNext = () => {
+    setFocusedIdx(null);
     loadNewTemplate();
   };
 
@@ -320,78 +257,115 @@ const ConstructorScreen = ({ navigation }: Props) => {
   }
 
   return (
-    <LinearGradient colors={['#f7b4c4d6', '#bf86fcc2']} style={quizStyles.container}>
-      <View style={cStyles.contentCenter}>
-        <View
-          style={[
-            quizStyles.questionButton,
-            feedback === 'success' && cStyles.successFlash,
-            feedback === 'error' && cStyles.errorFlash,
-          ]}
-        >
-          <View style={cStyles.templateRow}>
-            {chunks && chunks.length > 0 ? (
-              chunks.map((chunk, i) => {
-                if (chunk.type === 'text') {
+    <LinearGradient colors={['#f7b4c4d6', '#bf86fcc2']} style={styles.container}>
+      {/* хинт со стикмена */}
+      <PopoverHint visible={hintVisible} onClose={() => setHintVisible(false)}>
+        <Text style={styles.hintText}>
+        Welcome to the *CONSTRUCTOR*, adi, where your brain gets a workout Sheldon would actually approve of. {"\n\n"}
+        Any word you've already mastered can play. Just drop it into the sentence in the right spot—before Penny guesses 'bazinga' is a verb.{"\n\n"} 
+        Good Luck!
+        </Text>
+      </PopoverHint>
+
+      {/* Тап по пустому месту снимает фокус с инпутов */}
+      <Pressable style={{ flex: 1 }} onPress={() => setFocusedIdx(null)}>
+        {/* Интро-текст */}
+        <View style={styles.introWrap}>
+          <Text style={styles.introLineSmall}>You Are on The Finish Line, Adie:))</Text>
+          <Text style={styles.introLineSmall}>Check Your Tech Voice!</Text>
+          <Text style={styles.introLineBig}>Fill in The Blanks:</Text>
+        </View>
+
+        {/* Карточка внизу */}
+        <View style={styles.contentArea}>
+          <View
+            style={[
+              styles.cardBox,
+              feedback === 'success' && { borderColor: '#cbf6b6bd', borderWidth: 2 },
+              feedback === 'error' && { borderColor: '#F86A6AFF', borderWidth: 2 },
+            ]}
+          >
+            <View style={styles.templateRow}>
+              {chunks && chunks.length > 0 ? (
+                chunks.map((chunk, i) => {
+                  if (chunk.type === 'text') {
+                    return (
+                      <Text key={`t-${i}`} style={styles.templateText}>
+                        {chunk.value ?? ''}
+                      </Text>
+                    );
+                  }
+                  const bIdx = typeof chunk.blankIndex === 'number' ? chunk.blankIndex : i;
+                  const isRevealed = !!revealed[bIdx];
+                  const result = perBlankResult[bIdx];
+                  const value = answers[bIdx] ?? '';
+
                   return (
-                    <Text key={`t-${i}`} style={cStyles.templateText}>
-                      {chunk.value ?? ''}
-                    </Text>
+                    <TextInput
+                      key={`b-${bIdx}`}
+                      editable={!isRevealed}
+                      value={value}
+                      onChangeText={(txt) => handleChange(bIdx, txt)}
+                      onFocus={() => setFocusedIdx(bIdx)}
+                      onBlur={() => setFocusedIdx(null)}
+                      autoCapitalize="none"
+                      autoCorrect={false}
+                      style={[
+                        styles.blankInput,
+                        focusedIdx === bIdx && styles.blankInputFocused,
+                        isRevealed && styles.blankInputDisabled,
+                        result === true && styles.blankInputCorrect,
+                        result === false && styles.blankInputWrong,
+                      ]}
+                      placeholder={isRevealed ? (revealedWords[bIdx] || 'Answer not available') : '...'}
+                      placeholderTextColor="#246396"
+                    />
                   );
-                }
-                const bIdx = chunk.blankIndex ?? i;
-                const isRevealed = !!revealed[bIdx];
-                const result = perBlankResult[bIdx];
-                const value = answers[bIdx] ?? '';
-
-                console.log(`Render blank ${bIdx}: isRevealed ${isRevealed}, value '${value}', placeholder '${isRevealed ? revealedWords[bIdx] || '...' : '...'}', result ${result}`);
-
-                return (
-                  <TextInput
-                    key={`b-${bIdx}-${resetCount}`}
-                    editable={!isRevealed}
-                    value={value}
-                    onChangeText={(txt) => handleChange(bIdx, txt)}
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                    style={[
-                      cStyles.blankInput,
-                      isRevealed && cStyles.blankInputDisabled,
-                      result === true && cStyles.blankInputCorrect,
-                      result === false && cStyles.blankInputWrong,
-                    ]}
-                    placeholder={isRevealed ? (revealedWords[bIdx] || 'Answer not available') : '...'}
-                    placeholderTextColor="#246396"
-                  />
-                );
-              })
-            ) : (
-              <Text style={cStyles.templateText}>No content</Text>
-            )}
+                })
+              ) : (
+                <Text style={styles.templateText}>No content</Text>
+              )}
+            </View>
           </View>
         </View>
-      </View>
+      </Pressable>
 
-      <View style={quizStyles.bottomBar}>
-        <TouchableOpacity style={quizStyles.navItem} onPress={() => navigation.navigate('Home')}>
-          <Ionicons name="home" size={30} color="#97d0feff" />
-          <Text style={quizStyles.navText}>Home</Text>
-        </TouchableOpacity>
+      {/* Bottom bar — та же подсветка, что и в Quiz */}
+      <View style={styles.bottomBar}>
+        <Pressable
+          style={({ pressed }) => [styles.navIcon, pressed && styles.navIconActive]}
+          onPress={() => { setFocusedIdx(null); navigation.navigate('Home'); }}
+        >
+          <Ionicons name="home" size={35} color="#97d0feff" />
+          <Text style={styles.navText}>HOME</Text>
+        </Pressable>
 
-        <TouchableOpacity style={quizStyles.navItem} onPress={handleReset} disabled={submitting}>
+        <Pressable
+          style={({ pressed }) => [styles.navIcon, pressed && styles.navIconActive]}
+          onPress={handleReset}
+          disabled={submitting}
+        >
           <Ionicons name="refresh-circle" size={35} color="#97d0feff" />
-          <Text style={quizStyles.navText}>Reset</Text>
-        </TouchableOpacity>
+          <Text style={styles.navText}>RESET</Text>
+        </Pressable>
 
-        <TouchableOpacity style={quizStyles.navItem} onPress={handleSubmit} disabled={submitting}>
+        <Pressable
+          style={({ pressed }) => [styles.navIcon, pressed && styles.navIconActive]}
+          onPress={handleSubmit}
+          disabled={submitting}
+        >
           <Ionicons name="checkmark-circle" size={35} color="#97d0feff" />
-          <Text style={quizStyles.navText}>Submit</Text>
-        </TouchableOpacity>
+          <Text style={styles.navText}>SUBMIT</Text>
+        </Pressable>
 
-        <TouchableOpacity style={quizStyles.navItem} onPress={handleNext} disabled={submitting}>
+        <Pressable
+          style={({ pressed }) => [styles.navIcon, pressed && styles.navIconActive]}
+          onPress={handleNext}
+          disabled={submitting}
+        >
           <Ionicons name="arrow-forward-circle" size={35} color="#97d0feff" />
-          <Text style={quizStyles.navText}>Next</Text>
-        </TouchableOpacity>
+          <Text style={styles.navText}>NEXT</Text>
+        </Pressable>
       </View>
     </LinearGradient>
   );

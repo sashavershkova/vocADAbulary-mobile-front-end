@@ -1,59 +1,179 @@
-// styles/constructorStyles.ts
 import { StyleSheet } from 'react-native';
 
-const constructorStyles = StyleSheet.create({
-  // Center the yellow template box in the screen,
-  // but leave space for the bottom nav.
-  contentCenter: {
+const styles = StyleSheet.create({
+  // Базовый контейнер — как в Quiz
+  container: {
     flex: 1,
-    justifyContent: 'center',
-    paddingBottom: 100, // keep above bottomBar
+    paddingHorizontal: 20,
+    paddingTop: 100,
   },
 
-  // Flash states for the big yellow box
-  successFlash: { borderColor: '#2c6f33', borderWidth: 2 },
-  errorFlash: { borderColor: '#c62828', borderWidth: 2 },
+  // ===== header user badge (как в Quiz) =====
+  userWrapper: {
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    marginRight: 8,
+    paddingTop: 8,
+    minWidth: 60,
+  },
+  initialsCircle: {
+    backgroundColor: '#97D0FEFF',
+    borderRadius: 20,
+    width: 25,
+    height: 25,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1.5,
+    borderColor: '#246396',
+  },
+  initialsText: {
+    fontFamily: 'ArchitectsDaughter',
+    fontSize: 18,
+    color: '#246396',
+    fontWeight: 'bold',
+  },
+  userLabel: {
+    fontSize: 14,
+    color: '#246396',
+    fontFamily: 'ArchitectsDaughter',
+    marginTop: -5,
+    textAlign: 'center',
+  },
 
-  // Template rendering
+  // ===== интро над карточкой =====
+  introWrap: {
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  introLineSmall: {
+    fontFamily: 'ArchitectsDaughter',
+    fontSize: 22,
+    color: '#246396',
+    textAlign: 'center',
+    lineHeight: 30,
+  },
+  introLineBig: {
+    fontFamily: 'ArchitectsDaughter',
+    fontSize: 32,
+    color: '#246396',
+    textAlign: 'center',
+    marginTop: 8,
+  },
+
+  // ===== область контента с карточкой =====
+  contentArea: {
+    flex: 1,
+    justifyContent: 'flex-end',   // тянем к низу
+    paddingBottom: 200,           // подняли от футера
+  },
+
+  // Жёлтая «карточка»
+  cardBox: {
+    backgroundColor: '#FFF176',
+    borderRadius: 28,
+    paddingVertical: 22,
+    paddingHorizontal: 24,
+    minHeight: 260,               // фиксированная «масса»
+    justifyContent: 'flex-start',
+    shadowColor: '#313131FF',
+    shadowOpacity: 0.8,
+    shadowOffset: { width: 4, height: 6 },
+    shadowRadius: 8,
+  },
+
+  // Поток текста внутри карточки
   templateRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'center',
-    gap: 6,
+    // НЕ центрируем: обычный поток со строками
+    rowGap: 8,
+    columnGap: 8,
   },
   templateText: {
     fontFamily: 'ArchitectsDaughter',
-    fontSize: 22,
-    color: '#2c6f33',
+    fontSize: 30,
+    color: '#2C6F33',
+    lineHeight: 42,
   },
 
-  // Inputs for blanks
+  // Поле для ввода (занимает ~80–85% строки)
   blankInput: {
-    minWidth: 60,
-    paddingVertical: 6,
-    paddingHorizontal: 10,
-    borderRadius: 12,
-    backgroundColor: '#f9dafafd',
-    borderWidth: 1.5,
-    borderColor: '#97d0feff',
+    height: 56,
+    minWidth: '78%',
+    alignSelf: 'flex-start',
+    paddingHorizontal: 14,
+    borderRadius: 16,
+    backgroundColor: '#F9DAFAA8',
+    borderWidth: 2,
+    borderColor: '#F9DAFAFF',
     fontFamily: 'ArchitectsDaughter',
-    fontSize: 20,
-    color: '#246396',
-    marginVertical: 2,
+    fontSize: 28,
+    color: '#2C6F33',
     textAlign: 'center',
   },
+  blankInputFocused: {
+    borderColor: '#FFFFFF',
+    borderWidth: 2,
+    shadowColor: '#FFFFFF',
+    shadowOpacity: 1,
+    shadowOffset: { width: 0, height: 0 },
+    shadowRadius: 9,
+  },
   blankInputDisabled: {
-    backgroundColor: '#e6e6e6',
-    borderColor: '#bdbdbd',
+    backgroundColor: '#E6E6E6',
+    borderColor: '#BDBDBD',
   },
   blankInputCorrect: {
-    backgroundColor: '#cbf6b6ff',
-    borderColor: '#2c6f33',
+    backgroundColor: '#CBF6B6BD',
+    borderColor: '#CBF6B6FF',
   },
   blankInputWrong: {
-    backgroundColor: '#f86a6aff',
-    borderColor: '#c62828',
+    backgroundColor: '#F86A6ACD',
+    borderColor: '#F86A6AFF',
+  },
+
+  // ===== bottom bar (как в Quiz) =====
+  bottomBar: {
+    position: 'absolute',
+    bottom: 20,
+    left: 20,
+    right: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    shadowColor: '#313131FF',
+    shadowOpacity: 0.8,
+    shadowOffset: { width: 3, height: 6 },
+  },
+  navIcon: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
+  },
+  navIconActive: {
+    shadowColor: '#FFFFFF',
+    shadowOpacity: 1,
+    shadowOffset: { width: 0, height: 0 },
+    shadowRadius: 4,
+  },
+  navText: {
+    fontSize: 14,
+    color: '#97D0FEFF',
+    fontFamily: 'ArchitectsDaughter',
+    marginTop: 4,
+    textAlign: 'center',
+    width: '100%',
+  },
+
+  // Текст, который показываем в подсказках
+  hintText: {
+    marginTop: 3,
+    fontFamily: 'ArchitectsDaughter',
+    fontSize: 18,
+    color: '#246396',
+    marginLeft: 9,
   },
 });
 
-export default constructorStyles;
+export default styles;
