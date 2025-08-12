@@ -215,7 +215,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.8,
     shadowOffset: { width: 3, height: 6 },
   },
-  // Texts on buttons
   buttonText: {
     fontSize: 20,
     fontFamily: 'ArchitectsDaughter',
@@ -248,7 +247,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 24,
     fontFamily: 'ArchitectsDaughter',
-    color: '#2c6f33ff',
+    color: '#006400',
   },
   userCircle: {
     width: 40,
@@ -259,13 +258,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   initials: {
-    color: '#2c6f33ff',
+    color: '#006400',
     fontWeight: 'bold',
     fontSize: 16,
   },
   initialsCircle: {
     backgroundColor: '#8feda0ff',
-    borderColor: '#00640064',
+    borderColor: '#006400',
     width: 25,
     height: 25,
     alignItems: 'center',
@@ -275,7 +274,7 @@ const styles = StyleSheet.create({
   },
   initialsText: {
     fontFamily: 'ArchitectsDaughter',
-    color: '#2c6f33',
+    color: '#006400',
     fontWeight: 'bold',
     fontSize: 18,
   },
@@ -285,10 +284,11 @@ const styles = StyleSheet.create({
     marginRight: 8,
     paddingTop: 8,
     minWidth: 60,
+    top: -3,
   },
   userLabel: {
     fontSize: 14,
-    color: '#2c6f33',
+    color: '#006400',
     fontFamily: 'ArchitectsDaughter',
     marginTop: -5,
     textAlign: 'center',

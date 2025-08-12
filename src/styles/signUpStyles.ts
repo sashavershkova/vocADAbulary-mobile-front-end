@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: 'ArchitectsDaughter',
     color: '#b869d3ff',
-    textShadowColor: '#4f4e4eff',
+    textShadowColor: '#313131ff',
     textShadowOffset: { width: 3, height: 6 },
     textShadowRadius: 6,
     shadowOpacity: 0.1,
@@ -64,6 +64,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontFamily: 'ArchitectsDaughter',
     backgroundColor: 'transparent',
+    color: '#006400'
   },
   forgotText: {
     color: '#006400',

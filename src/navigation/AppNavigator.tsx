@@ -82,7 +82,7 @@ const AppNavigator = () => (
           headerBackVisible: false, 
           headerLeft: () => (
             <TouchableOpacity onPress={() => navigation.goBack()} style={{ marginLeft: 10 }}>
-              <Ionicons name="chevron-back-circle" size={30} color="#313bae8c" style={{ marginTop: -7 }} />
+              <Ionicons name="chevron-back-circle" size={30} color="#246396" style={{ marginTop: -7 }} />
             </TouchableOpacity>
           ),
         })}
@@ -98,7 +98,7 @@ const AppNavigator = () => (
           headerBackVisible: false, 
           headerLeft: () => (
             <TouchableOpacity onPress={() => navigation.goBack()} style={{ marginLeft: 10 }}>
-              <Ionicons name="chevron-back-circle" size={30} color="#313bae8c" style={{ marginTop: -7 }} />
+              <Ionicons name="chevron-back-circle" size={30} color="#246396" style={{ marginTop: -7 }} />
             </TouchableOpacity>
         ),
         })} 

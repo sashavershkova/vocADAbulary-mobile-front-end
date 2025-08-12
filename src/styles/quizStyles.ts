@@ -28,6 +28,7 @@ const styles = StyleSheet.create({
     marginRight: 8,
     paddingTop: 8,
     minWidth: 60,
+    top: -3,
   },
   userLabel: {
     fontSize: 14,
@@ -37,7 +38,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   questionButton: {
-    backgroundColor: '#FFF176',
+    backgroundColor: '#fff176',
     borderRadius: 20,
     padding: 15,
     marginBottom: 20,

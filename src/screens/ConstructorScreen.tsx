@@ -254,7 +254,7 @@ const ConstructorScreen = ({ navigation }: Props) => {
     <LinearGradient colors={['#f7b4c4d6', '#bf86fcc2']} style={styles.container}>
       <PopoverHint visible={hintVisible} onClose={() => setHintVisible(false)}>
         <Text style={styles.hintText}>
-        Welcome to the *CONSTRUCTOR*, adi, where your brain gets a workout Sheldon would actually approve of. {"\n\n"}
+        Welcome to the *CONSTRUCTOR*, ADIE, where your brain gets a workout Sheldon would actually approve of. {"\n\n"}
         Any word you've already mastered can play. Just drop it into the sentence in the right spot—before Penny guesses 'bazinga' is a verb.{"\n\n"} 
         Good Luck!
         </Text>

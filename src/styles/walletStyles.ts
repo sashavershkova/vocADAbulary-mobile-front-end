@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 18,
     fontSize: 18,
     fontFamily: "ArchitectsDaughter",
-    color: "#4d4e4dff",
+    color: "#246396",
     backgroundColor: "transparent",
   },
   cardGridList: {
@@ -70,10 +70,8 @@ const styles = StyleSheet.create({
   miniCard: {
     width: "100%",
     height: CARD_HEIGHT,
-    backgroundColor: "#faef8dff",
-    borderRadius: 16,
-    borderWidth: 2,
-    borderColor: "#f8f4c5ff",
+    backgroundColor: "#fff176",
+    borderRadius: 20,
     paddingTop: 12,
     paddingHorizontal: 10,
     alignItems: "center",
@@ -87,9 +85,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: CARD_HEIGHT,
     backgroundColor: "#faef8dff",
-    borderRadius: 16,
-    borderWidth: 2,
-    borderColor: "#f8f4c5ff",
+    borderRadius: 20,
     padding: 12,
     justifyContent: "center",
     shadowColor: "#313131ff",
@@ -122,7 +118,7 @@ const styles = StyleSheet.create({
   miniDefinition: {
     fontFamily: "ArchitectsDaughter",
     fontSize: 16,
-    color: "#4d4e4dff",
+    color: "#246396",
     textAlign: "center",
   },
   bottomBar: {
@@ -164,11 +160,11 @@ const styles = StyleSheet.create({
   returnCirclePressed: {
     transform: [{ scale: 0.95 }],
   },
-  userWrapper: { alignItems: "center", justifyContent: "flex-start", marginRight: 5, paddingTop: 5, minWidth: 60 },
-  userLabel: { fontSize: 14, color: "#313bae8c", fontFamily: "ArchitectsDaughter", marginTop: -5, textAlign: "center" },
+  userWrapper: { alignItems: "center", justifyContent: "flex-start", marginRight: 5, paddingTop: 5, minWidth: 60, top: -5 },
+  userLabel: { fontSize: 14, color: "#246396", fontFamily: "ArchitectsDaughter", marginTop: -5, textAlign: "center" },
   initialsCircle: {
     backgroundColor: "#97d0feff",
-    borderColor: "#313bae8c",
+    borderColor: "#246396",
     width: 25,
     height: 25,
     alignItems: "center",
@@ -180,7 +176,7 @@ const styles = StyleSheet.create({
 
   iconButton: { justifyContent: "center", alignItems: "center" },
   iconButtonActive: {
-    shadowColor: "rgba(216,129,245,1)",
+    shadowColor: "#ffffff",
     shadowOpacity: 1,
     shadowOffset: { width: 1, height: 1 },
     shadowRadius: 4,
@@ -188,7 +184,6 @@ const styles = StyleSheet.create({
   },
   iconGlyphGlow: { textShadowColor: "#ffffff", textShadowOffset: { width: 0, height: 0 }, textShadowRadius: 8 },
 
-  text: { fontFamily: "ArchitectsDaughter", fontSize: 16, lineHeight: 22, color: "#246396", textAlign: "left" },
 });
 
 export default styles;

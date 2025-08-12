@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     borderWidth: 2,
     borderColor: "#313bae5f",
-    height: 150, // ≈3см
+    height: 150, 
     textAlignVertical: 'top',
     fontFamily: 'ArchitectsDaughter',
     marginBottom: 18,
@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
   },
   initialsCircle: {
     backgroundColor: '#97d0feff',
-    borderColor: '#313bae8c',
+    borderColor: '#246396',
     width: 25,
     height: 25,
     alignItems: 'center',
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
   },
   userLabel: {
     fontSize: 14,
-    color: '#313bae8c',
+    color: '#246396',
     fontFamily: 'ArchitectsDaughter',
     marginTop: -5,
     textAlign: 'center',
@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     shadowOffset: { width: 3, height: 6 },
     zIndex: 11,
-    borderColor: "#313bae5f",
+    borderColor: "#246396",
     borderWidth: 2,
   },
   dropdownArrow: {
@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 25,
     borderWidth: 2,
-    borderColor: '#246396ff',
+    borderColor: '#246396',
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#313131ff',

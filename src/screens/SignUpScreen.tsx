@@ -7,8 +7,8 @@ import {
   Alert,
   Pressable,
   ActivityIndicator,
-  Keyboard,                 // 👈 add
-  TouchableWithoutFeedback, // 👈 add
+  Keyboard,                 
+  TouchableWithoutFeedback, 
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
@@ -33,7 +33,7 @@ const SignUpScreen = () => {
       title: 'Sign Up',
       headerBackVisible: false,
       headerStyle: { backgroundColor: '#abf5ab64' },
-      headerTitleStyle: { fontFamily: 'ArchitectsDaughter', fontSize: 28, color: '#2c6f33' },
+      headerTitleStyle: { fontFamily: 'ArchitectsDaughter', fontSize: 28, color: '#006400' },
     });
   }, [navigation]);
 
@@ -100,8 +100,8 @@ const SignUpScreen = () => {
             secureTextEntry
             onFocus={() => setFocused('password')}
             onBlur={() => setFocused(null)}
-            returnKeyType="done"                 // 👈 nice-to-have
-            onSubmitEditing={Keyboard.dismiss}   // 👈 hides keyboard on enter
+            returnKeyType="done"                 
+            onSubmitEditing={Keyboard.dismiss}   
           />
         </View>
 

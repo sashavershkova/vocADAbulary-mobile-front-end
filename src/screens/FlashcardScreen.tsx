@@ -97,7 +97,7 @@ const FlashcardScreen = ({ route, navigation }: Props) => { // Removed `async`
       headerStyle: { backgroundColor: '#abf5ab64' },
       headerTitleStyle: {
         fontFamily: 'ArchitectsDaughter',
-        fontSize: 36,
+        fontSize: 32,
         color: '#2c6f33',
       },
       headerRight: () => (
