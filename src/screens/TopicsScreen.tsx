@@ -77,7 +77,7 @@ const TopicsScreen = ({ navigation }: Props) => {
       headerStyle: { backgroundColor: '#abf5ab64' },
       headerTitleStyle: {
         fontFamily: 'ArchitectsDaughter',
-        fontSize: 36,
+        fontSize: 40,
         color: '#2c6f33',
       },
       headerLeft: () => (

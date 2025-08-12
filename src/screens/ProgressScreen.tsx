@@ -72,7 +72,7 @@ const ProgressScreen = () => {
       headerStyle: { backgroundColor: '#f9bcdeff' },
       headerTitleStyle: {
         fontFamily: 'ArchitectsDaughter',
-        fontSize: 24,
+        fontSize: 30,
         color: '#246396ff'
       },
       headerLeft: () => (

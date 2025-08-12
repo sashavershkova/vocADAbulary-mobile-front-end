@@ -62,6 +62,7 @@ const styles = StyleSheet.create({
   inputField: {
     padding: 12,
     fontSize: 20,
+    color: '#006400',
     fontFamily: 'ArchitectsDaughter',
     backgroundColor: 'transparent',
   },

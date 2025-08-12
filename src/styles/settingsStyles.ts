@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 18,
     fontSize: 18,
     fontFamily: 'ArchitectsDaughter',
-    color: '#4d4e4dff',
+    color: '#246396',
     backgroundColor: 'transparent',
   },
   disabledInput: {
@@ -126,6 +126,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderWidth: 1.5,
     borderColor: '#246396',
+    top: -2,
   },
   initialsText: {
     fontFamily: 'ArchitectsDaughter',

@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useLayoutEffect, useRef, useCallback, memo } from "react";
 import {
   Animated, View, Text, TextInput, FlatList, Alert, Pressable, ActivityIndicator,
+  TouchableWithoutFeedback, Keyboard, 
 } from "react-native";
 import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
@@ -45,6 +46,14 @@ const WalletScreen = () => {
   const [searchText, setSearchText] = useState("");
   const hasEnsuredDir = useRef(false);
 
+  const searchInputRef = useRef<TextInput>(null);
+
+  const dismiss = useCallback(() => {
+    Keyboard.dismiss();
+    searchInputRef.current?.blur();
+    setSearchFocused(false);
+  }, []);
+
   const fetchWallet = async () => {
     if (!hasEnsuredDir.current) {
       await ensureCacheDirExists();
@@ -75,7 +84,7 @@ const WalletScreen = () => {
     navigation.setOptions({
       title: "WALLET",
       headerStyle: { backgroundColor: "#b0f4c9ff" },
-      headerTitleStyle: { color: "#246396", fontFamily: "ArchitectsDaughter", fontSize: 36 },
+      headerTitleStyle: { color: "#246396", fontFamily: "ArchitectsDaughter", fontSize: 40 },
       headerLeft: () => (
         <Pressable
           onPress={() => {
@@ -256,81 +265,86 @@ const WalletScreen = () => {
   });
 
   return (
-    <LinearGradient colors={["#b0f4c9ff", "#313bae8c"]} style={styles.container}>
-      <PopoverHint visible={hintVisible} onClose={() => setHintVisible(false)}>
-        <Text style={styles.text}>
-          Welcome to your *WALLET* — where your favorite flashcards live happily ever after (until you delete them, you monster).{"\n\n"}
-          These are your PERSONAL MVPs, handpicked from the Learn section.{"\n"}
-          You can replay them endlessly, because repetition is key — just ask Sheldon, who's watched Star Trek 193 times.{"\n\n"}
-          But wait, there's more:{"\n"}
-          - Want to CREATE your own nerdy masterpiece? Go for it — unleash your inner Amy Farrah Fowler, ADD a new card.{"\n"}
-          - Need to TRACK what you've mastered? Slide over to the *PIGGY BANK* — it's like your brain's trophy shelf.{"\n\n"}
-          TL;DR: This is your Word Fortress. Customize it, listen to it, and flaunt it like Howard flaunts his belt buckles.{"\n\n"}
-          Fun fact: Unlike Raj, you can totally speak here — just press play.
-        </Text>
-      </PopoverHint>
+    <TouchableWithoutFeedback onPress={dismiss} accessible={false}>
+      <LinearGradient colors={["#b0f4c9ff", "#313bae8c"]} style={styles.container}>
+        <PopoverHint visible={hintVisible} onClose={() => setHintVisible(false)}>
+          <Text style={styles.text}>
+            Welcome to your *WALLET* — where your favorite flashcards live happily ever after (until you delete them, you monster).{"\n\n"}
+            These are your PERSONAL MVPs, handpicked from the Learn section.{"\n"}
+            You can replay them endlessly, because repetition is key — just ask Sheldon, who's watched Star Trek 193 times.{"\n\n"}
+            But wait, there's more:{"\n"}
+            - Want to CREATE your own nerdy masterpiece? Go for it — unleash your inner Amy Farrah Fowler, ADD a new card.{"\n"}
+            - Need to TRACK what you've mastered? Slide over to the *PIGGY BANK* — it's like your brain's trophy shelf.{"\n\n"}
+            TL;DR: This is your Word Fortress. Customize it, listen to it, and flaunt it like Howard flaunts his belt buckles.{"\n\n"}
+            Fun fact: Unlike Raj, you can totally speak here — just press play.
+          </Text>
+        </PopoverHint>
 
-      <View style={styles.searchOuter}>
-        <View style={[styles.inputBase, searchFocused && styles.inputFocused]}>
-          <TextInput
-            style={styles.inputField}
-            placeholder="Search in wallet..."
-            value={searchText}
-            onChangeText={setSearchText}
-            onFocus={() => setSearchFocused(true)}
-            onBlur={() => setSearchFocused(false)}
-          />
+        <View style={styles.searchOuter}>
+          <View style={[styles.inputBase, searchFocused && styles.inputFocused]}>
+            <TextInput
+              ref={searchInputRef}                 
+              style={styles.inputField}
+              placeholder="Search in wallet..."
+              value={searchText}
+              onChangeText={setSearchText}
+              onFocus={() => setSearchFocused(true)}
+              onBlur={() => setSearchFocused(false)}
+              returnKeyType="search"
+            />
+          </View>
         </View>
-      </View>
 
-      <FlatList
-        data={filteredFlashcards}
-        keyExtractor={(item) => item.id.toString()}
-        numColumns={2}
-        columnWrapperStyle={{ justifyContent: "flex-start" }}   // ширину/зазоры контролируют стили
-        contentContainerStyle={styles.cardGridList}
-        renderItem={({ item }) => (
-          <MiniCard
-            item={item}
-            onDelete={handleDelete}
-            onLearned={handleLearned}
-          />
-        )}
-        ListFooterComponent={<View style={{ height: 100 }} />}
-        style={{ marginBottom: 90 }}
-        removeClippedSubviews={false}    // для flip
-        keyboardShouldPersistTaps="handled"
-      />
-
-      <View style={styles.bottomBar}>
-        <Pressable onPress={() => navigation.navigate("Home")} hitSlop={10} style={({ pressed }) => [styles.navItem, pressed && styles.iconButtonActive]}>
-          {({ pressed }) => (
-            <>
-              <Ionicons name="home" size={35} color="#97d0feff" style={pressed && styles.iconGlyphGlow} />
-              <Text style={styles.navText}>HOME</Text>
-            </>
+        <FlatList
+          data={filteredFlashcards}
+          keyExtractor={(item) => item.id.toString()}
+          numColumns={2}
+          columnWrapperStyle={{ justifyContent: "flex-start" }}
+          contentContainerStyle={styles.cardGridList}
+          renderItem={({ item }) => (
+            <MiniCard
+              item={item}
+              onDelete={handleDelete}
+              onLearned={handleLearned}
+            />
           )}
-        </Pressable>
+          ListFooterComponent={<View style={{ height: 100 }} />}
+          style={{ marginBottom: 90 }}
+          removeClippedSubviews={false}
+          keyboardShouldPersistTaps="handled" 
+          onScrollBeginDrag={dismiss}         
+        />
 
-        <Pressable onPress={() => navigation.navigate("NewFlashcard" as never, { topicId: 0 } as never)} hitSlop={10} style={({ pressed }) => [styles.navItem, pressed && styles.iconButtonActive]}>
-          {({ pressed }) => (
-            <>
-              <Ionicons name="add-circle" size={35} color="#97d0feff" style={pressed && styles.iconGlyphGlow} />
-              <Text style={styles.navText}>ADD</Text>
-            </>
-          )}
-        </Pressable>
+        <View style={styles.bottomBar}>
+          <Pressable onPress={() => { dismiss(); navigation.navigate("Home"); }} hitSlop={10} style={({ pressed }) => [styles.navItem, pressed && styles.iconButtonActive]}>
+            {({ pressed }) => (
+              <>
+                <Ionicons name="home" size={35} color="#97d0feff" style={pressed && styles.iconGlyphGlow} />
+                <Text style={styles.navText}>HOME</Text>
+              </>
+            )}
+          </Pressable>
 
-        <Pressable onPress={() => navigation.navigate("LearnedCards" as never)} hitSlop={10} style={({ pressed }) => [styles.navItem, pressed && styles.iconButtonActive]}>
-          {({ pressed }) => (
-            <>
-              <FontAwesome5 name="piggy-bank" size={35} color="#97d0feff" style={pressed && styles.iconGlyphGlow} />
-              <Text style={styles.navText}>PIGGY BANK</Text>
-            </>
-          )}
-        </Pressable>
-      </View>
-    </LinearGradient>
+          <Pressable onPress={() => { dismiss(); navigation.navigate("NewFlashcard" as never, { topicId: 0 } as never); }} hitSlop={10} style={({ pressed }) => [styles.navItem, pressed && styles.iconButtonActive]}>
+            {({ pressed }) => (
+              <>
+                <Ionicons name="add-circle" size={35} color="#97d0feff" style={pressed && styles.iconGlyphGlow} />
+                <Text style={styles.navText}>ADD</Text>
+              </>
+            )}
+          </Pressable>
+
+          <Pressable onPress={() => { dismiss(); navigation.navigate("LearnedCards" as never); }} hitSlop={10} style={({ pressed }) => [styles.navItem, pressed && styles.iconButtonActive]}>
+            {({ pressed }) => (
+              <>
+                <FontAwesome5 name="piggy-bank" size={35} color="#97d0feff" style={pressed && styles.iconGlyphGlow} />
+                <Text style={styles.navText}>PIGGY BANK</Text>
+              </>
+            )}
+          </Pressable>
+        </View>
+      </LinearGradient>
+    </TouchableWithoutFeedback>
   );
 };
 

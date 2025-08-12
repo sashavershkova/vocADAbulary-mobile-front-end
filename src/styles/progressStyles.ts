@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
   },
   initialsCircle: {
     backgroundColor: '#87CEFA',
-    borderColor: '#669dcaff',
+    borderColor: '#246396',
     width: 25,
     height: 25,
     alignItems: 'center',
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
   metricText: {
     fontSize: 20,
     fontFamily: 'ArchitectsDaughter',
-    color: '#246396ff',
+    color: '#246396',
   },
   homeButton: {
     alignItems: 'center',
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 14,
     fontFamily: 'ArchitectsDaughter',
-    color: '#246396ff',
+    color: '#246396',
     marginTop: 4,
   },
   userWrapper: {
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
   },
   userLabel: {
     fontSize: 14,
-    color: '#077bb4ff',
+    color: '#246396',
     fontFamily: 'ArchitectsDaughter',
     marginTop: -5,
     textAlign: 'center',
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 25,
     borderWidth: 2,
-    borderColor: '#246396ff',
+    borderColor: '#246396',
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#313131ff',

@@ -61,6 +61,7 @@ const styles = StyleSheet.create({
     marginRight: 8,
     paddingTop: 8,
     minWidth: 60,
+    top: -5,
   },
   initialsCircle: {
     backgroundColor: '#b8efb7',
@@ -70,17 +71,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1.5,
-    borderColor: '#2c6f33',
+    borderColor: '#006400',
   },
   initialsText: {
     fontFamily: 'ArchitectsDaughter',
     fontSize: 18,
-    color: '#2c6f33',
+    color: '#006400',
     fontWeight: 'bold',
   },
   userLabel: {
     fontSize: 14,
-    color: '#2c6f33',
+    color: '#006400',
     fontFamily: 'ArchitectsDaughter',
     marginTop: -5,
     textAlign: 'center',
@@ -149,6 +150,7 @@ const styles = StyleSheet.create({
   },
   searchInput: {
     borderColor: '#2c6f33',
+    color: '#006400',
     borderWidth: 1.5,
     borderRadius: 10,
     backgroundColor: '#fff',

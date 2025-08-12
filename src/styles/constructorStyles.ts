@@ -22,6 +22,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderWidth: 1.5,
     borderColor: '#246396',
+    top: -2,
   },
   initialsText: {
     fontFamily: 'ArchitectsDaughter',
@@ -60,7 +61,7 @@ const styles = StyleSheet.create({
     paddingBottom: 200,           
   },
   cardBox: {
-    backgroundColor: '#FFF176',
+    backgroundColor: '#fff176',
     borderRadius: 28,
     paddingVertical: 22,
     paddingHorizontal: 24,
@@ -69,7 +70,7 @@ const styles = StyleSheet.create({
     shadowColor: '#313131FF',
     shadowOpacity: 0.8,
     shadowOffset: { width: 4, height: 6 },
-    shadowRadius: 8,
+    shadowRadius: 6,
   },
   templateRow: {
     flexDirection: 'row',
@@ -90,12 +91,12 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     paddingHorizontal: 14,
     borderRadius: 16,
-    backgroundColor: '#F9DAFAA8',
+    backgroundColor: '#f9dafacd',
     borderWidth: 2,
-    borderColor: '#F9DAFAFF',
+    borderColor: '#F9DAFA',
     fontFamily: 'ArchitectsDaughter',
     fontSize: 28,
-    color: '#2C6F33',
+    color: '#246396',
     textAlign: 'center',
   },
   blankInputFocused: {
@@ -148,13 +149,6 @@ const styles = StyleSheet.create({
     marginTop: 4,
     textAlign: 'center',
     width: '100%',
-  },
-  hintText: {
-    marginTop: 3,
-    fontFamily: 'ArchitectsDaughter',
-    fontSize: 18,
-    color: '#246396',
-    marginLeft: 9,
   },
 });
 
