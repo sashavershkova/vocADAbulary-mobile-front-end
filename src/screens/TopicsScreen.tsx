@@ -268,8 +268,8 @@ const TopicsScreen = ({ navigation }: Props) => {
           return w.includes(q);
         });
 
-    // Limit results to 7
-  const MAX_RESULTS = 7;
+    // Limit results to 5
+  const MAX_RESULTS = 5;
   const shown = filtered.slice(0, MAX_RESULTS);
 
   return (
