@@ -149,9 +149,19 @@ const SettingsScreen = ({ navigation }: Props) => {
       <LinearGradient colors={['#f9bcdeff', '#bf86fcfe']} style={styles.container}>
         <PopoverHint visible={hintVisible} onClose={() => setHintVisible(false)}>
           <Text style={styles.text}>
-            Welcome to the SETTINGS Center of the Universe{'\n'}
-            (AKA: where your identity crisis gets a stylish reboot.){'\n\n'}
-            {/* ... left as-is ... */}
+            Welcome to the Settings Center of the Universe{"\n"}
+            (AKA: where your identity crisis gets a stylish reboot.){"\n\n"}
+
+            This is the place to change your name or update your email —{"\n"}
+            because maybe "emma_dev" no longer reflects your inner tech goddess.{"\n"}
+            No need to consult Sheldon… unless it's Tuesday (Laundry Night).{"\n\n"}
+
+            Just remember:{"\n"}
+            Changing your info won't collapse the space-time continuum…{"\n"}
+            but it *will* boost your coolness by approximately 3.7%.{"\n"}
+            Bazinga!{"\n\n"}
+
+            Caution: Leonard is definitely not responsible for any consequences that follow.
           </Text>
         </PopoverHint>
 
