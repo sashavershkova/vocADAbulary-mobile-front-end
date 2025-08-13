@@ -88,7 +88,7 @@ const TopicsScreen = ({ navigation }: Props) => {
               Animated.timing(stickScale, { toValue: 1.0, duration: 100, useNativeDriver: true }),
             ]).start(() => setHintVisible(true));
           }}
-          style={{ marginLeft: 16, padding: 2 }}
+          style={{ marginLeft: 16, padding: 2, marginTop: -5 }}
         >
           <Animated.Image
             source={greenstick}
