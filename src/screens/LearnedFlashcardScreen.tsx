@@ -15,7 +15,6 @@ import {
   Pressable,
   ActivityIndicator,
   StyleSheet,
-  TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
@@ -193,7 +192,11 @@ const LearnedFlashcardsScreen = () => {
   );
 
   return (
-    <TouchableWithoutFeedback onPress={dismiss} accessible={false}>
+    <View
+      style={{ flex: 1 }}
+      onStartShouldSetResponder={() => searchFocused}
+      onResponderRelease={dismiss}
+    >
       <LinearGradient colors={["#b0f4c9ff", "#313bae8c"]} style={styles.container}>
         <View style={styles.searchOuter}>
           <View style={[styles.inputBase, searchFocused && styles.inputFocused]}>
@@ -221,11 +224,13 @@ const LearnedFlashcardsScreen = () => {
           )}
           ListFooterComponent={<View style={{ height: 100 }} />}
           style={{ marginBottom: 90 }}
+          removeClippedSubviews={false}
+          keyboardDismissMode="on-drag"      
           keyboardShouldPersistTaps="handled"
           onScrollBeginDrag={dismiss}
         />
 
-        <View style={styles.bottomBar}>
+        <View style={styles.bottomBar} pointerEvents="box-none">
           <Pressable
             onPress={() => {
               dismiss();
@@ -239,7 +244,7 @@ const LearnedFlashcardsScreen = () => {
           </Pressable>
         </View>
       </LinearGradient>
-    </TouchableWithoutFeedback>
+    </View>
   );
 };
 

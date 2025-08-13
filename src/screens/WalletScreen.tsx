@@ -1,23 +1,35 @@
 import React, { useEffect, useState, useLayoutEffect, useRef, useCallback, memo } from "react";
 import {
-  Animated, View, Text, TextInput, FlatList, Alert, Pressable, ActivityIndicator,
-  TouchableWithoutFeedback, Keyboard, 
+  Animated,
+  View,
+  Text,
+  TextInput,
+  FlatList,
+  Alert,
+  Pressable,
+  ActivityIndicator,
+  Keyboard,
 } from "react-native";
 import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { LinearGradient } from "expo-linear-gradient";
+
 import { RootStackParamList } from "../types/navigation";
 import { getWalletFlashcards, removeFromWallet, updateWalletFlashcardStatus } from "../api/wallet";
-import { LinearGradient } from "expo-linear-gradient";
 import {
-  ensureCacheDirExists, getCachedAudioPath, isAudioCached, fetchAndCacheTTS, playTTS,
+  ensureCacheDirExists,
+  getCachedAudioPath,
+  isAudioCached,
+  fetchAndCacheTTS,
+  playTTS,
 } from "../utils/ttsUtils";
-import bluestick from "../assets/images/bluestick.png";
 import PopoverHint from "./PopoverHint";
 import { useMockUser } from "../context/UserContext";
 import api from "../api/axiosInstance";
 
 import styles, { CARD_HEIGHT } from "../styles/walletStyles";
+import bluestick from "../assets/images/bluestick.png";
 
 type WalletNavProp = NativeStackNavigationProp<RootStackParamList, "Wallet">;
 
@@ -31,11 +43,7 @@ type WalletFlashcard = {
   phonetic?: string;
 };
 
-const WalletScreen = () => {
-  const [hintVisible, setHintVisible] = useState(false);
-  const stickScale = React.useRef(new Animated.Value(1)).current;
-  const [searchFocused, setSearchFocused] = useState(false);
-
+const WalletScreen: React.FC = () => {
   const navigation = useNavigation<WalletNavProp>();
   const { user } = useMockUser();
   const userId = user.id;
@@ -44,8 +52,11 @@ const WalletScreen = () => {
   const [flashcards, setFlashcards] = useState<WalletFlashcard[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState("");
-  const hasEnsuredDir = useRef(false);
+  const [searchFocused, setSearchFocused] = useState(false);
 
+  const [hintVisible, setHintVisible] = useState(false);
+  const stickScale = useRef(new Animated.Value(1)).current;
+  const hasEnsuredDir = useRef(false);
   const searchInputRef = useRef<TextInput>(null);
 
   const dismiss = useCallback(() => {
@@ -54,7 +65,7 @@ const WalletScreen = () => {
     setSearchFocused(false);
   }, []);
 
-  const fetchWallet = async () => {
+  const fetchWallet = useCallback(async () => {
     if (!hasEnsuredDir.current) {
       await ensureCacheDirExists();
       hasEnsuredDir.current = true;
@@ -78,7 +89,11 @@ const WalletScreen = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [userId]);
+
+  useEffect(() => {
+    fetchWallet();
+  }, [fetchWallet]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -90,12 +105,15 @@ const WalletScreen = () => {
           onPress={() => {
             Animated.sequence([
               Animated.timing(stickScale, { toValue: 0.5, duration: 100, useNativeDriver: true }),
-              Animated.timing(stickScale, { toValue: 1.0, duration: 100, useNativeDriver: true }),
+              Animated.timing(stickScale, { toValue: 1, duration: 100, useNativeDriver: true }),
             ]).start(() => setHintVisible(true));
           }}
-          style={{ marginLeft: 16, padding: 2 }}
+          style={{ marginLeft: 16, padding: 2, marginTop: -5 }}
         >
-          <Animated.Image source={bluestick} style={{ width: 30, height: 50, transform: [{ scale: stickScale }] }} />
+          <Animated.Image
+            source={bluestick}
+            style={{ width: 30, height: 50, transform: [{ scale: stickScale }] }}
+          />
         </Pressable>
       ),
       headerRight: () => (
@@ -109,30 +127,36 @@ const WalletScreen = () => {
     });
   }, [navigation, initials, stickScale]);
 
-  useEffect(() => { fetchWallet(); }, []);
+  const handleDelete = useCallback(
+    async (id: number) => {
+      try {
+        await removeFromWallet(userId, id);
+        fetchWallet();
+      } catch {
+        Alert.alert("Error", "Could not remove flashcard.");
+      }
+    },
+    [userId, fetchWallet]
+  );
 
-  const handleDelete = useCallback(async (id: number) => {
-    try {
-      await removeFromWallet(userId, id);
-      fetchWallet();
-    } catch {
-      Alert.alert("Error", "Could not remove flashcard.");
-    }
-  }, [userId]);
-
-  const handleLearned = useCallback(async (id: number) => {
-    try {
-      await updateWalletFlashcardStatus(userId, id, "LEARNED");
-    } finally {
-      fetchWallet();
-    }
-  }, [userId]);
+  const handleLearned = useCallback(
+    async (id: number) => {
+      try {
+        await updateWalletFlashcardStatus(userId, id, "LEARNED");
+      } finally {
+        fetchWallet();
+      }
+    },
+    [userId, fetchWallet]
+  );
 
   const filteredFlashcards = flashcards.filter((fc) =>
     fc.word.toLowerCase().includes(searchText.toLowerCase())
   );
 
-  if (loading) return <ActivityIndicator style={{ flex: 1 }} size="large" />;
+  if (loading) {
+    return <ActivityIndicator style={{ flex: 1 }} size="large" />;
+  }
 
   type MiniProps = {
     item: WalletFlashcard;
@@ -150,16 +174,22 @@ const WalletScreen = () => {
     const [playing, setPlaying] = useState(false);
 
     const front = flip.interpolate({ inputRange: [0, 180], outputRange: ["0deg", "180deg"] });
-    const back  = flip.interpolate({ inputRange: [0, 180], outputRange: ["180deg", "360deg"] });
+    const back = flip.interpolate({ inputRange: [0, 180], outputRange: ["180deg", "360deg"] });
 
     const toggle = () => {
-      Animated.spring(flip, { toValue: flipped ? 0 : 180, useNativeDriver: true, friction: 8, tension: 10 }).start();
-      setFlipped(!flipped);
+      Animated.spring(flip, {
+        toValue: flipped ? 0 : 180,
+        useNativeDriver: true,
+        friction: 8,
+        tension: 10,
+      }).start();
+      setFlipped((v) => !v);
     };
 
     useEffect(() => {
       if (!localPhon) {
-        api.get(`/api/flashcards/${item.id}`)
+        api
+          .get(`/api/flashcards/${item.id}`)
           .then(({ data }) => data?.phonetic && setLocalPhon(String(data.phonetic)))
           .catch(() => {});
       }
@@ -183,6 +213,7 @@ const WalletScreen = () => {
     return (
       <View style={styles.cardTileWrapper}>
         <View style={{ height: CARD_HEIGHT }}>
+          {/* FRONT */}
           <Animated.View
             style={[
               styles.miniCard,
@@ -205,32 +236,42 @@ const WalletScreen = () => {
               </Text>
 
               <View style={{ minHeight: 22, justifyContent: "center" }}>
-                {phonToShow !== "" && (
-                  <Text style={styles.miniPhonetic}>/{phonToShow}/</Text>
-                )}
+                {phonToShow !== "" && <Text style={styles.miniPhonetic}>/{phonToShow}/</Text>}
               </View>
             </Pressable>
 
             <View style={styles.miniActionsRow}>
               <Pressable
-                onPress={(e) => { (e as any)?.stopPropagation?.(); playLocal(); }}
+                onPress={(e) => {
+                  (e as any)?.stopPropagation?.();
+                  playLocal();
+                }}
                 hitSlop={10}
                 style={({ pressed }) => [styles.iconButton, pressed && styles.iconButtonActive]}
               >
-                {playing
-                  ? <ActivityIndicator size="small" />
-                  : <Ionicons name="volume-high" size={22} color="rgba(216,129,245,1)" style={styles.iconGlyphGlow} />
-                }
+                {playing ? (
+                  <ActivityIndicator size="small" />
+                ) : (
+                  <Ionicons name="volume-high" size={22} color="rgba(216,129,245,1)" style={styles.iconGlyphGlow} />
+                )}
               </Pressable>
+
               <Pressable
-                onPress={(e) => { (e as any)?.stopPropagation?.(); onLearned(item.id); }}
+                onPress={(e) => {
+                  (e as any)?.stopPropagation?.();
+                  onLearned(item.id);
+                }}
                 hitSlop={10}
                 style={({ pressed }) => [styles.iconButton, pressed && styles.iconButtonActive]}
               >
                 <Ionicons name="checkmark-circle" size={22} color="rgba(216,129,245,1)" style={styles.iconGlyphGlow} />
               </Pressable>
+
               <Pressable
-                onPress={(e) => { (e as any)?.stopPropagation?.(); onDelete(item.id); }}
+                onPress={(e) => {
+                  (e as any)?.stopPropagation?.();
+                  onDelete(item.id);
+                }}
                 hitSlop={10}
                 style={({ pressed }) => [styles.iconButton, pressed && styles.iconButtonActive]}
               >
@@ -247,7 +288,9 @@ const WalletScreen = () => {
             pointerEvents={flipped ? "auto" : "none"}
           >
             <Pressable style={{ flex: 1, justifyContent: "center" }} onPress={toggle}>
-              <Text style={styles.miniDefinition} numberOfLines={3}>{item.definition}</Text>
+              <Text style={styles.miniDefinition} numberOfLines={3}>
+                {item.definition}
+              </Text>
             </Pressable>
           </Animated.View>
         </View>
@@ -265,7 +308,11 @@ const WalletScreen = () => {
   });
 
   return (
-    <TouchableWithoutFeedback onPress={dismiss} accessible={false}>
+    <View
+      style={{ flex: 1 }}
+      onStartShouldSetResponder={() => searchFocused}
+      onResponderRelease={dismiss}
+    >
       <LinearGradient colors={["#b0f4c9ff", "#313bae8c"]} style={styles.container}>
         <PopoverHint visible={hintVisible} onClose={() => setHintVisible(false)}>
           <Text style={styles.text}>
@@ -283,7 +330,7 @@ const WalletScreen = () => {
         <View style={styles.searchOuter}>
           <View style={[styles.inputBase, searchFocused && styles.inputFocused]}>
             <TextInput
-              ref={searchInputRef}                 
+              ref={searchInputRef}
               style={styles.inputField}
               placeholder="Search in wallet..."
               value={searchText}
@@ -302,21 +349,25 @@ const WalletScreen = () => {
           columnWrapperStyle={{ justifyContent: "flex-start" }}
           contentContainerStyle={styles.cardGridList}
           renderItem={({ item }) => (
-            <MiniCard
-              item={item}
-              onDelete={handleDelete}
-              onLearned={handleLearned}
-            />
+            <MiniCard item={item} onDelete={handleDelete} onLearned={handleLearned} />
           )}
           ListFooterComponent={<View style={{ height: 100 }} />}
           style={{ marginBottom: 90 }}
           removeClippedSubviews={false}
-          keyboardShouldPersistTaps="handled" 
-          onScrollBeginDrag={dismiss}         
+          keyboardDismissMode="on-drag"
+          keyboardShouldPersistTaps="handled"
+          onScrollBeginDrag={dismiss}
         />
 
-        <View style={styles.bottomBar}>
-          <Pressable onPress={() => { dismiss(); navigation.navigate("Home"); }} hitSlop={10} style={({ pressed }) => [styles.navItem, pressed && styles.iconButtonActive]}>
+        <View style={styles.bottomBar} pointerEvents="box-none">
+          <Pressable
+            onPress={() => {
+              dismiss();
+              navigation.navigate("Home");
+            }}
+            hitSlop={10}
+            style={({ pressed }) => [styles.navItem, pressed && styles.iconButtonActive]}
+          >
             {({ pressed }) => (
               <>
                 <Ionicons name="home" size={35} color="#97d0feff" style={pressed && styles.iconGlyphGlow} />
@@ -325,7 +376,14 @@ const WalletScreen = () => {
             )}
           </Pressable>
 
-          <Pressable onPress={() => { dismiss(); navigation.navigate("NewFlashcard" as never, { topicId: 0 } as never); }} hitSlop={10} style={({ pressed }) => [styles.navItem, pressed && styles.iconButtonActive]}>
+          <Pressable
+            onPress={() => {
+              dismiss();
+              navigation.navigate("NewFlashcard" as never, { topicId: 0 } as never);
+            }}
+            hitSlop={10}
+            style={({ pressed }) => [styles.navItem, pressed && styles.iconButtonActive]}
+          >
             {({ pressed }) => (
               <>
                 <Ionicons name="add-circle" size={35} color="#97d0feff" style={pressed && styles.iconGlyphGlow} />
@@ -334,7 +392,14 @@ const WalletScreen = () => {
             )}
           </Pressable>
 
-          <Pressable onPress={() => { dismiss(); navigation.navigate("LearnedCards" as never); }} hitSlop={10} style={({ pressed }) => [styles.navItem, pressed && styles.iconButtonActive]}>
+          <Pressable
+            onPress={() => {
+              dismiss();
+              navigation.navigate("LearnedCards" as never);
+            }}
+            hitSlop={10}
+            style={({ pressed }) => [styles.navItem, pressed && styles.iconButtonActive]}
+          >
             {({ pressed }) => (
               <>
                 <FontAwesome5 name="piggy-bank" size={35} color="#97d0feff" style={pressed && styles.iconGlyphGlow} />
@@ -344,7 +409,7 @@ const WalletScreen = () => {
           </Pressable>
         </View>
       </LinearGradient>
-    </TouchableWithoutFeedback>
+    </View>
   );
 };
 

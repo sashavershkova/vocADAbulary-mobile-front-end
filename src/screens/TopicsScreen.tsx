@@ -88,7 +88,7 @@ const TopicsScreen = ({ navigation }: Props) => {
               Animated.timing(stickScale, { toValue: 1.0, duration: 100, useNativeDriver: true }),
             ]).start(() => setHintVisible(true));
           }}
-          style={{ marginLeft: 16, padding: 2 }}
+          style={{ marginLeft: 16, padding: 2, marginTop: -5 }}
         >
           <Animated.Image
             source={greenstick}
@@ -258,16 +258,19 @@ const TopicsScreen = ({ navigation }: Props) => {
     );
   };
 
+  // Only search in the flashcard "word" field (case-insensitive)
   const filtered =
-    searchQuery.trim().length < 2
+    searchQuery.trim().length === 0
       ? []
       : allMineOrPublic.filter((c) => {
-        const q = searchQuery.toLowerCase();
-        return (
-          (c.word && c.word.toLowerCase().includes(q)) ||
-          (c.definition && c.definition.toLowerCase().includes(q))
-        );
-      });
+          const q = searchQuery.trim().toLowerCase();
+          const w = (c.word ?? "").toLowerCase();
+          return w.includes(q);
+        });
+
+    // Limit results to 5
+  const MAX_RESULTS = 5;
+  const shown = filtered.slice(0, MAX_RESULTS);
 
   return (
     <LinearGradient colors={['#abf5ab64', '#347134bc']} style={{ flex: 1 }}>
@@ -363,11 +366,12 @@ const TopicsScreen = ({ navigation }: Props) => {
 
             {searchBusy ? (
               <ActivityIndicator size="large" color="#2c6f33" style={{ marginTop: 10 }} />
-            ) : filtered.length === 0 && searchQuery.trim().length >= 2 ? (
+            ) : shown.length === 0 && searchQuery.trim().length > 0 ? (
               <Text style={styles.noResultsText}>No cards found.</Text>
             ) : null}
 
-            {filtered.map((card) => (
+            {/* results list */}
+            {shown.map((card) => (
               <Pressable
                 key={card.id}
                 onPress={() => openSearchResult(card)}

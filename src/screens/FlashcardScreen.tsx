@@ -64,6 +64,7 @@ const FlashcardScreen = ({ route, navigation }: Props) => { // Removed `async`
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<Flashcard[]>([]);
+  const MAX_RESULTS = 5;
 
   const flipAnim = useRef(new Animated.Value(0)).current;
   const hasEnsuredDir = useRef(false);
@@ -289,15 +290,18 @@ const FlashcardScreen = ({ route, navigation }: Props) => { // Removed `async`
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
-    if (query.trim().length === 0) {
+
+    const q = query.trim().toLowerCase();
+    if (q.length === 0) {
       setSearchResults([]);
       return;
     }
-    const q = query.toLowerCase();
-    const results = flashcards.filter( (fc) =>
-      fc.word.toLowerCase().includes(q) ||
-      (fc.definition && fc.definition.toLowerCase().includes(q))
-    );
+
+    // ✅ Only search within the flashcard "word" and limit to 5
+    const results = flashcards
+      .filter(fc => (fc.word ?? '').toLowerCase().includes(q))
+      .slice(0, MAX_RESULTS);
+
     setSearchResults(results);
   };
 
