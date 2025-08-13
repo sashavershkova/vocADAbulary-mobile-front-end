@@ -258,16 +258,15 @@ const TopicsScreen = ({ navigation }: Props) => {
     );
   };
 
+  // Only search in the flashcard "word" field (case-insensitive)
   const filtered =
     searchQuery.trim().length < 2
       ? []
       : allMineOrPublic.filter((c) => {
-        const q = searchQuery.toLowerCase();
-        return (
-          (c.word && c.word.toLowerCase().includes(q)) ||
-          (c.definition && c.definition.toLowerCase().includes(q))
-        );
-      });
+          const q = searchQuery.trim().toLowerCase();
+          const w = (c.word ?? "").toLowerCase();
+          return w.includes(q);
+        });
 
   return (
     <LinearGradient colors={['#abf5ab64', '#347134bc']} style={{ flex: 1 }}>
