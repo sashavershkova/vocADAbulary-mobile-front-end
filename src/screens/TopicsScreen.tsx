@@ -260,7 +260,7 @@ const TopicsScreen = ({ navigation }: Props) => {
 
   // Only search in the flashcard "word" field (case-insensitive)
   const filtered =
-    searchQuery.trim().length < 2
+    searchQuery.trim().length === 0
       ? []
       : allMineOrPublic.filter((c) => {
           const q = searchQuery.trim().toLowerCase();
