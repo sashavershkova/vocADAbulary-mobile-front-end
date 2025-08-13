@@ -268,6 +268,10 @@ const TopicsScreen = ({ navigation }: Props) => {
           return w.includes(q);
         });
 
+    // Limit results to 7
+  const MAX_RESULTS = 7;
+  const shown = filtered.slice(0, MAX_RESULTS);
+
   return (
     <LinearGradient colors={['#abf5ab64', '#347134bc']} style={{ flex: 1 }}>
       <PopoverHint visible={hintVisible} onClose={() => setHintVisible(false)}>
@@ -362,11 +366,12 @@ const TopicsScreen = ({ navigation }: Props) => {
 
             {searchBusy ? (
               <ActivityIndicator size="large" color="#2c6f33" style={{ marginTop: 10 }} />
-            ) : filtered.length === 0 && searchQuery.trim().length >= 2 ? (
+            ) : shown.length === 0 && searchQuery.trim().length > 0 ? (
               <Text style={styles.noResultsText}>No cards found.</Text>
             ) : null}
 
-            {filtered.map((card) => (
+            {/* results list */}
+            {shown.map((card) => (
               <Pressable
                 key={card.id}
                 onPress={() => openSearchResult(card)}
