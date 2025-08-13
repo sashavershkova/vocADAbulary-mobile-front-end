@@ -22,6 +22,9 @@ The app is built with **React Native** and **TypeScript**, connects to a Java Sp
 - **Track Your Progress:** See statistics on learned vs. in-progress words and completed quizzes.
 - **Replay & Reset:** Repeat quizzes and sentence builder exercises as part of spaced repetition.
 
+##  Presentation link
+https://www.canva.com/design/DAGvVokR-Nk/eTWrnZKH-SmmJjPUvDifsQ/view?utm_content=DAGvVokR-Nk&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h1d96880c87
+
 ---
 
 ## 0. Tech Stack and Dependencies
